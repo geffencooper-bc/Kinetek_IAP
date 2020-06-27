@@ -12,8 +12,6 @@ DLC = 8
 DATA = 9
 
 def switch(arg):
-    # if arg == "0x0040":
-    #     print ("heart beat")
     return{
         '0x0000' : "CP-->MMC   HEART_BEAT",
         '0x0001' : "CP-->MMC   CONTROLLER_CHANGE_REQUEST",
@@ -27,7 +25,7 @@ def switch(arg):
     }.get(arg)
 
 
-with open('sampleLog.csv', 'r') as csv_file:
+with open('/home/geffen.cooper/vm_shared/can_logs/output.csv', 'r') as csv_file:
     reader = csv.reader(csv_file)
 
     translated_data = "\t\t\t\t\----------START OF STREAM----------\n\n"
