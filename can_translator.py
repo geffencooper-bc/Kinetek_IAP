@@ -26,9 +26,12 @@ def switch(arg):
         '0x0082' : "MMC-->CP   HOUR_METER_RESPONSE"
     }.get(arg)
 
-print(switch('0x0001'))
+
 with open('sampleLog.csv', 'r') as csv_file:
     reader = csv.reader(csv_file)
 
+    translated_data = "\t\t\t\t\----------START OF STREAM----------\n\n"
+
     for row in reader:
-        print(switch(row[FRAME_ID]))
+        translated_data += '\n' + str(switch(row[FRAME_ID]))
+    print(translated_data)
