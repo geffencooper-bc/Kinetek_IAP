@@ -13,8 +13,10 @@ DATA = 9
 
 def switch_frame(arg):
     return{
-        '0x0000' : "CP-->MMC   HEART_BEAT",
+        '0x0000' : "CP-->MMC   HEART_BEAT", 
         '0x0001' : "CP-->MMC   CONTROLLER_CHANGE_REQUEST     ",
+        '0x0014' : "HT-->KT    IAP REQUEST",
+        '0x0015' : "HT-->KT    IAP RESPONSE",    
         '0x03C9' : "UNKNOWN",
         '0x0040' : "KCH-->MMC  HEART_BEAT",
         '0x04CA' : "UNKNOWN",
@@ -36,7 +38,11 @@ def switch_command_data(arg):
         'F8 01' : "\tAUX2_OUT_ENABLE = ",
         'F2 04' : "\tBRUSH_UNLOAD = ",
         'F2 08' : "\tBRUSH_LOAD = ",
-        'F1 04' : "\tTRACTION_DIRECTION = ",
+        'F1 04' : "\tTRACTION_DIRECTION = "
+    }.get(arg)
+
+def switch_command_data2(arg):
+    return{
         'F1 00' : "\tTRACTION_SPEED_HIGH",
         'F1 01' : "\tTRACTION_SPEED_MEDIUM",
         'F1 02' : "\tTRACTION_SPEED_LOW",
@@ -62,10 +68,18 @@ with open('/home/geffen.cooper/vm_shared/can_logs/output.csv', 'r') as csv_file:
 
     for row in reader:
         frm_id = str(row[FRAME_ID])
+        # parse the frame id
         translated_data += '\n' + str(switch_frame(frm_id))
-        if frm_id == "0x0001":
-             translated_data +=  str(switch_command_data(str(row[DATA])[6:11])) + str(switch_state(str(row[DATA])[12:17]))
-             
+
+        # parse the command frames
+        if frm_id == "0x0001" or frm_id == "0x0081":
+             if str(switch_command_data(str(row[DATA])[6:11])) == "None":
+                 translated_data +=  str(switch_command_data2(str(row[DATA])[6:11]))
+             else:
+                 translated_data +=  str(switch_command_data(str(row[DATA])[6:11])) + str(switch_state(str(row[DATA])[12:17]))
+        
+        # parse the KT heart beat frames
         if frm_id == "0x0080":
              translated_data +=  "page: " + str(row[DATA])[6:8] + '\n' # + "\t" + str(switch_hb_data(str(row[DATA])[10:]))
+
     print(translated_data)
