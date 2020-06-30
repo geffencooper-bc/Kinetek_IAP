@@ -22,10 +22,10 @@ def switch_frame_id(arg):
         '0x0041' : "KCH-->MMC  HEART_BEAT2",
         '0x0045' : "KCH-->MMC  FW_REVISION_REQUEST",
         '0x0048' : "KCH-->MMC  IAP_REPLY_TO_LCD",
-        '0x004F' : "?-->?      FW_UNKNOWN",
-        '0x0050' : "?-->?      FW_UNKNOWN",
-        '0x0051' : "?-->?      FW_UNKNOWN",
-        '0x0052' : "?-->?      FW_UNKNOWN",
+        '0x004F' : "KCH-->MMC  1st 8 bytes",
+        '0x0050' : "KCH-->MMC  2nd 8 bytes",
+        '0x0051' : "KCH-->MMC  3rd 8 bytes",
+        '0x0052' : "KCH-->MMC  4th 8 bytes",
         '0x0053' : "?-->?      FW_UNKNOWN",
         '0x0054' : "?-->?      FW_UNKNOWN",
         '0x0055' : "?-->?      FW_UNKNOWN",
@@ -74,18 +74,37 @@ def switch_state(arg):
     return{
         '00 00' : "OFF",
         '00 01' : "ON",
-        '00 02' : "REVERSE",
+        '00 02' : "REVERSE"
     }.get(arg)
 
-def switch_other(arg):
+# def switch_IAP_ID(arg):
+#     return{
+#         '80 00 00 00 00' : "CONTROLLER_ENTER_IAP_MODE"
+
+#     }.get(arg)
+
+def switch_IAP_data(arg):
     return{
-        '80 00 00 00 00' : "CONTROLLER_ENTER_IAP_MODE"
+        '03 27' : "\tREPROGRAM_CONFIRM",
+        '10 10 10 10 10 10 10 10' : "\treceived 32 bytes",
+        '88 88 88 88 88 88 88 88' : "\tstart sending bytes request",
+        '99 99 99 99 99 99 99 99' : "\tready to receive bytes response",
+        '01 08 5E 00 80 00 00 00' : "\treceive reply of version request command",
+        '02 08 00 80 00 9A 00 00' : "\tsend code start address",
+        '02 10 10 10 10 10 10 10' : "\treceive reply of code start address",
+        '03 00 87 47 FE 9B 00 00' : "\tsend code data size",
+        '03 10 10 10 10 10 10 10' : "\treceive reply of code data size",
+        '04 00 01 68 30 9C 00 00' : "\tsend code checksum data",
+        '04 10 10 10 10 10 10 10' : "\treceive reply of code checksum data",
+        '05 10 00 00 00 90 00 00' : "\tsend end of hex file message",
+        '05 20 20 20 20 20 20 20' : "\tcalculated checksum successfully",
+        
 
     }.get(arg)
 
 
 # open the csv file and create the csv reader object
-with open('/home/geffen.cooper/vm_shared/can_logs/SelectiveController2.27-2.28.csv', 'r') as csv_file:
+with open('/home/geffen.cooper/vm_shared/can_logs/SC2.27-2.28_full.csv', 'r') as csv_file:
     reader = csv.reader(csv_file)
 
     translated_data = "\t\t\t\t\----------START OF STREAM----------\n\n"
@@ -99,10 +118,13 @@ with open('/home/geffen.cooper/vm_shared/can_logs/SelectiveController2.27-2.28.c
 
         # parse the command/verification frames
         if frm_id == "0x0001" or frm_id == "0x0081":
-             if str(switch_command_data(str(row[DATA])[6:11])) == "None":
-                 translated_data +=  str(switch_command_data2(str(row[DATA])[6:11]))
-             else:
+             if str(switch_command_data(str(row[DATA])[6:11])) != "None":
                  translated_data +=  str(switch_command_data(str(row[DATA])[6:11])) + str(switch_state(str(row[DATA])[12:17]))
+             if str(switch_command_data2(str(row[DATA])[6:11])) != "None":
+                 translated_data +=  str(switch_command_data2(str(row[DATA])[6:11]))
+        if str(row[DLC]) == "0x08" and str(switch_IAP_data(str(row[DATA])[3:26])) != "None":
+                 translated_data += str(switch_IAP_data(str(row[DATA])[3:26]))     
+                 
         
         # parse the KT heart beat frames
         if frm_id == "0x0080":
