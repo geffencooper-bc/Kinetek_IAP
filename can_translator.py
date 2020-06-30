@@ -16,8 +16,7 @@ def switch_frame_id(arg):
         '0x0000' : "CP-->MMC   HEART_BEAT", 
         '0x0001' : "CP-->MMC   CONTROLLER_CHANGE_REQUEST     ",
         '0x0002' : "CP-->MMC   HOUR_METER_REQUEST            ",
-        '0x0014' : "HT-->KT    IAP REQUEST",
-        '0x0015' : "HT-->KT    IAP RESPONSE",    
+        '0x0005' : "KCH-->MMC  SEND_VERSION_REQUEST_COMMAND  ",  
         '0x03C9' : "UNKNOWN",
         '0x0040' : "KCH-->MMC  HEART_BEAT\n",
         '0x0041' : "KCH-->MMC  HEART_BEAT2",
@@ -34,7 +33,7 @@ def switch_frame_id(arg):
         '0x0060' : "?-->?      NOT_USED",
         '0x0067' : "MMC-->KCH  FW_REVISION_RESPONSE",
         '0x0069' : "MMC-->KCH  HOST_IAP_REQUEST",
-        '0x0080' : "MMC-->CP   HEART_BEAT\n",
+        '0x0080' : "MMC-->CP   **HEART_BEAT**\n",
         '0x0081' : "MMC-->CP   CONTROLLER_CHANGE_VERIFICATION",
         '0x0082' : "MMC-->CP   HOUR_METER_RESPONSE",
         '0x04CA' : "?-->?      CONTROL_PANEL_UPDATE_COMMAND"
@@ -58,6 +57,7 @@ def switch_command_data(arg):
 
 def switch_command_data2(arg):
     return{
+        '03 27' : "\tREPROGRAM_CONFIRM",
         'F1 00' : "\tTRACTION_SPEED_HIGH",
         'F1 01' : "\tTRACTION_SPEED_MEDIUM",
         'F1 02' : "\tTRACTION_SPEED_LOW",
@@ -77,9 +77,15 @@ def switch_state(arg):
         '00 02' : "REVERSE",
     }.get(arg)
 
+def switch_other(arg):
+    return{
+        '80 00 00 00 00' : "CONTROLLER_ENTER_IAP_MODE"
+
+    }.get(arg)
+
 
 # open the csv file and create the csv reader object
-with open('/home/geffen.cooper/vm_shared/can_logs/FWU2.csv', 'r') as csv_file:
+with open('/home/geffen.cooper/vm_shared/can_logs/SelectiveController2.27-2.28.csv', 'r') as csv_file:
     reader = csv.reader(csv_file)
 
     translated_data = "\t\t\t\t\----------START OF STREAM----------\n\n"
