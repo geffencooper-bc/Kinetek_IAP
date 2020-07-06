@@ -11,32 +11,33 @@ FORMAT = 7
 DLC = 8
 DATA = 9
 
+# equivalent of a switch statement in python
 def switch_frame_id(arg):
-    return{
-        '0x0000' : "CP-->MMC   HEART_BEAT", 
-        '0x0001' : "CP-->MMC   CONTROLLER_CHANGE_REQUEST     ",
-        '0x0002' : "CP-->MMC   HOUR_METER_REQUEST            ",
-        '0x0005' : "KCH-->MMC  SEND_VERSION_REQUEST_COMMAND  ",  
-        '0x03C9' : "UNKNOWN",
-        '0x0040' : "KCH-->MMC  HEART_BEAT",
-        '0x0041' : "KCH-->MMC  HEART_BEAT2",
-        '0x0045' : "KCH-->MMC  FW_REVISION_REQUEST",
-        '0x0048' : "KCH-->MMC  IAP_REPLY_TO_LCD (IAP_REQUEST)",
-        '0x004F' : "KCH-->MMC  1st 8 bytes",
-        '0x0050' : "KCH-->MMC  2nd 8 bytes",
-        '0x0051' : "KCH-->MMC  3rd 8 bytes",
-        '0x0052' : "KCH-->MMC  4th 8 bytes",
-        '0x0053' : "?-->?      FW_UNKNOWN",
-        '0x0054' : "?-->?      FW_UNKNOWN",
-        '0x0055' : "?-->?      FW_UNKNOWN",
-        '0x0056' : "?-->?      FW_UNKNOWN",
-        '0x0060' : "?-->?      NOT_USED",
-        '0x0067' : "MMC-->KCH  FW_REVISION_RESPONSE",
-        '0x0069' : "MMC-->KCH  HOST_IAP_REQUEST (IAP_RESPONSE)",
-        '0x0080' : "MMC-->CP   **HEART_BEAT**",
-        '0x0081' : "MMC-->CP   CONTROLLER_CHANGE_VERIFICATION",
-        '0x0082' : "MMC-->CP   HOUR_METER_RESPONSE",
-        '0x04CA' : "?-->?      CONTROL_PANEL_UPDATE_COMMAND"
+    return{        # sender           frame_id meaning
+        '0x0000' : "Control Panel:    HEART_BEAT", 
+        '0x0001' : "Control Panel:    CONTROLLER_CHANGE_REQUEST",
+        '0x0002' : "Control Panel:    HOUR_METER_REQUEST",
+        '0x0005' : "KC Tool:          SEND_VERSION_REQUEST_COMMAND  ",  
+        '0x03C9' : "Kinetek:          BATTERY_INFO",
+        '0x0040' : "BCM:              HEART_BEAT",
+        '0x0041' : "BCM               AUTONOMY_CONTROL_COMMAND",
+        '0x0045' : "KC Tool:          FW_REVISION_REQUEST",
+        '0x0048' : "KC Tool:          IAP_REPLY_TO_LCD (IAP_REQUEST)",
+        '0x004F' : "KC Tool:          1st 8 bytes",
+        '0x0050' : "KC Tool:          2nd 8 bytes",
+        '0x0051' : "KC Tool:          3rd 8 bytes",
+        '0x0052' : "KC Tool:          4th 8 bytes",
+        '0x0053' : "?-->?             IAP_UNKNOWN",
+        '0x0054' : "?-->?             IAP_UNKNOWN",
+        '0x0055' : "?-->?             IAP_UNKNOWN",
+        '0x0056' : "?-->?             IAP_UNKNOWN",
+        '0x0060' : "?-->?             NOT_USED",
+        '0x0067' : "Kinetek:          FW_REVISION_RESPONSE",
+        '0x0069' : "Kinetek:          HOST_IAP_REQUEST (IAP_RESPONSE)",
+        '0x0080' : "Kinetek:          HEART_BEAT",
+        '0x0081' : "Kinetek:          CONTROLLER_CHANGE_VERIFICATION",
+        '0x0082' : "Kinetek:          HOUR_METER_RESPONSE",
+        '0x04CA' : "Control Panel:    CONTROL_PANEL_UPDATE_COMMAND"
     }.get(arg)
 
 def switch_command_data(arg):
@@ -98,31 +99,32 @@ def switch_IAP_data(arg):
     }.get(arg)
 
 
-# open the csv file and create the csv reader object
-with open('/home/geffen.cooper/vm_shared/can_logs/boot_00.csv', 'r') as csv_file:
-    reader = csv.reader(csv_file)
+if __name__ == "__main__":
+    # open the csv file and create the csv reader object
+    with open('/home/geffen.cooper/vm_shared/can_logs/boot_00.csv', 'r') as csv_file:
+        reader = csv.reader(csv_file)
 
-    translated_data = ""# "\t\t\t\t\----------START OF STREAM----------\n\n"
+        translated_data = ""# "\t\t\t\t\----------START OF STREAM----------\n\n"
 
-    # parse through all rows in csv file
-    for row in reader:
-        frm_id = str(row[FRAME_ID])
+        # parse through all rows in csv file
+        for row in reader:
+            frm_id = str(row[FRAME_ID])
 
-        # parse the frame id column
-        translated_data += '\n' + str(switch_frame_id(frm_id))
+            # parse the frame id column
+            translated_data += '\n' + str(switch_frame_id(frm_id))
 
-        # parse the command/verification frames
-        if frm_id == "0x0001" or frm_id == "0x0081":
-             if str(switch_command_data(str(row[DATA])[6:11])) != "None":
-                 translated_data +=  str(switch_command_data(str(row[DATA])[6:11])) + str(switch_state(str(row[DATA])[12:17]))
-             if str(switch_command_data2(str(row[DATA])[6:11])) != "None":
-                 translated_data +=  str(switch_command_data2(str(row[DATA])[6:11]))
-        if str(row[DLC]) == "0x08" and str(switch_IAP_data(str(row[DATA])[3:26])) != "None":
-                 translated_data += str(switch_IAP_data(str(row[DATA])[3:26]))     
-                 
-        
-        # parse the KT heart beat frames
-        if frm_id == "0x0080":
-             translated_data +=  "page: " + str(row[DATA])[6:8] # + "\t" + str(switch_hb_data(str(row[DATA])[10:]))
+            # parse the command/verification frames
+            if frm_id == "0x0001" or frm_id == "0x0081":
+                if str(switch_command_data(str(row[DATA])[6:11])) != "None":
+                    translated_data +=  str(switch_command_data(str(row[DATA])[6:11])) + str(switch_state(str(row[DATA])[12:17]))
+                if str(switch_command_data2(str(row[DATA])[6:11])) != "None":
+                    translated_data +=  str(switch_command_data2(str(row[DATA])[6:11]))
+            if str(row[DLC]) == "0x08" and str(switch_IAP_data(str(row[DATA])[3:26])) != "None":
+                    translated_data += str(switch_IAP_data(str(row[DATA])[3:26]))     
+                    
+            
+            # parse the KT heart beat frames
+            if frm_id == "0x0080":
+                translated_data +=  "page: " + str(row[DATA])[6:8] # + "\t" + str(switch_hb_data(str(row[DATA])[10:]))
 
-    print(translated_data)
+        print(translated_data)
