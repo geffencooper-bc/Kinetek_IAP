@@ -104,43 +104,57 @@ def switch_IAP_data(arg):
     }.get(arg)
 
 
+def translate_frame_data(frame_id, frame_data_size, frame_data):
+    translated_data = ""
+    if frame_id == "0x0001" or frame_id == "0x0081":
+        if str(switch_command_data(str(frame_data)[6:11])) != "None":
+            translated_data +=  str(switch_command_data(str(frame_data)[6:11])) + str(switch_state(str(frame_data)[12:17]))
+        if str(switch_command_data2(str(frame_data)[6:11])) != "None":
+            translated_data +=  str(switch_command_data2(str(frame_data)[6:11]))
+    if str(frame_data_size) == "0x08" and str(switch_IAP_data(str(frame_data)[3:26])) != "None":
+            translated_data += str(switch_IAP_data(str(frame_data)[3:26]))
+    return translated_data
 
-def check_path(string):
-    if os.path.isdir(string):
-        return string
-    else:
-        raise NotADirectoryError(string)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('input file', type=argparse.FileType('r'))
-    args = parser.parse_args()
 
+def translate_frames(fileName):
     # open the csv file and create the csv reader object
-    with open('/home/geffen.cooper/vm_shared/can_logs/boot_00.csv', 'r') as csv_file:
+    with open(fileName, 'r') as csv_file:
         reader = csv.reader(csv_file)
-
-        translated_data = ""# "\t\t\t\t\----------START OF STREAM----------\n\n"
-
+        
+        translated_data = ""
         # parse through all rows in csv file
         for row in reader:
-            frm_id = str(row[FRAME_ID])
+            # get the frame id of the current row
+            frame_id = str(row[FRAME_ID])
+            frame_data_size = row[DLC]
+            frame_data = row[DATA]
 
-            # parse the frame id column
-            translated_data += '\n' + str(switch_frame_id(frm_id))
+            # translate frame id
+            translated_data += '\n' + str(switch_frame_id(frame_id))
 
-            # parse the command/verification frames
-            if frm_id == "0x0001" or frm_id == "0x0081":
-                if str(switch_command_data(str(row[DATA])[6:11])) != "None":
-                    translated_data +=  str(switch_command_data(str(row[DATA])[6:11])) + str(switch_state(str(row[DATA])[12:17]))
-                if str(switch_command_data2(str(row[DATA])[6:11])) != "None":
-                    translated_data +=  str(switch_command_data2(str(row[DATA])[6:11]))
-            if str(row[DLC]) == "0x08" and str(switch_IAP_data(str(row[DATA])[3:26])) != "None":
-                    translated_data += str(switch_IAP_data(str(row[DATA])[3:26]))     
-                    
+            # translate command/verification frame data
+            translated_data += translate_frame_data(frame_id, frame_data_size, frame_data)    
             
             # parse the KT heart beat frames
-            if frm_id == "0x0080":
+            if frame_id == "0x0080":
                 translated_data +=  "page: " + str(row[DATA])[6:8] # + "\t" + str(switch_hb_data(str(row[DATA])[10:]))
 
-        print(translated_data)
+        return translated_data
+    
+
+
+if __name__ == "__main__":
+
+    # pass in the file to parse as a command line arg
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--csvFile", required=True)
+    args = parser.parse_args()
+    fileName = args.csvFile
+
+    translated_data = translate_frames(fileName)
+    output = open("translated_output/out.txt", "w")
+    output.write(translated_data)
+    output.close()
+
+    
