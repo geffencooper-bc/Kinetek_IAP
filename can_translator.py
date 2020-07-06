@@ -1,8 +1,9 @@
 import csv
 import argparse
-import os
+import re
+
 # script to parse CSV output of USB-CAN tool and interpret IAP messages
-# call the script with a .csv file location as a command line arg
+# call the script with a file location as a command line arg as follows:  '--csvFile file.csv' 
 
 # CSV columns
 INDEX = 0
@@ -20,7 +21,7 @@ DATA = 9
 def switch_frame_id(arg):
     return{        # sender           frame_id meaning
         '0x0000' : "Control Panel:    HEART_BEAT", 
-        '0x0001' : "Control Panel:    CONTROLLER_CHANGE_REQUEST",
+        '0x0001' : "Control Panel:    CONTROLLER_CHANGE_REQUEST     ",
         '0x0002' : "Control Panel:    HOUR_METER_REQUEST",
         '0x0005' : "KC Tool:          SEND_VERSION_REQUEST_COMMAND  ",  
         '0x03C9' : "Kinetek:          BATTERY_INFO",
@@ -37,7 +38,7 @@ def switch_frame_id(arg):
         '0x0055' : "KC Tool:          IAP_UNKNOWN",
         '0x0056' : "KC Tool:          IAP_UNKNOWN",
         '0x0060' : "KC Tool:          NOT_USED",
-        '0x0067' : "Kinetek:          FW_REVISION_RESPONSE",
+        '0x0067' : "Kinetek:          FW_REVISION_RESPONSE           ",
         '0x0069' : "Kinetek:          HOST_IAP_REQUEST (IAP_RESPONSE)",
         '0x0080' : "Kinetek:          HEART_BEAT",
         '0x0081' : "Kinetek:          CONTROLLER_CHANGE_VERIFICATION",
@@ -63,7 +64,7 @@ def switch_command_data(arg):
 
 def switch_command_data2(arg):
     return{
-        '03 27' : "\tREPROGRAM_CONFIRM",
+        '03 27' : "\tENTER_IAP_MODE",
         'F1 00' : "\tTRACTION_SPEED_HIGH",
         'F1 01' : "\tTRACTION_SPEED_MEDIUM",
         'F1 02' : "\tTRACTION_SPEED_LOW",
@@ -86,16 +87,15 @@ def switch_state(arg):
 
 def switch_IAP_data(arg):
     return{
-        '03 27' : "\tEnter IAP Mode",
         '10 10 10 10 10 10 10 10' : "\treceived 32 bytes",
         '88 88 88 88 88 88 88 88' : "\tstart sending bytes request",
         '99 99 99 99 99 99 99 99' : "\tready to receive bytes response",
         '01 08 5E 00 80 00 00 00' : "\treceive reply of version request command",
         '02 08 00 80 00 9A 00 00' : "\tsend code start address",
         '02 10 10 10 10 10 10 10' : "\treceive reply of code start address",
-        '03 00 87 47 FE 9B 00 00' : "\tsend code data size",
-        '03 10 10 10 10 10 10 10' : "\treceive reply of code data size",
-        '04 00 01 68 30 9C 00 00' : "\tsend code checksum data",
+        '03 00 87 47 FE 9B 00 00' : "\tsend code checksum data",
+        '03 10 10 10 10 10 10 10' : "\treceive reply of code checksum",
+        '04 00 01 68 30 9C 00 00' : "\tsend code data size",
         '04 10 10 10 10 10 10 10' : "\treceive reply of code checksum data",
         '05 10 00 00 00 90 00 00' : "\tsend end of hex file message",
         '05 20 20 20 20 20 20 20' : "\tcalculated checksum successfully",
@@ -106,13 +106,20 @@ def switch_IAP_data(arg):
 
 def translate_frame_data(frame_id, frame_data_size, frame_data):
     translated_data = ""
+
+    # BCM/Autonomous request or response
     if frame_id == "0x0001" or frame_id == "0x0081":
+        # command type one
         if str(switch_command_data(str(frame_data)[6:11])) != "None":
             translated_data +=  str(switch_command_data(str(frame_data)[6:11])) + str(switch_state(str(frame_data)[12:17]))
+        # command type two
         if str(switch_command_data2(str(frame_data)[6:11])) != "None":
             translated_data +=  str(switch_command_data2(str(frame_data)[6:11]))
+    
+    # IAP request or response
     if str(frame_data_size) == "0x08" and str(switch_IAP_data(str(frame_data)[3:26])) != "None":
             translated_data += str(switch_IAP_data(str(frame_data)[3:26]))
+
     return translated_data
 
 
@@ -125,7 +132,7 @@ def translate_frames(fileName):
         translated_data = ""
         # parse through all rows in csv file
         for row in reader:
-            # get the frame id of the current row
+            # get the frame id, data size, and data of the current row
             frame_id = str(row[FRAME_ID])
             frame_data_size = row[DLC]
             frame_data = row[DATA]
@@ -136,9 +143,9 @@ def translate_frames(fileName):
             # translate command/verification frame data
             translated_data += translate_frame_data(frame_id, frame_data_size, frame_data)    
             
-            # parse the KT heart beat frames
+            # translate the Kinetek heart beat frames
             if frame_id == "0x0080":
-                translated_data +=  "page: " + str(row[DATA])[6:8] # + "\t" + str(switch_hb_data(str(row[DATA])[10:]))
+                translated_data +=  " page: " + str(row[DATA])[6:8]
 
         return translated_data
     
@@ -152,7 +159,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     fileName = args.csvFile
 
+    # parse the csv file
     translated_data = translate_frames(fileName)
+
+    # append the parsed data exactly adjacent to the csv file
     output = open("translated_output/out.txt", "w")
     output.write(translated_data)
     output.close()
