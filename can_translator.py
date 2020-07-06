@@ -99,7 +99,7 @@ def switch_IAP_data(arg):
 
 
 # open the csv file and create the csv reader object
-with open('/home/geffen.cooper/vm_shared/can_logs/SC2.27-2.28_full_02.csv', 'r') as csv_file:
+with open('/home/geffen.cooper/vm_shared/can_logs/boot_00.csv', 'r') as csv_file:
     reader = csv.reader(csv_file)
 
     translated_data = ""# "\t\t\t\t\----------START OF STREAM----------\n\n"
