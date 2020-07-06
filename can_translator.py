@@ -1,5 +1,10 @@
 import csv
+import argparse
+import os
+# script to parse CSV output of USB-CAN tool and interpret IAP messages
+# call the script with a .csv file location as a command line arg
 
+# CSV columns
 INDEX = 0
 SYSTEM_TIME = 1
 TIME_STAMP = 2
@@ -27,11 +32,11 @@ def switch_frame_id(arg):
         '0x0050' : "KC Tool:          2nd 8 bytes",
         '0x0051' : "KC Tool:          3rd 8 bytes",
         '0x0052' : "KC Tool:          4th 8 bytes",
-        '0x0053' : "?-->?             IAP_UNKNOWN",
-        '0x0054' : "?-->?             IAP_UNKNOWN",
-        '0x0055' : "?-->?             IAP_UNKNOWN",
-        '0x0056' : "?-->?             IAP_UNKNOWN",
-        '0x0060' : "?-->?             NOT_USED",
+        '0x0053' : "KC Tool:          IAP_UNKNOWN",
+        '0x0054' : "KC Tool:          IAP_UNKNOWN",
+        '0x0055' : "KC Tool:          IAP_UNKNOWN",
+        '0x0056' : "KC Tool:          IAP_UNKNOWN",
+        '0x0060' : "KC Tool:          NOT_USED",
         '0x0067' : "Kinetek:          FW_REVISION_RESPONSE",
         '0x0069' : "Kinetek:          HOST_IAP_REQUEST (IAP_RESPONSE)",
         '0x0080' : "Kinetek:          HEART_BEAT",
@@ -99,7 +104,18 @@ def switch_IAP_data(arg):
     }.get(arg)
 
 
+
+def check_path(string):
+    if os.path.isdir(string):
+        return string
+    else:
+        raise NotADirectoryError(string)
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input file', type=argparse.FileType('r'))
+    args = parser.parse_args()
+
     # open the csv file and create the csv reader object
     with open('/home/geffen.cooper/vm_shared/can_logs/boot_00.csv', 'r') as csv_file:
         reader = csv.reader(csv_file)
