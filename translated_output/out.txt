@@ -15772,7 +15772,7 @@ Control Panel:    CONTROL_PANEL_UPDATE_COMMAND
 KC Tool:          NOT_USED
 BCM               AUTONOMY_CONTROL_COMMAND
 BCM:              HEART_BEAT
-KC Tool:          IAP_REPLY_TO_LCD (IAP_REQUEST)
+KC Tool:          IAP_REPLY_TO_LCD (IAP_REQUEST)	receive reply of version request command
 Control Panel:    HEART_BEAT
 Control Panel:    CONTROL_PANEL_UPDATE_COMMAND
 BCM               AUTONOMY_CONTROL_COMMAND

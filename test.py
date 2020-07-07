@@ -20,9 +20,9 @@ IAP_data_lookup = [
 #print(switch_IAP_data('01 08 5E 00 80 00 00 00'))
 #print(switch_IAP_data('11 22 5E 00 80 00 00 00'))
 
-def lookup(s, lookups):
-    for pattern, value in IAP_data_lookup:
-        if re.search(pattern, s):
+def lookup(data, table):
+    for pattern, value in table:
+        if re.search(pattern, data):
             return value
     return None
 
