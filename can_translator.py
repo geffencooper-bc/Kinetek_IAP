@@ -126,23 +126,28 @@ def lookup(data, table):
             return value
     return ""
 
-def translate_frame_data(frame_id, frame_data_size, frame_data):
-    translated_data = ""
 
+def translate_frame_data(frame_id, frame_data_size, frame_data):
     # BCM/Autonomous request or response
+    translated_data = ""
+    rawHex = ""
     if frame_id == "0x0001" or frame_id == "0x0081":
         # command type one
         if str(switch_command_data(str(frame_data)[6:11])) != "None":
-            translated_data +=  str(switch_command_data(str(frame_data)[6:11])) + str(switch_state(str(frame_data)[12:17]))
+            translated_data =  str(switch_command_data(str(frame_data)[6:11])) + str(switch_state(str(frame_data)[12:17]))
         # command type two
         if str(switch_command_data2(str(frame_data)[6:11])) != "None":
-            translated_data +=  str(switch_command_data2(str(frame_data)[6:11]))
+            translated_data =  str(switch_command_data2(str(frame_data)[6:11]))
     
     # IAP request or response
-    if frame_id == '0x0045' or frame_id == '0x0048' or frame_id == '0x0067' or frame_id =='0x0069':
-        translated_data += lookup(str(frame_data)[3:26], IAP_data_lookup)
+    elif frame_id == '0x0045' or frame_id == '0x0048' or frame_id == '0x0067' or frame_id =='0x0069':
+        translated_data = lookup(str(frame_data)[3:26], IAP_data_lookup)
 
-    return translated_data
+    # IAP write
+    elif frame_id == '0x004F' or frame_id == '0x0050' or frame_id == '0x0051' or frame_id =='0x0052':
+        rawHex = frame_data[3:26]+ '\n'
+
+    return (translated_data,rawHex)
 
 
 
@@ -152,6 +157,7 @@ def translate_frames(fileName):
         reader = csv.reader(csv_file)
         
         translated_data = ""
+        rawHex = ""
         # parse through all rows in csv file
         for row in reader:
             # get the frame id, data size, and data of the current row
@@ -163,13 +169,15 @@ def translate_frames(fileName):
             translated_data += '\n' + str(switch_frame_id(frame_id))
 
             # translate frame data
-            translated_data += translate_frame_data(frame_id, frame_data_size, frame_data)    
+            data = translate_frame_data(frame_id, frame_data_size, frame_data)  
+            translated_data += data[0]
+            rawHex += data[1]  
             
             # translate the Kinetek heart beat frames
             if frame_id == "0x0080":
                 translated_data +=  " page: " + str(row[DATA])[6:8]
 
-        return translated_data
+        return (translated_data, rawHex)
     
 
 
@@ -182,11 +190,17 @@ if __name__ == "__main__":
     fileName = args.csvFile
 
     # parse the csv file
-    translated_data = translate_frames(fileName)
+    data = translate_frames(fileName)
+    translated_data = data[0]
+    rawHex = data[1]
 
     # append the parsed data exactly adjacent to the csv file
     output = open("translated_output/out.txt", "w")
     output.write(translated_data)
     output.close()
+
+    hexOutput = open("translated_output/hexOut.txt", "w")
+    hexOutput.write(rawHex)
+    hexOutput.close()
 
     
