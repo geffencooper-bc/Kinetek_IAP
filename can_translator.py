@@ -1,9 +1,10 @@
 import csv
 import argparse
 import re
+import shutil
 
 # script to parse CSV output of USB-CAN tool and interpret IAP messages
-# call the script with a file location as a command line arg as follows:  '--csvFile file.csv' 
+# call the script with a file location as a command line arg as follows:  '--csv_file file.csv' 
 
 # CSV columns
 INDEX = 0
@@ -21,27 +22,27 @@ DATA = 9
 def switch_frame_id(arg):
     return{        # sender           frame_id meaning
         '0x0000' : "Control Panel:    HEART_BEAT", 
-        '0x0001' : "Control Panel:    CONTROLLER_CHANGE_REQUEST     ",
+        '0x0001' : "Control Panel:    CONTROLLER_CHANGE_REQUEST          ",
         '0x0002' : "Control Panel:    HOUR_METER_REQUEST",
-        '0x0005' : "KC Tool:          SEND_VERSION_REQUEST_COMMAND  ",  
+        '0x0005' : "KC Tool:          SEND_VERSION_REQUEST_COMMAND       ",  
         '0x03C9' : "Kinetek:          BATTERY_INFO",
         '0x0040' : "BCM:              HEART_BEAT",
-        '0x0041' : "BCM               AUTONOMY_CONTROL_COMMAND",
+        '0x0041' : "BCM:              AUTONOMY_CONTROL_COMMAND",
         '0x0045' : "KC Tool:          FW_REVISION_REQUEST",
-        '0x0048' : "KC Tool:          IAP_REPLY_TO_LCD (IAP_REQUEST)",
+        '0x0048' : "KC Tool:          IAP_REPLY_TO_LCD (IAP_REQUEST)     ",
         '0x004F' : "KC Tool:          1st 8 bytes",
         '0x0050' : "KC Tool:          2nd 8 bytes",
         '0x0051' : "KC Tool:          3rd 8 bytes",
         '0x0052' : "KC Tool:          4th 8 bytes",
-        '0x0053' : "KC Tool:          IAP_UNKNOWN",
-        '0x0054' : "KC Tool:          IAP_UNKNOWN",
-        '0x0055' : "KC Tool:          IAP_UNKNOWN",
-        '0x0056' : "KC Tool:          IAP_UNKNOWN",
+        '0x0053' : "KC Tool:          retry 1st 8 bytes",
+        '0x0054' : "KC Tool:          retry 2nd 8 bytes",
+        '0x0055' : "KC Tool:          retry 3rd 8 bytes",
+        '0x0056' : "KC Tool:          retry 4th 8 bytes",
         '0x0060' : "KC Tool:          NOT_USED",
-        '0x0067' : "Kinetek:          FW_REVISION_RESPONSE           ",
-        '0x0069' : "Kinetek:          HOST_IAP_REQUEST (IAP_RESPONSE)",
+        '0x0067' : "Kinetek:          FW_REVISION_RESPONSE               ",
+        '0x0069' : "Kinetek:          HOST_IAP_REQUEST (IAP_RESPONSE)    ",
         '0x0080' : "Kinetek:          HEART_BEAT",
-        '0x0081' : "Kinetek:          CONTROLLER_CHANGE_VERIFICATION",
+        '0x0081' : "Kinetek:          CONTROLLER_CHANGE_VERIFICATION     ",
         '0x0082' : "Kinetek:          HOUR_METER_RESPONSE",
         '0x04CA' : "Control Panel:    CONTROL_PANEL_UPDATE_COMMAND"
     }.get(arg)
@@ -128,9 +129,10 @@ def lookup(data, table):
 
 
 def translate_frame_data(frame_id, frame_data_size, frame_data):
-    # BCM/Autonomous request or response
     translated_data = ""
-    rawHex = ""
+    raw_hex = ""
+
+    # BCM/Autonomous request or response
     if frame_id == "0x0001" or frame_id == "0x0081":
         # command type one
         if str(switch_command_data(str(frame_data)[6:11])) != "None":
@@ -145,9 +147,9 @@ def translate_frame_data(frame_id, frame_data_size, frame_data):
 
     # IAP write
     elif frame_id == '0x004F' or frame_id == '0x0050' or frame_id == '0x0051' or frame_id =='0x0052':
-        rawHex = frame_data[3:26]+ '\n'
+        raw_hex = frame_data[3:26]+ '\n'
 
-    return (translated_data,rawHex)
+    return (translated_data,raw_hex)
 
 
 
@@ -156,8 +158,14 @@ def translate_frames(fileName):
     with open(fileName, 'r') as csv_file:
         reader = csv.reader(csv_file)
         
+        # strings that will accumulate with each row
         translated_data = ""
-        rawHex = ""
+        raw_hex = ""
+
+        # used to measure timeout when 32 bytes confirmation not received
+        lastTime = 0
+        currTime = 0
+
         # parse through all rows in csv file
         for row in reader:
             # get the frame id, data size, and data of the current row
@@ -165,42 +173,76 @@ def translate_frames(fileName):
             frame_data_size = row[DLC]
             frame_data = row[DATA]
 
+            # last time is the end of each 32 bytes and curr time is the start of the retry
+            if frame_id == '0x0052':
+                lastTime = int(row[TIME_STAMP], 16)
+
+            elif frame_id == '0x0053':
+                currTime = int(row[TIME_STAMP], 16)
+                timeout = currTime - lastTime
+                translated_data += "\ttimeout " + str(timeout)
+                #print("last", hex(lastTime))
+                #print("curr", hex(currTime))
+
+
             # translate frame id
             translated_data += '\n' + str(switch_frame_id(frame_id))
 
             # translate frame data
             data = translate_frame_data(frame_id, frame_data_size, frame_data)  
             translated_data += data[0]
-            rawHex += data[1]  
+            raw_hex += data[1]  
             
             # translate the Kinetek heart beat frames
             if frame_id == "0x0080":
                 translated_data +=  " page: " + str(row[DATA])[6:8]
 
-        return (translated_data, rawHex)
+        return (translated_data, raw_hex)
     
 
+# adds translated data as new column
+def append_CSV(csv_file, translated_text):
+    #copy csv file instead of overwrite
+    shutil.copy2(csv_file, "out.csv")
+
+    with open(csv_file, 'r') as read_obj, open('out.csv', 'w', newline='') as write_obj:
+        csv_reader = csv.reader(read_obj)
+        csv_writer = csv.writer(write_obj)
+        translated_text_lines = translated_text.splitlines()
+
+        itr  = 0
+        for row in csv_reader:
+            row.append(translated_text_lines[itr])
+            row.append("")
+            row.append("")
+            row.append("")
+            row.append("")
+            row.append("")
+            csv_writer.writerow(row)
+            itr+=1
+            
 
 if __name__ == "__main__":
 
     # pass in the file to parse as a command line arg
     parser = argparse.ArgumentParser()
-    parser.add_argument("--csvFile", required=True)
+    parser.add_argument("--csv_file", required=True)
     args = parser.parse_args()
-    fileName = args.csvFile
+    file_name = args.csv_file
 
     # parse the csv file
-    data = translate_frames(fileName)
+    data = translate_frames(file_name)
     translated_data = data[0]
-    rawHex = data[1]
+    raw_hex = data[1]
 
     # append the parsed data exactly adjacent to the csv file
-    output = open("translated_output/out.txt", "w")
-    output.write(translated_data)
-    output.close()
-
-    hexOutput = open("translated_output/hexOut.txt", "w")
-    hexOutput.write(rawHex)
-    hexOutput.close()
+    append_CSV(file_name, translated_data)
+    
+    # remove spaces and format like original hex file
+    raw_hex = raw_hex.replace(" ", "")
+    raw_hex = raw_hex.replace("\n","")
+    hex_output = open("translated_output/hexOut.txt", "w")
+    hex_output.write(raw_hex)
+    hex_output.close()
 
     

@@ -1,4 +1,6 @@
 import re
+import csv
+import shutil
 
 IAP_data_lookup = [
 
@@ -26,4 +28,29 @@ def lookup(data, table):
             return value
     return None
 
-print(lookup('F3 08 5E 00 80 00 00 00', IAP_data_lookup))
+
+
+def appendCSV(csvFile, textFile):
+    #copy csv file instead of overwrite
+    shutil.copy2(csvFile, "out.csv")
+
+    with open(csvFile, 'r') as read_obj, open('out.csv', 'w', newline='') as write_obj, open(textFile, 'r') as txtFile:
+        csvReader = csv.reader(read_obj)
+        csvWriter = csv.writer(write_obj)
+
+        for row in csvReader:
+            row.append((txtFile.readline()).strip('\n'))
+            row.append("")
+            row.append("")
+            row.append("")
+            row.append("")
+            row.append("")
+            csvWriter.writerow(row)
+
+            
+#print(lookup('F3 08 5E 00 80 00 00 00', IAP_data_lookup))
+# stri = "a a a a a"
+# stri = stri.replace(" ", "-")
+# print(stri)
+
+appendCSV('/home/geffen.cooper/vm_shared/can_logs/SC2.27-2.28_full.csv', 'translated_output/out.txt')
