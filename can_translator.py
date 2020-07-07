@@ -6,6 +6,7 @@ import shutil
 # script to parse CSV output of USB-CAN tool and interpret IAP messages
 # call the script with a file location as a command line arg as follows:  '--csv_file file.csv' 
 
+
 # CSV columns
 INDEX = 0
 SYSTEM_TIME = 1
@@ -85,25 +86,6 @@ def switch_state(arg):
         '00 02' : "REVERSE"
     }.get(arg)
 
-
-# def switch_IAP_data(arg):
-#     return{
-#         '10 10 10 10 10 10 10 10' : "\treceived 32 bytes",
-#         '88 88 88 88 88 88 88 88' : "\tstart sending bytes request",
-#         '99 99 99 99 99 99 99 99' : "\tready to receive bytes response",
-#         '01 08 5E 00 80 00 00 00' : "\treceive reply of version request command",
-#         '02 08 00 80 00 9A 00 00' : "\tsend code start address",
-#         '02 10 10 10 10 10 10 10' : "\treceive reply of code start address",
-#         '03 00 87 47 FE 9B 00 00' : "\tsend code checksum data",
-#         '03 10 10 10 10 10 10 10' : "\treceive reply of code checksum",
-#         '04 00 01 68 30 9C 00 00' : "\tsend code data size",
-#         '04 10 10 10 10 10 10 10' : "\treceive reply of code checksum data",
-#         '05 10 00 00 00 90 00 00' : "\tsend end of hex file message",
-#         '05 20 20 20 20 20 20 20' : "\tcalculated checksum successfully",
-        
-
-#     }.get(arg)
-
 # use regex for IAP data because is different for each fw version
 IAP_data_lookup = [
 
@@ -121,6 +103,7 @@ IAP_data_lookup = [
     ('05 20 20 20 20 20 20 20' ,                                                            "\tcalculated checksum successfully"),
 ] 
 
+# find the according pattern in the above table
 def lookup(data, table):
     for pattern, value in table:
         if re.search(pattern, data):
@@ -128,6 +111,7 @@ def lookup(data, table):
     return ""
 
 
+# convert data bytes of a frame to text and extract raw hex data
 def translate_frame_data(frame_id, frame_data_size, frame_data):
     translated_data = ""
     raw_hex = ""
@@ -145,17 +129,17 @@ def translate_frame_data(frame_id, frame_data_size, frame_data):
     elif frame_id == '0x0045' or frame_id == '0x0048' or frame_id == '0x0067' or frame_id =='0x0069':
         translated_data = lookup(str(frame_data)[3:26], IAP_data_lookup)
 
-    # IAP write
+    # IAP write (raw hex data)
     elif frame_id == '0x004F' or frame_id == '0x0050' or frame_id == '0x0051' or frame_id =='0x0052':
         raw_hex = frame_data[3:26]+ '\n'
 
     return (translated_data,raw_hex)
 
 
-
-def translate_frames(fileName):
+# translates each can frame (csv row) into text
+def translate_frames(file_name):
     # open the csv file and create the csv reader object
-    with open(fileName, 'r') as csv_file:
+    with open(file_name, 'r') as csv_file:
         reader = csv.reader(csv_file)
         
         # strings that will accumulate with each row
@@ -173,6 +157,18 @@ def translate_frames(fileName):
             frame_data_size = row[DLC]
             frame_data = row[DATA]
 
+            # translate frame id
+            translated_data += '\n' + str(switch_frame_id(frame_id))
+
+            # translate frame data
+            data = translate_frame_data(frame_id, frame_data_size, frame_data)  
+            translated_data += data[0]
+            raw_hex += data[1]  
+            
+            # translate the Kinetek heart beat frames
+            if frame_id == "0x0080":
+                translated_data +=  " page: " + str(row[DATA])[6:8] # don't need detailed info for now, just page is fine
+
             # last time is the end of each 32 bytes and curr time is the start of the retry
             if frame_id == '0x0052':
                 lastTime = int(row[TIME_STAMP], 16)
@@ -184,35 +180,21 @@ def translate_frames(fileName):
                 #print("last", hex(lastTime))
                 #print("curr", hex(currTime))
 
-
-            # translate frame id
-            translated_data += '\n' + str(switch_frame_id(frame_id))
-
-            # translate frame data
-            data = translate_frame_data(frame_id, frame_data_size, frame_data)  
-            translated_data += data[0]
-            raw_hex += data[1]  
-            
-            # translate the Kinetek heart beat frames
-            if frame_id == "0x0080":
-                translated_data +=  " page: " + str(row[DATA])[6:8]
-
         return (translated_data, raw_hex)
     
 
 # adds translated data as new column
 def append_CSV(csv_file, translated_text):
-    #copy csv file instead of overwrite
-    shutil.copy2(csv_file, "out.csv")
 
-    with open(csv_file, 'r') as read_obj, open('out.csv', 'w', newline='') as write_obj:
+    with open(csv_file, 'r') as read_obj, open('appended_csv_files/out.csv', 'w', newline='') as write_obj:
         csv_reader = csv.reader(read_obj)
         csv_writer = csv.writer(write_obj)
-        translated_text_lines = translated_text.splitlines()
+        translated_text_lines = translated_text.splitlines() # convert translated data into a list of lines
 
         itr  = 0
         for row in csv_reader:
             row.append(translated_text_lines[itr])
+            # add empty columns for formatting (google sheets)
             row.append("")
             row.append("")
             row.append("")
@@ -241,7 +223,7 @@ if __name__ == "__main__":
     # remove spaces and format like original hex file
     raw_hex = raw_hex.replace(" ", "")
     raw_hex = raw_hex.replace("\n","")
-    hex_output = open("translated_output/hexOut.txt", "w")
+    hex_output = open("hex_file_copies/hex_out.txt", "w")
     hex_output.write(raw_hex)
     hex_output.close()
 
