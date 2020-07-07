@@ -191,7 +191,7 @@ def append_CSV(csv_file, translated_text):
         csv_writer = csv.writer(write_obj)
         translated_text_lines = translated_text.splitlines() # convert translated data into a list of lines
 
-        itr  = 0
+        itr  = 1 # first line empty
         for row in csv_reader:
             row.append(translated_text_lines[itr])
             # add empty columns for formatting (google sheets)
@@ -223,6 +223,7 @@ if __name__ == "__main__":
     # remove spaces and format like original hex file
     raw_hex = raw_hex.replace(" ", "")
     raw_hex = raw_hex.replace("\n","")
+    raw_hex = raw_hex[:-32]
     hex_output = open("hex_file_copies/hex_out.txt", "w")
     hex_output.write(raw_hex)
     hex_output.close()

@@ -53,4 +53,21 @@ def appendCSV(csvFile, textFile):
 # stri = stri.replace(" ", "-")
 # print(stri)
 
-appendCSV('/home/geffen.cooper/vm_shared/can_logs/SC2.27-2.28_full.csv', 'translated_output/out.txt')
+#appendCSV('/home/geffen.cooper/vm_shared/can_logs/SC2.27-2.28_full.csv', 'translated_output/out.txt')
+
+expected = open("hex_file_copies/2.28_copy.hex", "r")
+#actual = open(actual_file, "r")
+
+# extract raw from expected
+data = expected.read()
+data_list = data.splitlines()
+raw_hex = ""
+for item in data_list:
+    item = item[9:]
+    item = item[:-2]
+    raw_hex += item
+
+raw_hex = raw_hex[4:]
+raw_hex = raw_hex[:-8]
+expected_raw = open("hex_file_copies/2.28_copy_raw.txt", "w")
+expected_raw.write(raw_hex)
