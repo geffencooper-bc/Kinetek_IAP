@@ -1,6 +1,6 @@
 import argparse
 from decoder import *
-
+import hexutils as hexutil
 
 if __name__ == "__main__":
     #----------------------csv test----------------
@@ -54,7 +54,10 @@ if __name__ == "__main__":
        print(kin_socketcan.decode_frame(msg))
 
     print("code data size received")
-
+    print("ready to start sending hex")
     # start readnig and writing the binary file here
 
+    hex_file = open("hex_file_copies/2.27_copy.hex", "r")
+    print(hexutil.hex_to_raw(hex_file.readline()))
+    print(hexutil.hex_to_raw(hex_file.readline()))
     print(kin_socketcan.hex_data)

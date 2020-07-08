@@ -1,5 +1,8 @@
 # some helper functions for working with hex files
 
+def hex_to_raw(line):
+    return line[9:-3]
+
 def hex_checksum(line):
     bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
     bytes_list_num = [int(i, 16) for i in bytes_list]
