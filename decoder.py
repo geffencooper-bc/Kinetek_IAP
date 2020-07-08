@@ -67,7 +67,8 @@ class Decoder:
             elif data == "88 88 88 88 88 88 88 88": # start sending bytes request
                 return "0x0069 | 0x08 | 99 99 99 99 99 99 99 99" # ready to receive bytes
             elif self.lookup(data, IAP_data_lookup) == "send code start address": # send start address
-                self.start_address = data[6:17].replace(" ","")
+                print("ad", data[3:15])
+                self.start_address = data[3:15].replace(" ","")
                 self.curr_address = self.start_address
                 self.hex_data += hex_util.make_start_address(self.start_address) # use start address to add extended adress to hex file if necessary
                 return "0x0069 | 0x08 | 02 10 10 10 10 10 10 10"
@@ -81,12 +82,19 @@ class Decoder:
             if frame[DATA][3:26] == "00 00 00 00 00 00 00 00": # force enter IAP mode
                 return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
         if frame[ID] == "0x004F":
-            print("first 8 bytes", data)
+            #print("first 8 bytes", data)
             self.first_8 = data
         elif frame[ID] == "0x0050":
-            print("second 8 bytes", data)
-            self.hex_data = hex_util.make_line((self.first_8).replace(" ", "")+data.replace(" ", ""), self.curr_address)
-            self.curr_address = int(self.curr_address, 16) + 0x0010
+            #print("second 8 bytes", data)
+            self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+data.replace(" ", ""), self.curr_address)
+            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
+        elif frame[ID] == "0x0051":
+            #print("3rd 8 bytes", data)
+            self.first_8 = data
+        elif frame[ID] == "0x0052":
+            #print("4th 8 bytes", data)
+            self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+data.replace(" ", ""), self.curr_address)
+            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
             
     def decode_socketcan_frame(self, frame):
         pass
@@ -112,3 +120,4 @@ if __name__ == "__main__":
             response = kin_csv.decode_frame(row)
             if response != None:
                 print(response)
+        print(kin_csv.hex_data)
