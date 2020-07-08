@@ -46,7 +46,7 @@ class Decoder:
         return ""
 
     def decode_my_frame(self, frame):
-        #print(frame.can_id, " ", frame.data)
+        print(frame.can_id, " ", frame.data)
         if frame.can_id == "0x0048": # IAP Request
             if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode
                 return "0x0060 | 0x05 | 08 00 00 00 00" # entered IAP mode
@@ -61,9 +61,9 @@ class Decoder:
             elif frame.data == "03 00 87 47 FE 9B 00 00": # checksum data
                 self.check_sum = frame.data[6:17].replace(" ", "")
                 return "0x0069 | 0x08 | 03 10 10 10 10 10 10 10"
-            elif frame.data == self.lookup(frame.data, IAP_data_lookup) == "send code data size":
+            elif self.lookup(frame.data, IAP_data_lookup) == "send code data size":
                 self.data_size = frame.data[6:17].replace(" ", "")
-                return "04 10 10 10 10 10 10 10"
+                return "0x0069 | 0x08 | 04 10 10 10 10 10 10 10"
         if frame.can_id == "0x0045": # fw revision request
             if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode
                 return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
@@ -93,8 +93,10 @@ class Decoder:
     # takes in a socketcan frame and returns what would be expected for the kinetek (only IAP)
     def decode_socketcan_frame(self, frame):
         can_id = "0x00" + hex(frame.arbitration_id)[2:]
-        data = (str(frame.data).replace("\\x", " "))[13:-2]
-        my_frame = My_frame(frame.timestamp, can_id, data)
+        data = ""
+        for byte in frame.data:
+           data += hex(byte)[2:].zfill(2).upper() + " "
+        my_frame = My_frame(frame.timestamp, can_id, data[:-1])
         return self.decode_my_frame(my_frame)
 
     # determines if csv or socketcan
