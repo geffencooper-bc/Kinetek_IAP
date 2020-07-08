@@ -2,7 +2,10 @@ import csv
 import argparse
 import hexutils as hex_util
 import re
+import can
 
+
+# used for decoding requests
 IAP_data_lookup = [
 
         ('10 10 10 10 10 10 10 10' ,                                                            "received 32 bytes"),
@@ -19,6 +22,12 @@ IAP_data_lookup = [
         ('05 20 20 20 20 20 20 20' ,                                                            "calculated checksum successfully"),
     ] 
 
+class My_frame:
+    def __init__(self, time_stamp, can_id, data):
+        self.time_stamp = time_stamp
+        self.id = can_id
+        self.data = data
+
 # a class used to make a decoder to recreate the hex file frame IAP CAN frames (imitates the Kinetek)
 class Decoder:
     def __init__(self,input_type): # input is either csv or socketcan
@@ -29,26 +38,7 @@ class Decoder:
         self.first_8 = ""
         self.curr_address = ""
         self.start_address = ""
-        # self.can_input_frame = ""
-        # self.initial_state()
-    
-    # def get_next_frame(self)
-
-    # def initial_state(self):
-    #     while(decode_frame(get_next_frame()) != "0x0048 | 0x08 | 08 00 00 00 00 00 00 00"): # force enter iap mode command
-    #         print("Decoded frame: still in inital state, waiting till enter IAP_MODE, getting next frame")
-    #     print("Decoded frame: ENTERED IAP MODE, getting next frame")
-    #     self.iap_state_1()
-
-    # def iap_state_1(self): # before fw revision request
-    #     while(decode_frame(get_next_frame()) != "0x0045 | 0x00 | 00 00 00 00 00"): # fw revision request
-    #         print("Decoded frame: in iap mode, getting next frame")
-    #     print("Decoded frame: FW REVISION REQUEST COMMAND, getting next frame")
-    #     self.iap_state_1()
-
-    # use regex for IAP data because is different for each fw version
-    
-
+ 
     # find the according pattern in the above table
     def lookup(self,data, table):
         for pattern, value in table:
@@ -56,12 +46,16 @@ class Decoder:
                 return value
         return ""
 
+    def decode_my_frame(self, frame):
+        pass        
+
+
+    # takes in a csv frame, returns nothing if not an IAP frame, returns expected kinetek reply otherwise
     def decode_csv_frame(self, frame):
         ID = 5
         DATA = 9
         data = frame[DATA][3:26]
         if frame[ID] == "0x0048": # IAP Request
-            #print("IAP REQ")
             if data == "00 00 00 00 00 00 00 00": # force enter IAP mode
                 return "0x0060 | 0x05 | 08 00 00 00 00" # entered IAP mode
             elif data == "88 88 88 88 88 88 88 88": # start sending bytes request
@@ -81,24 +75,24 @@ class Decoder:
         if frame[ID] == "0x0045": # fw revision request
             if frame[DATA][3:26] == "00 00 00 00 00 00 00 00": # force enter IAP mode
                 return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
+        # hex file transfer        
         if frame[ID] == "0x004F":
-            #print("first 8 bytes", data)
             self.first_8 = data
         elif frame[ID] == "0x0050":
-            #print("second 8 bytes", data)
             self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+data.replace(" ", ""), self.curr_address)
             self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
         elif frame[ID] == "0x0051":
-            #print("3rd 8 bytes", data)
             self.first_8 = data
         elif frame[ID] == "0x0052":
-            #print("4th 8 bytes", data)
             self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+data.replace(" ", ""), self.curr_address)
             self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
+            return "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received
             
+    # takes in a socketcan frame and returns what would be expected for the kinetek (only IAP)
     def decode_socketcan_frame(self, frame):
         pass
 
+    # determines if csv or socketcan
     def decode_frame(self, frame):
         if self.input_type == "csv":
             return self.decode_csv_frame(frame)
@@ -120,5 +114,5 @@ if __name__ == "__main__":
             response = kin_csv.decode_frame(row)
             if response != None:
                 pass
-                #print(response)
+                print(response)
         print(kin_csv.hex_data)
