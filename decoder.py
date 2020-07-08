@@ -77,7 +77,7 @@ class Decoder:
                 return "0x0069 | 0x08 | 02 10 10 10 10 10 10 10"
 
             elif self.lookup(frame.data, IAP_data_lookup) == "send code checksum data": # total checksum data
-                self.check_sum = frame.data[6:17].replace(" ", "") # extract the total checksum
+                self.check_sum = frame.data[6:15].replace(" ", "") # extract the total checksum
                 return "0x0069 | 0x08 | 03 10 10 10 10 10 10 10"
 
             elif self.lookup(frame.data, IAP_data_lookup) == "send code data size":
@@ -91,6 +91,18 @@ class Decoder:
                 else:
                     print(cks, " == ", self.calc_checksum_page)
                     return "wrong page checksum-------------------"
+            
+            elif self.lookup(frame.data, IAP_data_lookup) == "send end of hex file message":
+                self.accumulated_hex_frames_total = self.accumulated_hex_frames_total.replace(" ","")
+                cs = hex(self.calc_page_checksum(self.accumulated_hex_frames_total))[2:].upper().zfill(6)
+                self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
+                cs_page = hex(self.calc_page_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
+                self.calc_page_checksum = cs_page
+                self.calc_checksum_total = cs
+                if self.calc_checksum_total == self.check_sum:
+                    return "0x0069 | 0x08 | 05 20 20 20 20 20 20 20"
+                else:
+                    print(self.check_sum, "!=", self.calc_checksum_total)
 
         if frame.can_id == "0x0045": # fw revision request
             if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode
@@ -99,19 +111,27 @@ class Decoder:
         # hex file transfer        
         if frame.can_id == "0x004F":
             self.first_8 = frame.data
-            self.accumulated_hex_frames += frame.data
+            if frame.data != "FF FF FF FF FF FF FF FF":
+                self.accumulated_hex_frames += frame.data
+                self.accumulated_hex_frames_total += frame.data
         elif frame.can_id == "0x0050":
-            self.accumulated_hex_frames += frame.data
+            if frame.data != "FF FF FF FF FF FF FF FF":
+                self.accumulated_hex_frames += frame.data
+                self.accumulated_hex_frames_total += frame.data
             self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+frame.data.replace(" ", ""), self.curr_address)
             self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
         elif frame.can_id == "0x0051":
             self.first_8 = frame.data
-            self.accumulated_hex_frames += frame.data
+            if frame.data != "FF FF FF FF FF FF FF FF":
+                self.accumulated_hex_frames += frame.data
+                self.accumulated_hex_frames_total += frame.data
         elif frame.can_id == "0x0052":
             self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+frame.data.replace(" ", ""), self.curr_address)
             self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
             self.num_hex_frames += 4
-            self.accumulated_hex_frames += frame.data
+            if frame.data != "FF FF FF FF FF FF FF FF":
+                self.accumulated_hex_frames += frame.data
+                self.accumulated_hex_frames_total += frame.data
             return_msg = "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received
             if self.num_hex_frames == 128:
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
