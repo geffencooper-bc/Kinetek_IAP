@@ -17,7 +17,7 @@ def make_start_address(start_address):
         address_upper_16_bits_str = address_upper_16_bits_str.zfill(4)
         hex_line = "02000004" + address_upper_16_bits_str 
         address_cs = hex_checksum(hex_line)
-        return ":" + hex_line + str(address_cs) + "\n"
+        return (":" + hex_line + str(address_cs) + "\n").upper()
     return
 
 def make_line(line, address):
@@ -27,4 +27,4 @@ def make_line(line, address):
     if(address_lower16 == 0): # went up a level because passed FFF0
         hex_line += make_start_address(hex(address))
     pre_cs = "10" + (hex(address_lower16)[2:].zfill(4)) + "00" + line
-    return hex_line + ":10" + (hex(address_lower16)[2:].zfill(4)) + "00" + line + str(hex_checksum(pre_cs)) + '\n'
+    return (hex_line + ":10" + (hex(address_lower16)[2:].zfill(4)) + "00" + line + str(hex_checksum(pre_cs)) + '\n').upper()

@@ -24,6 +24,7 @@ IAP_data_lookup = [
     ('84 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F]',              "calculated page checksum")
 ] 
 
+# a generic structure for a can frame to conform to from csv and socket can used by the decoder
 class My_frame:
     def __init__(self, time_stamp, can_id, data):
         self.time_stamp = time_stamp
@@ -34,19 +35,20 @@ class My_frame:
 class Decoder:
     def __init__(self,input_type): # input is either csv or socketcan
         self.input_type = input_type
-        self.hex_data = "" # recreate hex file
-        self.check_sum = ""
-        self.data_size = ""
-        self.first_8 = ""
-        self.curr_address = ""
-        self.start_address = ""
-        self.num_hex_frames = 0
-        self.accumulated_hex_frames = ""
-        self.accumulated_hex_frames_total = ""
-        self.calc_checksum_total = ""
-        self.calc_checksum_page = ""
+        self.hex_data = "" # stores the recreated hex file
+        self.check_sum = "" # stores the total check sum passed in by user
+        self.data_size = "" # size of the fw file in bytes
+        self.first_8 = "" # stores the first 8 bytes of a hex line passed in by can fram, gets merged with second 8
+        self.curr_address = "" # holds the current address in the hex file
+        self.start_address = "" # holds the start address in the hex file
+        self.num_hex_frames = 0 # counts the number of hex can packets passed in (8 bytes)
+        self.accumulated_hex_frames = "" # accumulates the hex frames passed in to calculate checksum
+        self.accumulated_hex_frames_total = "" # same as above but total
+        self.calc_checksum_total = "" # compare against passed in checksum
+        self.calc_checksum_page = "" # same as above
  
-        # calculates the checksum of a page
+
+    # calculates the checksum of a page by adding all the bytes, need to convert from string
     def calc_page_checksum(self,line):
         bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
         #print(bytes_list)
@@ -80,11 +82,11 @@ class Decoder:
                 self.check_sum = frame.data[6:15].replace(" ", "") # extract the total checksum
                 return "0x0069 | 0x08 | 03 10 10 10 10 10 10 10"
 
-            elif self.lookup(frame.data, IAP_data_lookup) == "send code data size":
+            elif self.lookup(frame.data, IAP_data_lookup) == "send code data size": # not really used
                 self.data_size = frame.data[6:17].replace(" ", "")
                 return "0x0069 | 0x08 | 04 10 10 10 10 10 10 10"
 
-            elif self.lookup(frame.data, IAP_data_lookup) == "check page checksum":
+            elif self.lookup(frame.data, IAP_data_lookup) == "check page checksum": # compare last calculated page checksum to value fed in
                 cks = frame.data[6:15].replace(" ", "")
                 if cks == self.calc_checksum_page:
                     return "0x0069 | 0x08 | 07 40 40 40 40 40 40 40"
@@ -92,15 +94,19 @@ class Decoder:
                     print(cks, " == ", self.calc_checksum_page)
                     return "wrong page checksum-------------------"
             
-            elif self.lookup(frame.data, IAP_data_lookup) == "send end of hex file message":
+            elif self.lookup(frame.data, IAP_data_lookup) == "send end of hex file message": # once the hex file ends, calculate total checksum, and current checksum
                 self.accumulated_hex_frames_total = self.accumulated_hex_frames_total.replace(" ","")
                 cs = hex(self.calc_page_checksum(self.accumulated_hex_frames_total))[2:].upper().zfill(6)
+
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
                 cs_page = hex(self.calc_page_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
-                self.calc_page_checksum = cs_page
+                
+                self.calc_checksum_page = cs_page
                 self.calc_checksum_total = cs
-                if self.calc_checksum_total == self.check_sum:
-                    return "0x0069 | 0x08 | 05 20 20 20 20 20 20 20"
+
+                cs_page = " ".join(cs_page[i:i+2] for i in range(0, len(cs_page), 2))
+                if self.calc_checksum_total == self.check_sum: # check if total checksum good
+                    return "0x0069 | 0x08 | 05 20 20 20 20 20 20 20" + "\n0x0060 | 0x08 | 84 00 " + cs_page
                 else:
                     print(self.check_sum, "!=", self.calc_checksum_total)
 
@@ -135,7 +141,7 @@ class Decoder:
             return_msg = "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received
             if self.num_hex_frames == 128:
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
-                return_msg += "\n" + "0x0060 | 0x05 | "
+                return_msg += "\n" + "0x0060 | 0x05 | 84 00 "
                 cs = hex(self.calc_page_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
                 cs = " ".join(cs[i:i+2] for i in range(0, len(cs), 2))
                 return_msg += cs

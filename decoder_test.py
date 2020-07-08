@@ -26,7 +26,8 @@ if __name__ == "__main__":
         for row in reader:
             response = kin_csv.decode_frame(row)
             if response != None:
-                print(response)
+                pass
+                #print(response)
         print(kin_csv.hex_data)
 
 
