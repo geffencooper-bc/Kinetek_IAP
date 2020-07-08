@@ -34,7 +34,7 @@ class My_frame:
 class Decoder:
     def __init__(self,input_type): # input is either csv or socketcan
         self.input_type = input_type
-        self.hex_data = ""
+        self.hex_data = "" # recreate hex file
         self.check_sum = ""
         self.data_size = ""
         self.first_8 = ""
@@ -42,6 +42,9 @@ class Decoder:
         self.start_address = ""
         self.num_hex_frames = 0
         self.accumulated_hex_frames = ""
+        self.accumulated_hex_frames_total = ""
+        self.calc_checksum_total = ""
+        self.calc_checksum_page = ""
  
         # calculates the checksum of a page
     def calc_page_checksum(self,line):
@@ -59,30 +62,40 @@ class Decoder:
         return ""
 
     def decode_my_frame(self, frame):
-        #print(frame.can_id, " ", frame.data)
-        if frame.can_id == "0x0048": # IAP Request
-            if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode
-                return "0x0060 | 0x05 | 08 00 00 00 00" # entered IAP mode
+        #print(frame.can_id, " ", frame.data) # if want to see frames sent uncomment this (has lots of noise)
+        if frame.can_id == "0x0048": # IAP Request sent
+            if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode command
+                return "0x0060 | 0x05 | 08 00 00 00 00" # entered IAP mode response
+
             elif frame.data == "88 88 88 88 88 88 88 88": # start sending bytes request
-                return "0x0069 | 0x08 | 99 99 99 99 99 99 99 99" # ready to receive bytes
-            elif self.lookup(frame.data, IAP_data_lookup) == "send code start address": # send start address
-                #print("ad", data[3:15])
-                self.start_address = frame.data[3:15].replace(" ","")
-                self.curr_address = self.start_address
+                return "0x0069 | 0x08 | 99 99 99 99 99 99 99 99" # ready to receive bytes response
+
+            elif self.lookup(frame.data, IAP_data_lookup) == "send code start address": # send start address information
+                self.start_address = frame.data[3:15].replace(" ","") # extract the start address from the frame
+                self.curr_address = self.start_address # set this as the current address
                 self.hex_data += hex_util.make_start_address(self.start_address) # use start address to add extended adress to hex file if necessary
                 return "0x0069 | 0x08 | 02 10 10 10 10 10 10 10"
-            elif frame.data == "03 00 87 47 FE 9B 00 00": # checksum data
-                self.check_sum = frame.data[6:17].replace(" ", "")
+
+            elif self.lookup(frame.data, IAP_data_lookup) == "send code checksum data": # total checksum data
+                self.check_sum = frame.data[6:17].replace(" ", "") # extract the total checksum
                 return "0x0069 | 0x08 | 03 10 10 10 10 10 10 10"
+
             elif self.lookup(frame.data, IAP_data_lookup) == "send code data size":
                 self.data_size = frame.data[6:17].replace(" ", "")
                 return "0x0069 | 0x08 | 04 10 10 10 10 10 10 10"
+
             elif self.lookup(frame.data, IAP_data_lookup) == "check page checksum":
-                self.data_size = frame.data[6:17].replace(" ", "")
-                return "0x0069 | 0x08 | 07 40 40 40 40 40 40 40"
+                cks = frame.data[6:15].replace(" ", "")
+                if cks == self.calc_checksum_page:
+                    return "0x0069 | 0x08 | 07 40 40 40 40 40 40 40"
+                else:
+                    print(cks, " == ", self.calc_checksum_page)
+                    return "wrong page checksum-------------------"
+
         if frame.can_id == "0x0045": # fw revision request
             if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode
                 return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
+
         # hex file transfer        
         if frame.can_id == "0x004F":
             self.first_8 = frame.data
@@ -106,6 +119,7 @@ class Decoder:
                 cs = hex(self.calc_page_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
                 cs = " ".join(cs[i:i+2] for i in range(0, len(cs), 2))
                 return_msg += cs
+                self.calc_checksum_page = cs.replace(" ","")
                 self.num_hex_frames = 0
                 self.accumulated_hex_frames = ""
                 return return_msg      
