@@ -55,17 +55,37 @@ def appendCSV(csvFile, textFile):
 
 #appendCSV('/home/geffen.cooper/vm_shared/can_logs/SC2.27-2.28_full.csv', 'translated_output/out.txt')
 
-expected = open("hex_file_copies/2.27_copy.hex", "r")
+#expected = open("hex_file_copies/2.27_copy.hex", "r")
 #actual = open(actual_file, "r")
 
 # extract raw from expected
-data = expected.read()
-data_list = data.splitlines()
-raw_hex = ""
-for item in data_list:
-    if item[:3] == ":10":
-        item = item[9:]
-        item = item[:-2]
-        raw_hex += item
-expected_raw = open("hex_file_copies/2.27_copy_raw.txt", "w")
-expected_raw.write(raw_hex)
+# data = expected.read()
+# data_list = data.splitlines()
+# raw_hex = ""
+# for item in data_list:
+#     if item[:3] == ":10":
+#         item = item[9:]
+#         item = item[:-2]
+#         raw_hex += item
+# expected_raw = open("hex_file_copies/2.27_copy_raw.txt", "w")
+# expected_raw.write(raw_hex)
+
+# write_ids = [0x04F, 0x050, 0x051, 0x052]
+
+# i = 0
+# while i in range(len(write_ids)):
+#     print(write_ids[i])
+#     i += 1
+#     if i == len(write_ids):
+#         i = 0
+#         print('\n')
+
+# calculates the checksum of a page
+def calc_checksum(line):
+    bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
+    print(bytes_list)
+    print(len(bytes_list))
+    bytes_list_num = [int(i, 16) for i in bytes_list]
+    return sum(bytes_list_num)
+
+print(hex(calc_checksum("6888000830E80108B8050020B80A00003EB5010845020406082D010203040405FF0607080901FF01FF01FF01FF01A900")))

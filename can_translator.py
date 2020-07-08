@@ -101,6 +101,9 @@ IAP_data_lookup = [
     ('04 10 10 10 10 10 10 10' ,                                                            "\treceive reply of code data size"),
     ('05 10 00 00 00 90 00 00' ,                                                            "\tsend end of hex file message"),
     ('05 20 20 20 20 20 20 20' ,                                                            "\tcalculated checksum successfully"),
+    ('07 40 40 40 40 40 40 40' ,                                                            "\tchecksum correct?"),
+    ('07 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 9E [0-9A-F][0-9A-F] [0-9A-F][0-9A-F]' , "\tcheck page checksum"),
+    ('84 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F]',              "\tcalculated page checksum")
 ] 
 
 # find the according pattern in the above table
@@ -126,7 +129,7 @@ def translate_frame_data(frame_id, frame_data_size, frame_data):
             translated_data =  str(switch_command_data2(str(frame_data)[6:11]))
     
     # IAP request or response
-    elif frame_id == '0x0045' or frame_id == '0x0048' or frame_id == '0x0067' or frame_id =='0x0069':
+    elif frame_id == '0x0045' or frame_id == '0x0048' or frame_id == '0x0060' or frame_id == '0x0067' or frame_id =='0x0069':
         translated_data = lookup(str(frame_data)[3:26], IAP_data_lookup)
 
     # IAP write (raw hex data)
