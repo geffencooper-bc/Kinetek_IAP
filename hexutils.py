@@ -25,10 +25,12 @@ def make_line(line, address):
     hex_line = ""
     address_lower16 = (address & 0x0000FFFF)
     if(address_lower16 == 0): # went up a level because passed FFF0
-        hex_line += make_start_address(str(address))
-    pre_cs = "10" + hex(address_lower16)[2:] + "00" + line
+        hex_line += make_start_address(hex(address))
+    pre_cs = "10" + (hex(address_lower16)[2:].zfill(4)) + "00" + line
     #print(pre_cs+'\n') 
-    return hex_line + ":10" + hex(address_lower16)[2:] + "00" + line + str(hex_checksum(pre_cs)) + '\n'
+    return hex_line + ":10" + (hex(address_lower16)[2:].zfill(4)) + "00" + line + str(hex_checksum(pre_cs)) + '\n'
 
 #print(make_line("70100020018100082912010871ED0008", "8008000"))
-print(hex_checksum("10886000F4E7010814E8010870B501EB020410F8"))
+#print(hex_checksum("10886000F4E7010814E8010870B501EB020410F8"))
+#print(make_start_address("8010000"))
+#print(make_line("20019EE6D348D44990F84D0013B1072B", "8010000"))

@@ -61,13 +61,13 @@ class Decoder:
         DATA = 9
         data = frame[DATA][3:26]
         if frame[ID] == "0x0048": # IAP Request
-            print("IAP REQ")
+            #print("IAP REQ")
             if data == "00 00 00 00 00 00 00 00": # force enter IAP mode
                 return "0x0060 | 0x05 | 08 00 00 00 00" # entered IAP mode
             elif data == "88 88 88 88 88 88 88 88": # start sending bytes request
                 return "0x0069 | 0x08 | 99 99 99 99 99 99 99 99" # ready to receive bytes
             elif self.lookup(data, IAP_data_lookup) == "send code start address": # send start address
-                print("ad", data[3:15])
+                #print("ad", data[3:15])
                 self.start_address = data[3:15].replace(" ","")
                 self.curr_address = self.start_address
                 self.hex_data += hex_util.make_start_address(self.start_address) # use start address to add extended adress to hex file if necessary
@@ -119,5 +119,6 @@ if __name__ == "__main__":
         for row in reader:
             response = kin_csv.decode_frame(row)
             if response != None:
-                print(response)
+                pass
+                #print(response)
         print(kin_csv.hex_data)
