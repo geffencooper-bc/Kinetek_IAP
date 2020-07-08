@@ -9,14 +9,27 @@ def hex_checksum(line):
 def make_start_address(start_address):
     address = int(start_address, 16)
     if address > 0xFFFF: # if address is larger than max of 4 hex digits, need to do extended linear address records
-        
         address_upper_16_bits = (address & 0xFFFF0000)>>16
-        print(hex(address_upper_16_bits))
         address_upper_16_bits_str = hex(address_upper_16_bits)[2:]
         address_upper_16_bits_str = address_upper_16_bits_str.zfill(4)
         hex_line = "02000004" + address_upper_16_bits_str 
         address_cs = hex_checksum(hex_line)
-        print(hex_line)
-        return ":" + hex_line + str(address_cs)
+        return ":" + hex_line + str(address_cs) + "\n"
+    return
 
-print(make_start_address("01238000"))
+def make_line(line, address):
+    print(line)
+    print(address)
+    print("-----------")
+    address = int(address, 16)
+    # if address > 0xFFFF:
+    hex_line = ""
+    address_lower16 = (address & 0x0000FFFF)
+    print(hex(address_lower16))
+    if(address_lower16 == 0): # went up a level because passed FFF0
+        hex_line += make_start_address(str(address)) + '\n'
+    pre_cs = "10" + hex(address_lower16)[2:] + "00" + line
+    print(pre_cs) 
+    return ":10" + hex(address_lower16)[2:] + "00" + line + str(hex_checksum(pre_cs))
+
+#print(make_line("70100020018100082912010871ED0008", "8008000"))

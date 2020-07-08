@@ -98,7 +98,7 @@ IAP_data_lookup = [
     ('03 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 9B 00 00' ,    "\tsend code checksum data"),
     ('03 10 10 10 10 10 10 10' ,                                                            "\treceive reply of code checksum"),
     ('04 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 9C 00 00' ,    "\tsend code data size"),
-    ('04 10 10 10 10 10 10 10' ,                                                            "\treceive reply of code checksum data"),
+    ('04 10 10 10 10 10 10 10' ,                                                            "\treceive reply of code data size"),
     ('05 10 00 00 00 90 00 00' ,                                                            "\tsend end of hex file message"),
     ('05 20 20 20 20 20 20 20' ,                                                            "\tcalculated checksum successfully"),
 ] 
