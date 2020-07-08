@@ -1,5 +1,4 @@
 import csv
-import argparse
 import hexutils as hex_util
 import re
 import can
@@ -25,7 +24,7 @@ IAP_data_lookup = [
 class My_frame:
     def __init__(self, time_stamp, can_id, data):
         self.time_stamp = time_stamp
-        self.id = can_id
+        self.can_id = can_id
         self.data = data
 
 # a class used to make a decoder to recreate the hex file frame IAP CAN frames (imitates the Kinetek)
@@ -47,50 +46,56 @@ class Decoder:
         return ""
 
     def decode_my_frame(self, frame):
-        pass        
+        #print(frame.can_id, " ", frame.data)
+        if frame.can_id == "0x0048": # IAP Request
+            if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode
+                return "0x0060 | 0x05 | 08 00 00 00 00" # entered IAP mode
+            elif frame.data == "88 88 88 88 88 88 88 88": # start sending bytes request
+                return "0x0069 | 0x08 | 99 99 99 99 99 99 99 99" # ready to receive bytes
+            elif self.lookup(frame.data, IAP_data_lookup) == "send code start address": # send start address
+                #print("ad", data[3:15])
+                self.start_address = frame.data[3:15].replace(" ","")
+                self.curr_address = self.start_address
+                self.hex_data += hex_util.make_start_address(self.start_address) # use start address to add extended adress to hex file if necessary
+                return "0x0069 | 0x08 | 02 10 10 10 10 10 10 10"
+            elif frame.data == "03 00 87 47 FE 9B 00 00": # checksum data
+                self.check_sum = frame.data[6:17].replace(" ", "")
+                return "0x0069 | 0x08 | 03 10 10 10 10 10 10 10"
+            elif frame.data == self.lookup(frame.data, IAP_data_lookup) == "send code data size":
+                self.data_size = frame.data[6:17].replace(" ", "")
+                return "04 10 10 10 10 10 10 10"
+        if frame.can_id == "0x0045": # fw revision request
+            if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode
+                return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
+        # hex file transfer        
+        if frame.can_id == "0x004F":
+            self.first_8 = frame.data
+        elif frame.can_id == "0x0050":
+            self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+frame.data.replace(" ", ""), self.curr_address)
+            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
+        elif frame.can_id == "0x0051":
+            self.first_8 = frame.data
+        elif frame.can_id == "0x0052":
+            self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+frame.data.replace(" ", ""), self.curr_address)
+            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
+            return "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received       
 
 
     # takes in a csv frame, returns nothing if not an IAP frame, returns expected kinetek reply otherwise
     def decode_csv_frame(self, frame):
+        TIME_STAMP = 2
         ID = 5
         DATA = 9
-        data = frame[DATA][3:26]
-        if frame[ID] == "0x0048": # IAP Request
-            if data == "00 00 00 00 00 00 00 00": # force enter IAP mode
-                return "0x0060 | 0x05 | 08 00 00 00 00" # entered IAP mode
-            elif data == "88 88 88 88 88 88 88 88": # start sending bytes request
-                return "0x0069 | 0x08 | 99 99 99 99 99 99 99 99" # ready to receive bytes
-            elif self.lookup(data, IAP_data_lookup) == "send code start address": # send start address
-                #print("ad", data[3:15])
-                self.start_address = data[3:15].replace(" ","")
-                self.curr_address = self.start_address
-                self.hex_data += hex_util.make_start_address(self.start_address) # use start address to add extended adress to hex file if necessary
-                return "0x0069 | 0x08 | 02 10 10 10 10 10 10 10"
-            elif data == "03 00 87 47 FE 9B 00 00": # checksum data
-                self.check_sum = data[6:17].replace(" ", "")
-                return "0x0069 | 0x08 | 03 10 10 10 10 10 10 10"
-            elif data == self.lookup(data, IAP_data_lookup) == "send code data size":
-                self.data_size = data[6:17].replace(" ", "")
-                return "04 10 10 10 10 10 10 10"
-        if frame[ID] == "0x0045": # fw revision request
-            if frame[DATA][3:26] == "00 00 00 00 00 00 00 00": # force enter IAP mode
-                return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
-        # hex file transfer        
-        if frame[ID] == "0x004F":
-            self.first_8 = data
-        elif frame[ID] == "0x0050":
-            self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+data.replace(" ", ""), self.curr_address)
-            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
-        elif frame[ID] == "0x0051":
-            self.first_8 = data
-        elif frame[ID] == "0x0052":
-            self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+data.replace(" ", ""), self.curr_address)
-            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
-            return "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received
+
+        my_frame = My_frame(frame[TIME_STAMP], frame[ID], frame[DATA][3:26])
+        return self.decode_my_frame(my_frame)
             
     # takes in a socketcan frame and returns what would be expected for the kinetek (only IAP)
     def decode_socketcan_frame(self, frame):
-        pass
+        can_id = "0x00" + hex(frame.arbitration_id)[2:]
+        data = (str(frame.data).replace("\\x", " "))[13:-2]
+        my_frame = My_frame(frame.timestamp, can_id, data)
+        return self.decode_my_frame(my_frame)
 
     # determines if csv or socketcan
     def decode_frame(self, frame):
@@ -99,20 +104,3 @@ class Decoder:
         elif self.input_type == "socketcan":
             return self.decode_socketcan_frame(frame)
 
-if __name__ == "__main__":
-    kin_csv = Decoder("csv")
-   
-    # pass in the file to parse as a command line arg
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--csv_file", required=True)
-    args = parser.parse_args()
-    file_name = args.csv_file
-
-    with open(file_name, 'r') as csv_file:
-        reader = csv.reader(csv_file)
-        for row in reader:
-            response = kin_csv.decode_frame(row)
-            if response != None:
-                pass
-                print(response)
-        print(kin_csv.hex_data)
