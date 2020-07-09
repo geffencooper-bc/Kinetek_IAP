@@ -76,6 +76,7 @@ class Decoder:
                 self.start_address = frame.data[3:15].replace(" ","") # extract the start address from the frame
                 self.curr_address = self.start_address # set this as the current address
                 self.hex_data += hex_util.make_start_address(self.start_address) # use start address to add extended adress to hex file if necessary
+               
                 return "0x0069 | 0x08 | 02 10 10 10 10 10 10 10"
 
             elif self.lookup(frame.data, IAP_data_lookup) == "send code checksum data": # total checksum data
@@ -115,7 +116,7 @@ class Decoder:
                 return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
 
         # hex file transfer        
-        if frame.can_id == "0x004F":
+        if frame.can_id == "0x004F" or frame.can_id == "0x004f":
             self.first_8 = frame.data
             if frame.data != "FF FF FF FF FF FF FF FF":
                 self.accumulated_hex_frames += frame.data
@@ -140,6 +141,7 @@ class Decoder:
                 self.accumulated_hex_frames_total += frame.data
             return_msg = "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received
             if self.num_hex_frames == 128:
+                print(self.accumulated_hex_frames)
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
                 return_msg += "\n" + "0x0060 | 0x05 | 84 00 "
                 cs = hex(self.calc_page_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)

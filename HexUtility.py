@@ -59,8 +59,10 @@ class HexUtility:
     def get_data_bytes(self, line, start=0, num_bytes=-1): # start is an index relative to the first byte, so 8 means start from the 8th bytes
         # need to check if num bytes is valid, throw exception if not
         start = start*2
-        if num_bytes == -1:  # then get all bytes
-            return line[9+start:9+start + 2*int(self.get_record_length(line))] # record length in bytes, two hex chars are a byte
+        #print("-----------",len(line[9:9 + 2*int(self.get_record_length(line), 16)]))
+        if num_bytes == -1 or len(line[9:9 + 2*int(self.get_record_length(line), 16)]) < num_bytes:  # then get all bytes
+            #print("-----------------------------")
+            return line[9+start:9+start + 2*int(self.get_record_length(line), 16)] # record length in bytes, two hex chars are a byte
         return line[9+start:9+start + 2*num_bytes]
 
     def get_checksum(self, line):
