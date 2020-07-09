@@ -1,0 +1,498 @@
+Timestamp: 1594333706.715043        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.728995        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.738518        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333706.738519        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.744969        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.775069        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.779036        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.789672        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333706.789672        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.805179        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.829025        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.835175        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.835176        ID: 0001    S                DLC:  5    1d f9 01 00 00              Channel: can0
+Timestamp: 1594333706.840555        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333706.840555        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.865201        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.879052        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.891525        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333706.891525        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.895249        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.906875        ID: 0001    S                DLC:  5    1d f1 06 00 01              Channel: can0
+Timestamp: 1594333706.906875        ID: 0001    S                DLC:  5    1d f2 03 00 00              Channel: can0
+Timestamp: 1594333706.925302        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.929000        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.942576        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333706.942577        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.955354        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.977979        ID: 04ca    S                DLC:  8    00 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.977980        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+Timestamp: 1594333706.979375        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333706.985403        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333706.993554        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333706.993554        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.015486        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.029064        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.044564        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.044564        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.044564        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.049010        ID: 04ca    S                DLC:  8    01 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.075561        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.079013        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.095538        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.095538        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.105646        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.119986        ID: 04ca    S                DLC:  8    02 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.129047        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.135720        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.146536        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.146537        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.165712        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.179046        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.190991        ID: 04ca    S                DLC:  8    03 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.195816        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.197567        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.197567        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.225842        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.229013        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.248589        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.248589        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.255888        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.261990        ID: 04ca    S                DLC:  8    04 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.279017        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.285940        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.299667        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.299668        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.315994        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.328994        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.346043        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.350543        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.350543        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.376197        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.379048        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.401647        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.401647        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.406166        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.429053        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.436230        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.452579        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.452579        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.466282        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.475004        ID: 04ca    S                DLC:  8    05 01 02 01 00 00 00 00     Channel: can0
+Timestamp: 1594333707.479059        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.496332        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.503708        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.503709        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.526382        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.528905        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+Timestamp: 1594333707.528905        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.554628        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.554628        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.556400        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.579004        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.586487        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.605703        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.605703        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.616529        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.629027        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.646604        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.656556        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.656556        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.676633        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.679032        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.687880        ID: 0001    S                DLC:  5    1d f8 01 00 00              Channel: can0
+Timestamp: 1594333707.706684        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.707706        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.707706        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.729010        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.736733        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.758583        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.758583        ID: 0001    S                DLC:  5    1d f7 03 00 00              Channel: can0
+Timestamp: 1594333707.758583        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.766785        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.779011        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.796837        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.809511        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.809511        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.826887        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.829009        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.829010        ID: 0001    S                DLC:  5    1d f2 07 00 00              Channel: can0
+Timestamp: 1594333707.856940        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.860587        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.860588        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.879020        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.887024        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.900896        ID: 0001    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.900896        ID: 0001    S                DLC:  5    1d f1 00 00 00              Channel: can0
+Timestamp: 1594333707.911646        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.911646        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.917072        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.929023        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.947123        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.962601        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333707.962601        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333707.977213        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333707.979025        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.007250        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.013668        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.013669        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.029048        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.037300        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.042907        ID: 0001    S                DLC:  5    1d f9 01 00 00              Channel: can0
+Timestamp: 1594333708.064602        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.064602        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.067352        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.078901        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+Timestamp: 1594333708.078902        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.097349        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.113873        ID: 0001    S                DLC:  5    1d f1 06 00 01              Channel: can0
+Timestamp: 1594333708.113874        ID: 0001    S                DLC:  5    1d f2 03 00 00              Channel: can0
+Timestamp: 1594333708.115697        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.115697        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.127422        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.129041        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.157475        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.166600        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.166600        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.178999        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.184972        ID: 04ca    S                DLC:  8    00 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.187533        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.217577        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.217577        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.217577        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.229004        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.247647        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.256012        ID: 04ca    S                DLC:  8    01 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.268610        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.268610        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.277680        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.279002        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.307731        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.319630        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.319631        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.326979        ID: 04ca    S                DLC:  8    02 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.329005        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.337815        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.367834        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.370541        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.370541        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.379008        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.398016        ID: 04ca    S                DLC:  8    03 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.398016        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.421636        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.421636        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.427965        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.429048        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.449313        ID: 0002    S                DLC:  0                                Channel: can0
+Timestamp: 1594333708.457986        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.468986        ID: 04ca    S                DLC:  8    04 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.469922        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.472509        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.472509        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.472677        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.472794        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.479036        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.479273        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.488073        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.518114        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.523545        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.523546        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.528988        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.548209        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.574518        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.574519        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.578208        ID: 0060    S                DLC:  5    80 00 00 00 00              Channel: can0
+Timestamp: 1594333708.578209        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.578415        ID: 0045    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.580588        ID: 0067    S                DLC:  8    01 08 5e 00 80 00 00 00     Channel: can0
+Timestamp: 1594333708.580837        ID: 0048    S                DLC:  8    88 88 88 88 88 88 88 88     Channel: can0
+Timestamp: 1594333708.582937        ID: 0069    S                DLC:  8    99 99 99 99 99 99 99 99     Channel: can0
+Timestamp: 1594333708.608267        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.625618        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.625619        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.628869        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+Timestamp: 1594333708.628869        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.638350        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.668400        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.676576        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.676576        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.679024        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.681991        ID: 04ca    S                DLC:  8    05 01 02 01 00 00 00 00     Channel: can0
+Timestamp: 1594333708.698439        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.727524        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.727525        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.727525        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.728998        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.758555        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.778598        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.778598        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.779597        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.788598        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.818662        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.829037        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.829038        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.830056        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.848707        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.878762        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.878762        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.880524        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.880524        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.894876        ID: 0001    S                DLC:  5    1d f8 01 00 00              Channel: can0
+Timestamp: 1594333708.908814        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.929043        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.931686        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.931686        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.938855        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.965887        ID: 0001    S                DLC:  5    1d f7 03 00 00              Channel: can0
+Timestamp: 1594333708.968912        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333708.979005        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.982529        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333708.982529        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333708.998958        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.029010        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.029010        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.033609        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.033610        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.036856        ID: 0001    S                DLC:  5    1d f2 07 00 00              Channel: can0
+Timestamp: 1594333709.059061        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.079010        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.084558        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.084558        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.089106        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.107862        ID: 0001    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.107862        ID: 0001    S                DLC:  5    1d f1 00 00 00              Channel: can0
+Timestamp: 1594333709.119228        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.129012        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.135660        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.135661        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.149232        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.178888        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+Timestamp: 1594333709.178888        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.178889        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.186897        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.186898        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.209339        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.228992        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.237643        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.237644        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.239382        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.249843        ID: 0001    S                DLC:  5    1d f9 01 00 00              Channel: can0
+Timestamp: 1594333709.269417        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.279023        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.288598        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.288598        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.299498        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.320869        ID: 0001    S                DLC:  5    1d f1 06 00 01              Channel: can0
+Timestamp: 1594333709.320870        ID: 0001    S                DLC:  5    1d f2 03 00 00              Channel: can0
+Timestamp: 1594333709.328994        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.328995        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.339541        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.339542        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.359604        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.379029        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.389645        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.389646        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.391081        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.391081        ID: 04ca    S                DLC:  8    00 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.419723        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.428998        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.441648        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.441648        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.449732        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.462975        ID: 04ca    S                DLC:  8    01 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.479033        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.479034        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.492559        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.492560        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.509886        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.529034        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.534006        ID: 04ca    S                DLC:  8    02 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.539936        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.543652        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.543652        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.569986        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.579008        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.594537        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.594538        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.600035        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.604976        ID: 04ca    S                DLC:  8    03 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.628981        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.630085        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.645682        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.645682        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.660138        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.675993        ID: 04ca    S                DLC:  8    04 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.679037        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.690188        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.696538        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.696538        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.720275        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.728889        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+Timestamp: 1594333709.728889        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.747634        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.747634        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.750252        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.778987        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.780309        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.798510        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.798510        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.810360        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.828987        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.840437        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.849696        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.849697        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.870496        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.879022        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.888943        ID: 04ca    S                DLC:  8    05 01 02 01 00 00 00 00     Channel: can0
+Timestamp: 1594333709.900514        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.900515        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.928993        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.930589        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.951674        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333709.951674        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.960659        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333709.978993        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333709.990693        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.002668        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.002668        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.020747        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.028996        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.050795        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.053645        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.053645        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.079032        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.080876        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.101873        ID: 0001    S                DLC:  5    1d f8 01 00 00              Channel: can0
+Timestamp: 1594333710.104521        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.104521        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.110928        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.128999        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.140951        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.155709        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.155710        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.171000        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.172848        ID: 0001    S                DLC:  5    1d f7 03 00 00              Channel: can0
+Timestamp: 1594333710.179030        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.201054        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.206551        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.206551        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.229034        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.231133        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.243886        ID: 0001    S                DLC:  5    1d f2 07 00 00              Channel: can0
+Timestamp: 1594333710.257654        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.257655        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.261151        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.278858        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+Timestamp: 1594333710.278858        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.291308        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.308556        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.308556        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.314855        ID: 0001    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.314856        ID: 0001    S                DLC:  5    1d f1 00 00 00              Channel: can0
+Timestamp: 1594333710.321275        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.329013        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.351323        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.359632        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.359632        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.379015        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.381412        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.410537        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.410538        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.410538        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.428988        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.441487        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.456836        ID: 0001    S                DLC:  5    1d f9 01 00 00              Channel: can0
+Timestamp: 1594333710.461585        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.461585        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.471536        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.478999        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.501627        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.512521        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.512521        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.527864        ID: 0001    S                DLC:  5    1d f1 06 00 01              Channel: can0
+Timestamp: 1594333710.527864        ID: 0001    S                DLC:  5    1d f2 03 00 00              Channel: can0
+Timestamp: 1594333710.528986        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.531637        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.561692        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.563638        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.563638        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.578991        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.591740        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.598966        ID: 04ca    S                DLC:  8    00 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.614543        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.614543        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.621794        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.628998        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.651849        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.665699        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.665700        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.669946        ID: 04ca    S                DLC:  8    01 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.678971        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.681930        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.711947        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.716577        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.716578        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.728975        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.740976        ID: 04ca    S                DLC:  8    02 01 01 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.742020        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.767682        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.767682        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.772074        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.778976        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.802118        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.811949        ID: 04ca    S                DLC:  8    03 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.818600        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.818600        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.828854        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+Timestamp: 1594333710.828855        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.832208        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.862329        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.869529        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.869529        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.878978        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.882987        ID: 04ca    S                DLC:  8    04 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.892299        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.920559        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.920560        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.922331        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.928982        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.952384        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333710.971609        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333710.971609        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.978986        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333710.982432        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.012487        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.022509        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333711.022509        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.028984        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.042537        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.072583        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.072584        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333711.073983        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.078984        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.095962        ID: 04ca    S                DLC:  8    05 01 02 01 00 00 00 00     Channel: can0
+Timestamp: 1594333711.102635        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.124514        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333711.124515        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.128986        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.132719        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.162771        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.175619        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333711.175620        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.179020        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.192820        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.222897        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.226520        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333711.226520        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.228989        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.252918        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.277594        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333711.277594        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.278990        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.282940        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.308844        ID: 0001    S                DLC:  5    1d f8 01 00 00              Channel: can0
+Timestamp: 1594333711.313016        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+Timestamp: 1594333711.328519        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+Timestamp: 1594333711.328519        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.329546        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+Timestamp: 1594333711.343096        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
