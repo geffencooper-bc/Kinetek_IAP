@@ -124,12 +124,6 @@ class Decoder:
                 self.is_eof = False
                 return (make_socketcan_packet(0x060, data_string_to_byte_list("84 00 " + cs_page)))
 
-        elif self.is_eop == True:
-            cs_page = self.calc_checksum_page
-            cs_page = " ".join(cs_page[i:i+2] for i in range(0, len(cs_page), 2)) # format into print
-            self.is_eop = False
-            return (make_socketcan_packet(0x060, data_string_to_byte_list("84 00 " + cs_page)))
-
         if frame.can_id == "0x0045": # fw revision request
             if frame.data == "00 00 00 00 00 00 00 00": # default ?
                 return make_socketcan_packet(0x067, data_string_to_byte_list("01 08 5E 00 80 00 00 00")) # fw revision response
@@ -140,6 +134,11 @@ class Decoder:
             if frame.data != "FF FF FF FF FF FF FF FF": # don't want to include empty space at end as part of hex file
                 self.accumulated_hex_frames += frame.data
                 self.accumulated_hex_frames_total += frame.data
+            if self.is_eop == True:
+                cs_page = self.calc_checksum_page
+                cs_page = " ".join(cs_page[i:i+2] for i in range(0, len(cs_page), 2)) # format into print
+                self.is_eop = False
+                return (make_socketcan_packet(0x060, data_string_to_byte_list("84 00 " + cs_page)))
         elif frame.can_id == "0x0050":
             if frame.data != "FF FF FF FF FF FF FF FF":
                 self.accumulated_hex_frames += frame.data
@@ -169,6 +168,7 @@ class Decoder:
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
                 cs = hex(self.calc_laurence_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
                 self.calc_checksum_page = cs
+                #print(self.accumulated_hex_frames)
                 # rest values to start next page
                 self.num_hex_frames = 0
                 self.accumulated_hex_frames = ""   
