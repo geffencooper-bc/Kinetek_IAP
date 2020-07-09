@@ -1,5 +1,5 @@
 import csv
-import hexutils as hex_util
+import hex_maker as hex_util
 import re
 import can
 
@@ -31,16 +31,17 @@ class My_frame:
         self.can_id = can_id
         self.data = data
 
+
 # a class used to make a decoder to recreate the hex file frame IAP CAN frames (imitates the Kinetek)
 class Decoder:
-    def __init__(self,input_type): # input is either csv or socketcan
+    def __init__(self,input_type): # input is either "csv" or "socketcan"
         self.input_type = input_type
         self.hex_data = "" # stores the recreated hex file
-        self.check_sum = "" # stores the total check sum passed in by user
+        self.checksum_total = "" # stores the total check sum passed in by user
         self.data_size = "" # size of the fw file in bytes
         self.first_8 = "" # stores the first 8 bytes of a hex line passed in by can fram, gets merged with second 8
-        self.curr_address = "" # holds the current address in the hex file
-        self.start_address = "" # holds the start address in the hex file
+        self.curr_address = "" # holds the current address in the hex file (stored as total address, not just lower 16 bits of extended linear form)
+        self.start_address = "" # holds the total start address in the hex file
         self.num_hex_frames = 0 # counts the number of hex can packets passed in (8 bytes)
         self.accumulated_hex_frames = "" # accumulates the hex frames passed in to calculate checksum
         self.accumulated_hex_frames_total = "" # same as above but total
@@ -48,11 +49,9 @@ class Decoder:
         self.calc_checksum_page = "" # same as above
  
 
-    # calculates the checksum of a page by adding all the bytes, need to convert from string
-    def calc_page_checksum(self,line):
+    # calculates the checksum of a page by adding all the bytes, need to convert from string, returns as the numerical value
+    def calc_laurence_checksum(self,line):
         bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
-        #print(bytes_list)
-        #print(len(bytes_list))
         bytes_list_num = [int(i, 16) for i in bytes_list]
         return sum(bytes_list_num)
     
@@ -63,6 +62,7 @@ class Decoder:
                 return value
         return ""
 
+    # takes the generic My_frame structure and decodes it by responding like a kinetek, input frames are commands sent during IAP
     def decode_my_frame(self, frame):
         #print(frame.can_id, " ", frame.data) # if want to see frames sent uncomment this (has lots of noise)
         if frame.can_id == "0x0048": # IAP Request sent
@@ -76,77 +76,84 @@ class Decoder:
                 self.start_address = frame.data[3:15].replace(" ","") # extract the start address from the frame
                 self.curr_address = self.start_address # set this as the current address
                 self.hex_data += hex_util.make_start_address(self.start_address) # use start address to add extended adress to hex file if necessary
-               
                 return "0x0069 | 0x08 | 02 10 10 10 10 10 10 10"
 
             elif self.lookup(frame.data, IAP_data_lookup) == "send code checksum data": # total checksum data
-                self.check_sum = frame.data[6:15].replace(" ", "") # extract the total checksum
+                self.checksum_total = frame.data[6:15].replace(" ", "") # extract the total checksum, no work done because don't have access to hex file yet
                 return "0x0069 | 0x08 | 03 10 10 10 10 10 10 10"
 
-            elif self.lookup(frame.data, IAP_data_lookup) == "send code data size": # not really used
+            elif self.lookup(frame.data, IAP_data_lookup) == "send code data size": # not sure how kinetek uses this
                 self.data_size = frame.data[6:17].replace(" ", "")
                 return "0x0069 | 0x08 | 04 10 10 10 10 10 10 10"
-
-            elif self.lookup(frame.data, IAP_data_lookup) == "check page checksum": # compare last calculated page checksum to value fed in
-                cks = frame.data[6:15].replace(" ", "")
-                if cks == self.calc_checksum_page:
+            
+            # the page checksum is calculated every 1024 bytes and is calculated in the frame_id 0x052 if block
+            # that happens before this statement is called so we already have the checksum, just need to validate it
+            elif self.lookup(frame.data, IAP_data_lookup) == "check page checksum": 
+                cs = frame.data[6:15].replace(" ", "")
+                if cs == self.calc_checksum_page:
                     return "0x0069 | 0x08 | 07 40 40 40 40 40 40 40"
                 else:
                     print(cks, " == ", self.calc_checksum_page)
                     return "wrong page checksum-------------------"
             
-            elif self.lookup(frame.data, IAP_data_lookup) == "send end of hex file message": # once the hex file ends, calculate total checksum, and current checksum
+            # once the hex file ends, calculate total checksum, and current page checksum
+            elif self.lookup(frame.data, IAP_data_lookup) == "send end of hex file message": 
                 self.accumulated_hex_frames_total = self.accumulated_hex_frames_total.replace(" ","")
-                cs = hex(self.calc_page_checksum(self.accumulated_hex_frames_total))[2:].upper().zfill(6)
+                cs_total = hex(self.calc_laurence_checksum(self.accumulated_hex_frames_total))[2:].upper().zfill(6) # total checksum, format into string
 
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
-                cs_page = hex(self.calc_page_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
+                cs_page = hex(self.calc_laurence_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6) # current page checksum, format into string
                 
                 self.calc_checksum_page = cs_page
-                self.calc_checksum_total = cs
+                self.calc_checksum_total = cs_total
 
-                cs_page = " ".join(cs_page[i:i+2] for i in range(0, len(cs_page), 2))
-                if self.calc_checksum_total == self.check_sum: # check if total checksum good
+                cs_page = " ".join(cs_page[i:i+2] for i in range(0, len(cs_page), 2)) # format into print
+                if self.calc_checksum_total == self.checksum_total: # check if total checksum good
                     return "0x0069 | 0x08 | 05 20 20 20 20 20 20 20" + "\n0x0060 | 0x08 | 84 00 " + cs_page
                 else:
-                    print(self.check_sum, "!=", self.calc_checksum_total)
+                    print(self.checksum_total, "!=", self.calc_checksum_total)
 
         if frame.can_id == "0x0045": # fw revision request
-            if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode
+            if frame.data == "00 00 00 00 00 00 00 00": # default ?
                 return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
 
-        # hex file transfer        
+        # hex file transfer commands, 4 sets of 8 bytes --> ids are 4F, 50, 51, 52 in that order   
         if frame.can_id == "0x004F" or frame.can_id == "0x004f":
-            self.first_8 = frame.data
-            if frame.data != "FF FF FF FF FF FF FF FF":
+            self.first_8 = frame.data # store first 8 bytes of 16 byte hex line
+            if frame.data != "FF FF FF FF FF FF FF FF": # don't want to include empty space at end as part of hex file
                 self.accumulated_hex_frames += frame.data
                 self.accumulated_hex_frames_total += frame.data
         elif frame.can_id == "0x0050":
             if frame.data != "FF FF FF FF FF FF FF FF":
                 self.accumulated_hex_frames += frame.data
                 self.accumulated_hex_frames_total += frame.data
+            # second 8 bytes of 16 byte line received, combine it with first 8 bytes
             self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+frame.data.replace(" ", ""), self.curr_address)
-            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
-        elif frame.can_id == "0x0051":
+            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:] # increment the current address, then format to string
+        elif frame.can_id == "0x0051": # same as 4F
             self.first_8 = frame.data
             if frame.data != "FF FF FF FF FF FF FF FF":
                 self.accumulated_hex_frames += frame.data
                 self.accumulated_hex_frames_total += frame.data
         elif frame.can_id == "0x0052":
-            self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+frame.data.replace(" ", ""), self.curr_address)
-            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
-            self.num_hex_frames += 4
-            if frame.data != "FF FF FF FF FF FF FF FF":
+            if frame.data != "FF FF FF FF FF FF FF FF": # first four lines same as 50 
                 self.accumulated_hex_frames += frame.data
                 self.accumulated_hex_frames_total += frame.data
+            self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+frame.data.replace(" ", ""), self.curr_address)
+            self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
+            
+            # keep track so can know when enf of page, hex frame is 8 bytes
+            self.num_hex_frames += 4 # this is the 4th 8 byte frame
             return_msg = "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received
-            if self.num_hex_frames == 128:
+            if self.num_hex_frames == 128: # page is 1024 bytes, 8 byte frame * 128 = 1024 bytes
+                # calculate checksum of page, format into print frame
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
                 return_msg += "\n" + "0x0060 | 0x05 | 84 00 "
-                cs = hex(self.calc_page_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
-                cs = " ".join(cs[i:i+2] for i in range(0, len(cs), 2))
+                cs = hex(self.calc_laurence_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
+                cs = " ".join(cs[i:i+2] for i in range(0, len(cs), 2)) # print format
                 return_msg += cs
-                self.calc_checksum_page = cs.replace(" ","")
+                self.calc_checksum_page = cs.replace(" ","") # stored format
+                # rest values to start next page
                 self.num_hex_frames = 0
                 self.accumulated_hex_frames = ""
                 return return_msg      

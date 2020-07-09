@@ -1,7 +1,5 @@
 import argparse
 from decoder import *
-import hexutils as hexutil
-
 from HexUtility import *
 
 if __name__ == "__main__":
@@ -113,7 +111,7 @@ if __name__ == "__main__":
         if i == len(write_ids):
             i = 0
         
-    print(kin_socketcan.hex_data)
+    # print(kin_socketcan.hex_data)
     # print(make_socketcan_packet(0x04F,hexUtil.get_next_data_8()))
     # print(make_socketcan_packet(0x050,hexUtil.get_next_data_8()))
     # print(make_socketcan_packet(0x051,hexUtil.get_next_data_8()))

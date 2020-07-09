@@ -149,11 +149,11 @@ class HexUtility:
         print("closing file")
         self.hex_file.close()
 
+
 # helper function independent of class
 def make_socketcan_packet(can_id, data_bytes): # pass in data as a list of 8 bytes
-        return can.Message(arbitration_id=can_id, data=[data_bytes[0], data_bytes[1], data_bytes[2],
-                                                        data_bytes[3], data_bytes[4], data_bytes[5], 
-                                                        data_bytes[6], data_bytes[7]], is_extended_id=False)
+    return can.Message(arbitration_id=can_id, data=data_bytes, is_extended_id=False)
+        
         
 
 # for the actual can class make it easy to send messages, abstract away socket can
