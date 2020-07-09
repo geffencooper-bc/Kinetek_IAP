@@ -162,7 +162,7 @@ class Decoder:
             self.num_hex_frames += 4 # this is the 4th 8 byte frame
             
             if self.num_hex_frames == 128: # page is 1024 bytes, 8 byte frame * 128 = 1024 bytes
-                print("\n\n\n=================================================\n\n\n")
+                #print("\n\n\n=================================================\n\n\n")
                 self.is_eop = True
                 # calculate checksum of page, format into print frame
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
