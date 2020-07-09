@@ -90,3 +90,7 @@ def appendCSV(csvFile, textFile):
 
 # print(hex(calc_checksum("70100020018")))
 
+import sys
+sys.path.insert(1, '/home/geffen.cooper/Desktop/kinetek_scripts/ota_scripts/')
+print(sys.path)
+import HexUtility

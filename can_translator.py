@@ -224,11 +224,11 @@ if __name__ == "__main__":
     append_CSV(file_name, translated_data)
     
     # remove spaces and format like original hex file
-    raw_hex = raw_hex.replace(" ", "")
-    raw_hex = raw_hex.replace("\n","")
-    raw_hex = raw_hex[:-32]
-    hex_output = open("hex_file_copies/hex_out.txt", "w")
-    hex_output.write(raw_hex)
-    hex_output.close()
+    # raw_hex = raw_hex.replace(" ", "")
+    # raw_hex = raw_hex.replace("\n","")
+    # raw_hex = raw_hex[:-32]
+    # hex_output = open("hex_file_copies/hex_out.txt", "w")
+    # hex_output.write(raw_hex)
+    # hex_output.close()
 
     
