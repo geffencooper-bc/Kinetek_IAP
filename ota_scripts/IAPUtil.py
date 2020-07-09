@@ -7,7 +7,7 @@ class IAPUtil:
         self.code_size_bytes = 0   # integer form    ex: 92208
         self.page_check_sums = []  # list of hex strings ex: ['01 64 3C', '01 8F 75' ...]
         self.total_checksum = 0    #
-        self.code_start_address = 0
+        self.start_address = 0
 
     def load_hex_file(self, file_path):
         # get fw data from hex file
@@ -22,17 +22,17 @@ class IAPUtil:
         self.FW_REVISION_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("FW_REVISION_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("DEFAULT")))
         self.ENTER_IAP_MODE_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("ENTER_IAP_MODE")))
         self.SEND_BYTES_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("SEND_BYTES")))
-        self.SEND_START_ADDRESS = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
+        self.SEND_START_ADDRESS_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                         get_kinetek_data_code("CODE_START_ADDRESS_PREFIX") \
-                                                                                                        + insert_spaces(str(self.code_start_address), 2)
+                                                                                                        + insert_spaces(self.start_address, 2)
                                                                                                         + get_kinetek_data_code("CODE_START_ADDRESS_SUFFIX")
                                                                                                         ))
-        self.SEND_CHECKSUM_DATA = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
+        self.SEND_CHECKSUM_DATA_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                         get_kinetek_data_code("SEND_CHECKSUM_PREFIX") \
                                                                                                         + self.total_checksum
                                                                                                         + get_kinetek_data_code("SEND_CHECKSUM_SUFFIX")
                                                                                                         ))
-        self.SEND_DATA_SIZE = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
+        self.SEND_DATA_SIZE_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                         get_kinetek_data_code("SEND_DATA_SIZE_PREFIX") \
                                                                                                         + format_int_to_code(self.data_size_bytes, 4)
                                                                                                         + get_kinetek_data_code("SEND_DATA_SIZE_SUFFIX")
@@ -40,16 +40,20 @@ class IAPUtil:
         
 
     def to_string(self):
-        print("DATA SIZE:\t", self.data_size_bytes, "bytes")
-        print("TOTAL CHECKSUM:\t", self.total_checksum)
-        print("START ADDRESS:\t", self.start_address)
+        print("\n")
+        print("\t\t\t\t\t=============================================")
+        print("\t\t\t\t\t=========== IAP UTILITY TO STRING ===========")
+        print("\t\t\t\t\t=============================================\n\n")
+        print("HEX FILE DATA SIZE:\t\t", self.data_size_bytes, "bytes")
+        print("HEX FILE DATA TOTAL CHECKSUM:\t", self.total_checksum)
+        print("START ADDRESS:\t\t\t", self.start_address)
         print("PAGE CHECKSUMS:\t", self.page_check_sums)
-        print("\n---COMMANDS---\nFW_REVISION_REQUEST:\t", self.FW_REVISION_REQUEST)
-        print("\nENTER_IAP_MODE_REQUEST:\t", self.ENTER_IAP_MODE_REQUEST)
-        print("\nSEND_BYTES_REQUEST:\t", self.SEND_BYTES_REQUEST)
-        print("\nSEND_START_ADDRESS:\t", self.SEND_START_ADDRESS)
-        print("\nSEND_CHECKSUM_DATA:\t", self.SEND_CHECKSUM_DATA)
-        print("\nSEND_DATA_SIZE:\t\t", self.SEND_DATA_SIZE)
+        print("\n\n==== INIT COMMANDS====\n\nFW_REVISION_REQUEST:\t\t", self.FW_REVISION_REQUEST)
+        print("\nENTER_IAP_MODE_REQUEST:\t\t", self.ENTER_IAP_MODE_REQUEST)
+        print("\nSEND_BYTES_REQUEST:\t\t", self.SEND_BYTES_REQUEST)
+        print("\nSEND_START_ADDRESS_REQUEST:\t", self.SEND_START_ADDRESS_REQUEST)
+        print("\nSEND_CHECKSUM_DATA_REQUEST:\t", self.SEND_CHECKSUM_DATA_REQUEST)
+        print("\nSEND_DATA_SIZE_REQUEST:\t\t", self.SEND_DATA_SIZE_REQUEST)
     
     def init_can(self):
         # implement later
@@ -115,10 +119,10 @@ class IAPUtil:
         # make sure in iap mode first
         if self.check_if_in_iap_mode() == True:
             # request fw revision
-            if self.send_request(FW_REVISION_REQUEST, "FW_REVISION_REQUEST_RESPONSE", 10) == False:
+            if self.send_request(self.FW_REVISION_REQUEST, "FW_REVISION_REQUEST_RESPONSE", 10) == False:
                 return "CONTROLLER WONT RECEIVE BYTES"
             # request to send bytes
-            if self.send_request(SEND_BYTES_REQUEST, "SEND_BYTES_RESPONSE", 10) == False:
+            if self.send_request(self.SEND_BYTES_REQUEST, "SEND_BYTES_RESPONSE", 10) == False:
                 return "CONTROLLER WONT RECEIVE BYTES"
             #if self.send_request()
 
@@ -146,7 +150,6 @@ def decode_socketcan_packet(frame):
     return str(can_id + " | " + data[:-1])
 
 ut = IAPUtil()
-print(get_kinetek_data_code("CODE_START_ADDRESS_SUFFIX"))
 ut.load_hex_file("2.28_copy.hex")
 ut.to_string()
 
