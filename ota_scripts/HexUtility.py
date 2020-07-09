@@ -46,6 +46,42 @@ class HexUtility:
         self.hex_file = open(self.hex_file_path, "r")
         self.hex_lines = self.hex_file.readlines()
     
+    def get_file_data_size(self):
+        size = 0
+        for line in self.hex_lines:
+            if self.get_type(line) == DATA:
+                line_size = int(self.get_record_length(line), 16)
+                size += line_size
+        return size
+
+    def calc_laurence_checksum(self, line):
+        bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
+        bytes_list_num = [int(i, 16) for i in bytes_list]
+        cs = hex(sum(bytes_list_num))[2:].upper().zfill(6)
+        return " ".join(cs[i:i+2] for i in range(0, len(cs), 2))
+
+    def get_total_checksum(self):
+        raw_data = ""
+        for line in self.hex_lines:
+            if self.get_type(line) == DATA:
+                raw_data += self.get_data_bytes(line)
+        return self.calc_laurence_checksum(raw_data)
+
+    def get_page_checksums(self):
+        page_data = ""
+        page_check_sums = []
+        i = 0
+        for line in self.hex_lines:
+            if self.get_type(line) == DATA:
+                page_data += self.get_data_bytes(line)
+                i += 1
+                if i == 64: # pages are 1024 bytes, 128 frames * 8 bytes each --> 64 lines 16 bytes each
+                    #print(page_data + "\n\n")
+                    page_check_sums.append(self.calc_laurence_checksum(page_data))
+                    page_data = ""
+                    i = 0
+        return page_check_sums
+
     # the following five functions extract a certain field given an entry
     def get_record_length(self, line):
         return line[RECORD_LENGTH_FIELD]
@@ -59,8 +95,10 @@ class HexUtility:
     def get_data_bytes(self, line, start=0, num_bytes=-1): # start is an index relative to the first byte, so 8 means start from the 8th bytes
         # need to check if num bytes is valid, throw exception if not
         start = start*2
-        if num_bytes == -1:  # then get all bytes
-            return line[9+start:9+start + 2*int(self.get_record_length(line))] # record length in bytes, two hex chars are a byte
+        #print("-----------",len(line[9:9 + 2*int(self.get_record_length(line), 16)]))
+        if num_bytes == -1 or len(line[9:9 + 2*int(self.get_record_length(line), 16)]) < num_bytes:  # then get all bytes
+            #print("-----------------------------")
+            return line[9+start:9+start + 2*int(self.get_record_length(line), 16)] # record length in bytes, two hex chars are a byte
         return line[9+start:9+start + 2*num_bytes]
 
     def get_checksum(self, line):
@@ -78,7 +116,7 @@ class HexUtility:
                 return start_address
         return self.get_address(first_line)
 
-    # calculates the checksum of an entry in the hex file
+    # calculates the checksum of an entry in the hex file (.hex checksum)
     def calc_checksum(self, line):
         bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
         bytes_list_num = [int(i, 16) for i in bytes_list]

@@ -4,13 +4,6 @@ import hexutils as hexutil
 
 from HexUtility import *
 
-def calc_page_checksum(line):
-    bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
-    print(bytes_list)
-    print(len(bytes_list))
-    bytes_list_num = [int(i, 16) for i in bytes_list]
-    return sum(bytes_list_num)
-
 if __name__ == "__main__":
     #----------------------csv test----------------
     # kin_csv = Decoder("csv")
@@ -36,6 +29,8 @@ if __name__ == "__main__":
     # #----------------------socket_can test--------------------
     # note calling the decode function multiple times may cause duplication
     # of the recreated hex data. Store return value in a variable as shown.
+
+    # this is a hard coded test, need a more flexible script that just reads from the hex file
 
     # make a kinetek socketcan decoder
     kin_socketcan = Decoder("socketcan")
@@ -91,13 +86,15 @@ if __name__ == "__main__":
         print("RECEIVED:\t", resp)
 
     print("code data size received")
-    print(kin_socketcan.hex_data)
     print("ready to start sending hex")
     # start reading and writing the binary file here
     
 
     hexUtil = HexUtility()
     hexUtil.open_file("hex_file_copies/2.28_copy.hex")
+    print(hexUtil.get_file_data_size())
+    print(hexUtil.get_total_checksum())
+    print(hexUtil.get_page_checksums())
     write_ids = [0x04F, 0x050, 0x051, 0x052]
 
     i = 0
@@ -116,7 +113,7 @@ if __name__ == "__main__":
         if i == len(write_ids):
             i = 0
         
-            
+    print(kin_socketcan.hex_data)
     # print(make_socketcan_packet(0x04F,hexUtil.get_next_data_8()))
     # print(make_socketcan_packet(0x050,hexUtil.get_next_data_8()))
     # print(make_socketcan_packet(0x051,hexUtil.get_next_data_8()))

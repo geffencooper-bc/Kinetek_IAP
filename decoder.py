@@ -141,7 +141,6 @@ class Decoder:
                 self.accumulated_hex_frames_total += frame.data
             return_msg = "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received
             if self.num_hex_frames == 128:
-                print(self.accumulated_hex_frames)
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
                 return_msg += "\n" + "0x0060 | 0x05 | 84 00 "
                 cs = hex(self.calc_page_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
