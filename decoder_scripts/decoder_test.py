@@ -32,6 +32,13 @@ if __name__ == "__main__":
 
     # this is a hard coded test, need a more flexible script that just reads from the hex file
 
+    def decode_socket(frame): # only accounts for id a data
+        can_id = hex(frame.arbitration_id)[2:].zfill(3)
+        data = ""
+        for byte in frame.data:
+           data += hex(byte)[2:].zfill(2).upper() + " "
+        return str(can_id + " | " + data[:-1])
+
     # make a kinetek socketcan decoder
     kin_socketcan = Decoder("socketcan")
 
@@ -40,7 +47,7 @@ if __name__ == "__main__":
     print("SENT:\t", msg)
     resp = kin_socketcan.decode_frame(msg)
     print("RECEIVED:\t", resp)
-    while resp != "0x0060 | 0x05 | 08 00 00 00 00":
+    while decode_socket(resp) != "060 | 08 00 00 00 00":
         resp = kin_socketcan.decode_frame(msg)
         print("RECEIVED:\t", resp)
 
@@ -51,7 +58,7 @@ if __name__ == "__main__":
     print("SENT:\t", msg)
     resp = kin_socketcan.decode_frame(msg)
     print("RECEIVED:\t", resp)
-    while resp != "0x0069 | 0x08 | 99 99 99 99 99 99 99 99":
+    while decode_socket(resp) != "069 | 99 99 99 99 99 99 99 99":
         resp = kin_socketcan.decode_frame(msg)
         print("RECEIVED:\t", resp)
 
@@ -61,7 +68,7 @@ if __name__ == "__main__":
     print("SENT:\t", msg)
     resp = kin_socketcan.decode_frame(msg)
     print("RECEIVED:\t", resp)
-    while resp != "0x0069 | 0x08 | 02 10 10 10 10 10 10 10":
+    while decode_socket(resp) != "069 | 02 10 10 10 10 10 10 10":
         resp = kin_socketcan.decode_frame(msg)
         print("RECEIVED:\t", resp)
     
@@ -71,7 +78,7 @@ if __name__ == "__main__":
     print("SENT:\t", msg)
     resp = kin_socketcan.decode_frame(msg)
     print("RECEIVED:\t", resp)
-    while resp != "0x0069 | 0x08 | 03 10 10 10 10 10 10 10":
+    while decode_socket(resp) != "069 | 03 10 10 10 10 10 10 10":
         resp = kin_socketcan.decode_frame(msg)
         print("RECEIVED:\t", resp)
 
@@ -81,7 +88,7 @@ if __name__ == "__main__":
     print("SENT:\t", msg)
     resp = kin_socketcan.decode_frame(msg)
     print("RECEIVED:\t", resp)
-    while resp != "0x0069 | 0x08 | 04 10 10 10 10 10 10 10":
+    while decode_socket(resp) != "069 | 04 10 10 10 10 10 10 10":
         resp = kin_socketcan.decode_frame(msg)
         print("RECEIVED:\t", resp)
 
@@ -113,7 +120,7 @@ if __name__ == "__main__":
         if i == len(write_ids):
             i = 0
         
-    # print(kin_socketcan.hex_data)
+    print(kin_socketcan.hex_data)
     # print(make_socketcan_packet(0x04F,hexUtil.get_next_data_8()))
     # print(make_socketcan_packet(0x050,hexUtil.get_next_data_8()))
     # print(make_socketcan_packet(0x051,hexUtil.get_next_data_8()))

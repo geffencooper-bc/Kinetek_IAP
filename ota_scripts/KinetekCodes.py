@@ -1,3 +1,10 @@
+from HexUtility import make_socketcan_packet, data_string_to_byte_list
+
+# FW_REVISION_REQUEST = make_socketcan_packet(0x045, "00 00 00 00 00 00 00 00")
+# ENTER_IAP_MODE_REQUEST = make_socketcan_packet(0x048, "00 00 00 00 00 00 00 00")
+# SEND_BYTES_REQUEST = make_socketcan_packet(0x048, "88 88 88 88 88 88 88 88")
+# SEND_CODE     doesnt work cuz of timestamp
+
 def get_kinetek_can_id_code(arg):
     return{
         'FW_REVISION_REQUEST' :  '0x045',

@@ -4,7 +4,7 @@ import can
 import hex_maker as hex_util
 import sys
 sys.path.insert(1, '/home/geffen.cooper/Desktop/kinetek_scripts/ota_scripts/')
-from HexUtility import make_socketcan_packet
+from HexUtility import make_socketcan_packet, data_string_to_byte_list
 
 
 # used for decoding requests
@@ -50,6 +50,8 @@ class Decoder:
         self.accumulated_hex_frames_total = "" # same as above but total
         self.calc_checksum_total = "" # compare against passed in checksum
         self.calc_checksum_page = "" # same as above
+        self.is_eof = False # if hex file ended received
+        self.is_eop = False # if page ended
  
 
     # calculates the checksum of a page by adding all the bytes, need to convert from string, returns as the numerical value
@@ -70,37 +72,38 @@ class Decoder:
         #print(frame.can_id, " ", frame.data) # if want to see frames sent uncomment this (has lots of noise)
         if frame.can_id == "0x0048": # IAP Request sent
             if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode command
-                return "0x0060 | 0x05 | 08 00 00 00 00" # entered IAP mode response
+                return make_socketcan_packet(0x060, data_string_to_byte_list("08 00 00 00 00")) # entered IAP mode response
 
             elif frame.data == "88 88 88 88 88 88 88 88": # start sending bytes request
-                return "0x0069 | 0x08 | 99 99 99 99 99 99 99 99" # ready to receive bytes response
+                return make_socketcan_packet(0x069, data_string_to_byte_list("99 99 99 99 99 99 99 99")) # ready to receive bytes response
 
             elif self.lookup(frame.data, IAP_data_lookup) == "send code start address": # send start address information
                 self.start_address = frame.data[3:15].replace(" ","") # extract the start address from the frame
                 self.curr_address = self.start_address # set this as the current address
                 self.hex_data += hex_util.make_start_address(self.start_address) # use start address to add extended adress to hex file if necessary
-                return "0x0069 | 0x08 | 02 10 10 10 10 10 10 10"
+                return make_socketcan_packet(0x069, data_string_to_byte_list("02 10 10 10 10 10 10 10"))
 
             elif self.lookup(frame.data, IAP_data_lookup) == "send code checksum data": # total checksum data
                 self.checksum_total = frame.data[6:15].replace(" ", "") # extract the total checksum, no work done because don't have access to hex file yet
-                return "0x0069 | 0x08 | 03 10 10 10 10 10 10 10"
+                return make_socketcan_packet(0x069, data_string_to_byte_list("03 10 10 10 10 10 10 10"))
 
             elif self.lookup(frame.data, IAP_data_lookup) == "send code data size": # not sure how kinetek uses this
                 self.data_size = frame.data[6:17].replace(" ", "")
-                return "0x0069 | 0x08 | 04 10 10 10 10 10 10 10"
+                return make_socketcan_packet(0x069, data_string_to_byte_list("04 10 10 10 10 10 10 10"))
             
             # the page checksum is calculated every 1024 bytes and is calculated in the frame_id 0x052 if block
             # that happens before this statement is called so we already have the checksum, just need to validate it
             elif self.lookup(frame.data, IAP_data_lookup) == "check page checksum": 
                 cs = frame.data[6:15].replace(" ", "")
                 if cs == self.calc_checksum_page:
-                    return "0x0069 | 0x08 | 07 40 40 40 40 40 40 40"
+                    return make_socketcan_packet(0x069, data_string_to_byte_list("07 40 40 40 40 40 40 40"))
                 else:
                     print(cks, " == ", self.calc_checksum_page)
                     return "wrong page checksum-------------------"
             
             # once the hex file ends, calculate total checksum, and current page checksum
             elif self.lookup(frame.data, IAP_data_lookup) == "send end of hex file message": 
+                self.is_eof = True
                 self.accumulated_hex_frames_total = self.accumulated_hex_frames_total.replace(" ","")
                 cs_total = hex(self.calc_laurence_checksum(self.accumulated_hex_frames_total))[2:].upper().zfill(6) # total checksum, format into string
 
@@ -110,15 +113,26 @@ class Decoder:
                 self.calc_checksum_page = cs_page
                 self.calc_checksum_total = cs_total
 
-                cs_page = " ".join(cs_page[i:i+2] for i in range(0, len(cs_page), 2)) # format into print
                 if self.calc_checksum_total == self.checksum_total: # check if total checksum good
-                    return "0x0069 | 0x08 | 05 20 20 20 20 20 20 20" + "\n0x0060 | 0x08 | 84 00 " + cs_page
+                    return make_socketcan_packet(0x069, data_string_to_byte_list("05 20 20 20 20 20 20 20")) # need to return total checksum good
                 else:
                     print(self.checksum_total, "!=", self.calc_checksum_total)
+            
+        elif self.is_eof == True:
+                cs_page = self.calc_checksum_page
+                cs_page = " ".join(cs_page[i:i+2] for i in range(0, len(cs_page), 2)) # format into print
+                self.is_eof = False
+                return (make_socketcan_packet(0x060, data_string_to_byte_list("84 00 " + cs_page)))
+
+        elif self.is_eop == True:
+            cs_page = self.calc_checksum_page
+            cs_page = " ".join(cs_page[i:i+2] for i in range(0, len(cs_page), 2)) # format into print
+            self.is_eop = False
+            return (make_socketcan_packet(0x060, data_string_to_byte_list("84 00 " + cs_page)))
 
         if frame.can_id == "0x0045": # fw revision request
             if frame.data == "00 00 00 00 00 00 00 00": # default ?
-                return "0x0067 | 0x08 | 01 08 5E 00 80 00 00 00" # fw revision response
+                return make_socketcan_packet(0x067, data_string_to_byte_list("01 08 5E 00 80 00 00 00")) # fw revision response
 
         # hex file transfer commands, 4 sets of 8 bytes --> ids are 4F, 50, 51, 52 in that order   
         if frame.can_id == "0x004F" or frame.can_id == "0x004f":
@@ -145,22 +159,20 @@ class Decoder:
             self.hex_data += hex_util.make_line((self.first_8).replace(" ", "")+frame.data.replace(" ", ""), self.curr_address)
             self.curr_address = hex(int(self.curr_address, 16) + 0x0010)[2:]
             
-            # keep track so can know when enf of page, hex frame is 8 bytes
+            # keep track so can know when end of page, hex frame is 8 bytes
             self.num_hex_frames += 4 # this is the 4th 8 byte frame
-            return_msg = "0x0069 | 0x08 | 10 10 10 10 10 10 10 10" # 32 bytes received
+            
             if self.num_hex_frames == 128: # page is 1024 bytes, 8 byte frame * 128 = 1024 bytes
+                print("\n\n\n=================================================\n\n\n")
+                self.is_eop = True
                 # calculate checksum of page, format into print frame
                 self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
-                return_msg += "\n" + "0x0060 | 0x05 | 84 00 "
                 cs = hex(self.calc_laurence_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
-                cs = " ".join(cs[i:i+2] for i in range(0, len(cs), 2)) # print format
-                return_msg += cs
-                self.calc_checksum_page = cs.replace(" ","") # stored format
+                self.calc_checksum_page = cs
                 # rest values to start next page
                 self.num_hex_frames = 0
-                self.accumulated_hex_frames = ""
-                return return_msg      
-            return return_msg
+                self.accumulated_hex_frames = ""   
+            return make_socketcan_packet(0x069, data_string_to_byte_list("10 10 10 10 10 10 10 10")) # 32 bytes received
 
 
     # takes in a csv frame, returns nothing if not an IAP frame, returns expected kinetek reply otherwise

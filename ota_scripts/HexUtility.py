@@ -151,6 +151,13 @@ class HexUtility:
 
 
 # helper function independent of class
+def data_string_to_byte_list(data_bytes): # input form is 00 00 00 00 00 00 00 00
+    data_bytes = data_bytes.replace(" ","")
+    bytes_list = [data_bytes[i:i+2] for i in range(0, len(data_bytes), 2)]
+    bytes_list_num = [int(i, 16) for i in bytes_list]
+    return bytes_list_num
+
+# helper function independent of class
 def make_socketcan_packet(can_id, data_bytes): # pass in data as a list of 8 bytes
     return can.Message(arbitration_id=can_id, data=data_bytes, is_extended_id=False)
         

@@ -92,5 +92,10 @@ def appendCSV(csvFile, textFile):
 
 import sys
 sys.path.insert(1, '/home/geffen.cooper/Desktop/kinetek_scripts/ota_scripts/')
-print(sys.path)
-import HexUtility
+#print(sys.path)
+from HexUtility import make_socketcan_packet, data_string_to_byte_list
+f = make_socketcan_packet(0x069, data_string_to_byte_list("05 20 20 20 20 20 20 20"))
+print(f.timestamp)
+print(data_string_to_byte_list("05 20 20 20 20 20 20 20"))
+print(str(make_socketcan_packet(0x069, data_string_to_byte_list("05 20 20 20 20 20 20 20"))) + "\n" 
+      + str(make_socketcan_packet(0x069, data_string_to_byte_list("05 20 20 20 20 20 20 20"))))
