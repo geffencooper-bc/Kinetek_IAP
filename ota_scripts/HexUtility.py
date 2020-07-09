@@ -57,8 +57,8 @@ class HexUtility:
     def calc_laurence_checksum(self, line):
         bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
         bytes_list_num = [int(i, 16) for i in bytes_list]
-        cs = hex(sum(bytes_list_num))[2:].upper().zfill(6)
-        return " ".join(cs[i:i+2] for i in range(0, len(cs), 2))
+        cs = hex(sum(bytes_list_num))[2:].upper().zfill(8)
+        return insert_spaces(cs, 2)
 
     def get_total_checksum(self):
         raw_data = ""
@@ -104,7 +104,7 @@ class HexUtility:
     def get_checksum(self, line):
         return line[9 + 2*int(self.get_record_length(line)):9 + 2*int(self.get_record_length(line)) + 2] # don't know if have newline or not, safer to start from begginging
     
-    # gets the start address by parsing the first and/or second line
+    # gets the start address by parsing the first and/or second line, returns as string ex: "08008000"
     def get_start_address(self): # returns it as a string
         first_line = self.hex_lines[0]
         if self.get_type(first_line) == "04": # if extended address
@@ -160,7 +160,13 @@ def data_string_to_byte_list(data_bytes): # input form is 00 00 00 00 00 00 00 0
 # helper function independent of class
 def make_socketcan_packet(can_id, data_bytes): # pass in data as a list of 8 bytes
     return can.Message(arbitration_id=can_id, data=data_bytes, is_extended_id=False)
-        
+
+# inserts spaces into a string every n chars
+def insert_spaces(string, n):
+    return " ".join(string[i:i+n] for i in range(0, len(string), n))
+
+def format_int_to_code(num, num_bytes):
+    return insert_spaces(hex(num)[2:].zfill(num_bytes*2), 2)
         
 
 # for the actual can class make it easy to send messages, abstract away socket can

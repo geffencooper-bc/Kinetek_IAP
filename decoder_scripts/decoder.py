@@ -7,7 +7,7 @@ sys.path.insert(1, '/home/geffen.cooper/Desktop/kinetek_scripts/ota_scripts/')
 from HexUtility import make_socketcan_packet, data_string_to_byte_list
 
 
-# used for decoding requests
+# used for decoding requests/responses
 IAP_data_lookup = [
 
     ('10 10 10 10 10 10 10 10' ,                                                            "received 32 bytes"),
