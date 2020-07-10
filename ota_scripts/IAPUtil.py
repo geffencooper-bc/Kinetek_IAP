@@ -199,29 +199,41 @@ class IAPUtil:
         self.num_bytes_uploaded = 0
         
         while True:
+            if self.packet_count > 0 and self.packet_count% 32 == 0: # page_cs packet needs to be made while running unless want to make all during load
+                print("\n======END OF PAGE======\n")
+                page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
+                                                                                                    get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
+                                                                                                    + self.page_check_sums[self.page_count]
+                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
+                                                                                                    + format_int_to_code(self.page_count+1, 1) \
+                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
+                                                                                                    ))
+                # need to wait for 06 pointer thing with page checksum, try without
+                
+                # resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 40, "NO SELF CALCULATED PAGE CHECKSUM") 
+                # if resp != None and resp[0] == False:
+                #     return resp[1]
+                resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
+                if resp != None and resp[0] == False:
+                    return resp[1]
+                self.page_count += 1
+
             status = self.send_hex_packet(write_ids)
-            while status == True: # keep sending hex packets until status false or none
+            if status == True: # keep sending hex packets until status false or none
                 self.packet_count += 1
-                if self.packet_count % 32 == 0: # page_cs packet needs to be made while running unless want to make all during load
-                    print("\n======END OF PAGE======\n")
-                    page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
-                                                                                                        get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
-                                                                                                        + self.page_check_sums[self.page_count]
-                                                                                                        + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
-                                                                                                        + format_int_to_code(self.page_count+1, 1) \
-                                                                                                        + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
-                                                                                                        ))
-                    # need to wait for 06 pointer thing with page checksum
-                    
-                    resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 40, "NO SELF CALCULATED PAGE CHECKSUM") 
-                    if resp != None and resp[0] == False:
-                        return resp[1]
-                    resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
-                    if resp != None and resp[0] == False:
-                        return resp[1]
-                    self.page_count += 1
-                status = self.send_hex_packet(write_ids)
-            if status == None: # reached end of file
+            
+            elif status == False: # retry
+                status = self.send_hex_packet(write_ids_retry, True)
+                if status == False:
+                    return (False, "32_BYTE_RESPONSE_TIMEOUT")
+                for chunk in self.current_packet:
+                    self.num_bytes_uploaded += len(chunk)
+                print(self.num_bytes_uploaded)
+                self.packet_count += 1
+                self.current_packet.clear() # if receive confirmation can clear and return true
+                continue
+                
+            elif status == None: # reached end of file
                 #self.page_count +=1 # (degenarate packet at the end)
                 page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                     get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
@@ -234,9 +246,9 @@ class IAPUtil:
                 if resp != None and resp[0] == False:
                     return resp[1]
                 
-                resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 20, "NO SELF CALCULATED PAGE CHECKSUM") 
-                if resp != None and resp[0] == False:
-                    return resp[1]
+                # resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 20, "NO SELF CALCULATED PAGE CHECKSUM") 
+                # if resp != None and resp[0] == False:
+                #     return resp[1]
                 resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
                 if resp != None and resp[0] == False:
                     return resp[1]
@@ -244,16 +256,7 @@ class IAPUtil:
                 if resp != None and resp[0] == False:
                     return resp[1]
                 return (True, "EOF")
-            if status == False: # retry
-                status = self.send_hex_packet(write_ids_retry, True)
-                if status == False:
-                    return (False, "32_BYTE_RESPONSE_TIMEOUT")
-                for chunk in self.current_packet:
-                    self.num_bytes_uploaded += len(chunk)
-                print(self.num_bytes_uploaded)
-                self.packet_count += 1
-                self.current_packet.clear() # if receive confirmation can clear and return true
-                continue
+            
             
             
 
