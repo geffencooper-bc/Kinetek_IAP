@@ -208,7 +208,6 @@ class IAPUtil:
                                                                                                         + format_int_to_code(self.page_count+1, 1) \
                                                                                                         + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
                                                                                                         ))
-                    self.page_count += 1
                     # need to wait for 06 pointer thing with page checksum
                     
                     resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 20, "NO SELF CALCULATED PAGE CHECKSUM") 
@@ -217,6 +216,7 @@ class IAPUtil:
                     resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
                     if resp != None and resp[0] == False:
                         return resp[1]
+                    self.page_count += 1
                 status = self.send_hex_packet(write_ids)
             if status == None: # reached end of file
                 #self.page_count +=1 # (degenarate packet at the end)
@@ -242,18 +242,32 @@ class IAPUtil:
                     return resp[1]
                 return (True, "EOF")
             if status == False: # retry
-                status = self.send_hex_packet(write_ids_retry)
+                status = self.send_hex_packet(write_ids_retry, True)
                 if status == False:
                     return (False, "32_BYTE_RESPONSE_TIMEOUT")
-                self.page_count += 1
                 continue
             
             
 
-    def send_hex_packet(self,write_ids): #32 bytes of data
+    def send_hex_packet(self,write_ids, is_retry=False): #32 bytes of data
+        if is_retry == True:
+            count = 0
+            while True:
+                hex_frame = make_socketcan_packet(write_ids[count], self.current_packet[count])
+                if count == 3:
+                    if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
+                        return False
+                    #self.num_bytes_uploaded += len(self.current_packet)
+                    self.current_packet.clear() # if receive confirmation can clear and return true
+                    return True
+
+                else:
+                    self.bus.send(hex_frame) 
+                    #self.num_bytes_uploaded += len(self.current_packet[count])
+                    print("SENT:\t",hex_frame)
+                count += 1
         i = 0
         while True:
-            print(self.num_bytes_uploaded)
             if self.num_bytes_uploaded == self.data_size_bytes:
                 return None
             data = self.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file
@@ -266,15 +280,18 @@ class IAPUtil:
             if i == 3: # if this is the fourth packet, wait for 32 bytes confirmation from Kinetek
                 if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
                     return False
-                self.current_packet.clear # if receive confirmation can clear and return true
-                self.num_bytes_uploaded += len(data)
+                print(self.current_packet)
+                for chunk in self.current_packet:
+                    self.num_bytes_uploaded += len(chunk)
+                self.current_packet.clear() # if receive confirmation can clear and return true
+                print(self.num_bytes_uploaded)
                 return True
 
             else: # if first three packets then send normally
                 self.bus.send(hex_frame) 
-                self.num_bytes_uploaded += len(data)
+                #self.num_bytes_uploaded += len(data)
                 print("SENT:\t",hex_frame)
-
+            #print(self.num_bytes_uploaded)
             i += 1
             if i == len(write_ids):
                 i = 0
