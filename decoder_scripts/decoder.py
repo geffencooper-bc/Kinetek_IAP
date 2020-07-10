@@ -58,9 +58,25 @@ class Decoder:
                 return value
         return ""
 
+    def init_simulator(self, channel_name):
+        self.bus = can.interface.Bus(bustype='socketcan', channel=channel_name)
+
+    def run_simulator(self):
+        while True:
+            frame = self.bus.recv(timeout=1000)
+            print(frame)
+            resp = self.decode_socketcan_frame(frame)
+            if resp != None:
+                self.bus.send(resp)
+
     # takes the generic My_frame structure and decodes it by responding like a kinetek, input frames are commands sent during IAP
     def decode_my_frame(self, frame):
         #print(frame.can_id, " ", frame.data) # if want to see frames sent uncomment this (has lots of noise)
+        print(frame.can_id)
+        # ping command to see if working
+        if frame.can_id == "0x0111":
+            if frame.data == "11 11 11 11 11 11 11 11":
+                return make_socketcan_packet(0x101, data_string_to_byte_list("10 10 10 10 10 10 10 10"))
         if frame.can_id == "0x0048": # IAP Request sent
             if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode command
                 return make_socketcan_packet(0x060, data_string_to_byte_list("08 00 00 00 00")) # entered IAP mode response
@@ -180,7 +196,7 @@ class Decoder:
             
     # takes in a socketcan frame and returns what would be expected for the kinetek (only IAP)
     def decode_socketcan_frame(self, frame):
-        can_id = "0x00" + hex(frame.arbitration_id)[2:]
+        can_id = "0x" + hex(frame.arbitration_id)[2:].zfill(4)
         data = ""
         for byte in frame.data:
            data += hex(byte)[2:].zfill(2).upper() + " "

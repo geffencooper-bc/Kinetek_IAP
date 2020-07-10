@@ -63,14 +63,18 @@ class IAPUtil:
         print("\nSEND_START_ADDRESS_REQUEST:\t", self.SEND_START_ADDRESS_REQUEST)
         print("\nSEND_CHECKSUM_DATA_REQUEST:\t", self.SEND_CHECKSUM_DATA_REQUEST)
         print("\nSEND_DATA_SIZE_REQUEST:\t\t", self.SEND_DATA_SIZE_REQUEST)
+        print("\n")
+        print("\t\t\t\t\t=============================================")
+        print("\t\t\t\t\t=========== IAP UTILITY TO STRING ===========")
+        print("\t\t\t\t\t=============================================\n\n\n\n\n\n\n")
     
-    def init_can(self):
+    def init_can(self, channel_name):
         # need to add modprobe, ip set up stuff for ifconfig
         # maybe add a test message to send to see if works
         if self.is_virtual:
-            self.bus = can.interface.Bus(bustype='socketcan', channel='vcan0')
+            self.bus = can.interface.Bus(bustype='socketcan', channel=channel_name)
         else:
-            self.bus = can.interface.Bus(bustype='socketcan', channel='can0')
+            self.bus = can.interface.Bus(bustype='socketcan', channel=channel_name)
 
     def put_in_IAP_mode(self):
         self.bus.send(self.ENTER_IAP_MODE_REQUEST)
