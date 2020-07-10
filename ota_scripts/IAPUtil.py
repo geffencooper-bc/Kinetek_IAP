@@ -47,7 +47,7 @@ class IAPUtil:
                                                                                                         + get_kinetek_data_code("END_OF_HEX_FILE_SUFFIX")))             
         self.SEND_TOTAL_CHECKSUM_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                     get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
-                                                                                                    + reverse_bytes(self.total_checksum_reverse) \
+                                                                                                    + self.total_checksum_reverse \
                                                                                                     + get_kinetek_data_code("TOTAL_CHECKSUM_SUFFIX")
                                                                                                     ))
         print(self.last_data_line_size)                                                                                  
@@ -284,7 +284,7 @@ class IAPUtil:
 
             data = self.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file, or next n if last line and incomplete
 
-            if self.hexUtil.curr_line_index == self.hexUtil.last_data_line_index: # if last line add filler if necessary
+            if self.hexUtil.curr_line_index-1 == self.hexUtil.last_data_line_index: # if last line add filler if necessary
                 print("\n\n\n====FILLER====\n\n\n")
                 self.num_bytes_uploaded += len(data)
                 last_data_frame_filler_amount = 8 - len(data) # complete the frame with filler data bytes
@@ -297,17 +297,20 @@ class IAPUtil:
                 num_frames_to_fill = 4 - len(self.current_packet) # complete the packet with filler frames
                 for i in range(num_frames_to_fill):
                     self.current_packet.append(filler_data)
-
                 hex_frame = make_socketcan_packet(write_ids[write_id_index], self.current_packet[write_id_index])
                 self.bus.send(hex_frame)
+                print("SENT:\t", hex_frame)
+                # do get to here bu dont exec for loop, num_frames to fill = 0?
                 for i in range(num_frames_to_fill):
                     hex_frame = make_socketcan_packet(write_ids[write_id_index + i + 1], self.current_packet[write_id_index + i + 1])
-                    self.bus.send(hex_frame)
-                    if write_id_index + i == 3:
+                    if write_id_index + i + 1 == 3:
                         if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
                             return False
                         print(self.current_packet)
                         return None
+                    self.bus.send(hex_frame)
+                    print("SENT:\t", hex_frame)
+                    
 
 
             self.current_packet.append(data) # stores these in case need to retry

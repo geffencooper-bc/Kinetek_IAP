@@ -1,3 +1,5 @@
+:10E82000FF0607080901FF01FF01FF01FF01A90021
+
 10
 
 
@@ -38,263 +40,154 @@ SEND_DATA_SIZE_REQUEST:		 Timestamp:        0.000000        ID: 0048    S       
 
 
 Message sent on socketcan channel 'can0'
-RECEIVED:	 Timestamp: 1594417475.823761        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.211895        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.823938        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.212158        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.824011        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.212235        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.824080        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.212306        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.824145        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.212375        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.824208        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.212468        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.824274        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.212541        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.824336        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.250411        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.824400        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.250411        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.851227        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.260213        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.852675        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.292083        ID: 0001    S                DLC:  5    1d f8 01 00 00              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.860679        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.301507        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.860679        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.301508        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.882759        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.310207        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.901208        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.352511        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.911684        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.352512        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.911685        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.360226        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.912778        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.363086        ID: 0001    S                DLC:  5    1d f7 03 00 00              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.942867        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.403479        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.951184        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.403479        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.951185        ID: 0001    S                DLC:  5    1d f8 01 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.410181        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.962665        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.434052        ID: 0001    S                DLC:  5    1d f2 07 00 00              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.962665        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.454358        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417475.972900        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.454359        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.001209        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.460209        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.002951        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.505060        ID: 0001    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.013831        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.505060        ID: 0001    S                DLC:  5    1d f1 00 00 00              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.013832        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.505060        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.022057        ID: 0001    S                DLC:  5    1d f7 03 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.506317        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.033044        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.510207        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.051214        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.556514        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.063030        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.556514        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.064680        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.560224        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.064680        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.607384        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.093058        ID: 0001    S                DLC:  5    1d f2 07 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.607384        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.093059        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.610344        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.101212        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.647091        ID: 0001    S                DLC:  5    1d f9 01 00 00              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.115823        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.658479        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.115823        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.658479        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.123150        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.660181        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.151195        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.709478        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.153488        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.709479        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.164040        ID: 0001    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.709479        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.164040        ID: 0001    S                DLC:  5    1d f1 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.710784        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.166875        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.718094        ID: 0001    S                DLC:  5    1d f1 06 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.166875        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.718094        ID: 0001    S                DLC:  5    1d f2 03 00 00              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.183274        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.760175        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.201198        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.760176        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.213388        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.760176        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.217808        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.789188        ID: 04ca    S                DLC:  8    00 01 01 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.217808        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.810184        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.243357        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.811392        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.251066        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.811392        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.251066        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.860190        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.268698        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.860190        ID: 04ca    S                DLC:  8    01 01 01 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.268698        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.862517        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.273408        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.862517        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.301187        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.910186        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.303463        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.913389        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.306034        ID: 0001    S                DLC:  5    1d f9 01 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.913390        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.319747        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.931152        ID: 04ca    S                DLC:  8    02 01 01 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.319748        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.960219        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.333521        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.960220        ID: 0002    S                DLC:  0                                Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.351196        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422878.964508        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.363601        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422878.964508        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.370678        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422879.002169        ID: 04ca    S                DLC:  8    03 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.370678        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422879.010178        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.377037        ID: 0001    S                DLC:  5    1d f1 06 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422879.015438        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.377037        ID: 0001    S                DLC:  5    1d f2 03 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422879.015439        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.393655        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
+RECEIVED:	 Timestamp: 1594422879.060187        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.401166        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422879.066512        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.421765        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
+RECEIVED:	 Timestamp: 1594422879.066513        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.421765        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422879.073189        ID: 04ca    S                DLC:  8    04 01 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.448174        ID: 04ca    S                DLC:  8    00 01 01 00 00 00 00 00     Channel: can0
+RECEIVED:	 Timestamp: 1594422879.110210        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.451163        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.453741        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.472691        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.472691        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.483817        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.501193        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.513839        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.519146        ID: 04ca    S                DLC:  8    01 01 01 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.523751        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.523751        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.543918        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.551164        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.573980        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.573980        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.575184        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.590174        ID: 04ca    S                DLC:  8    02 01 01 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.601160        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.604016        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.625799        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.625799        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.634042        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.651170        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.661173        ID: 04ca    S                DLC:  8    03 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.664101        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.676824        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.676825        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.694137        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.701195        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.724236        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.727788        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.727789        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.732176        ID: 04ca    S                DLC:  8    04 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.751165        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.754250        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.778679        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.778679        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.784395        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.801022        ID: 0001    S                DLC:  5    1d f7 05 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.801022        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.814406        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.829779        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.829779        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.844430        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.851208        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.874506        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.880721        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.880721        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.901206        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.904518        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.931623        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.931623        ID: 0040    S                DLC:  8    00 01 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.934569        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.945180        ID: 04ca    S                DLC:  8    05 01 02 01 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.951153        ID: 0000    S                DLC:  8    00 00 00 00 00 00 00 00     Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.964655        ID: 0060    S                DLC:  5    81 00 00 00 00              Channel: can0
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp: 1594417476.982623        ID: 0041    S                DLC:  5    1d f1 04 00 01              Channel: can0
-SENT:	
+RECEIVED:	 Timestamp: 1594422879.117144        ID: 0080    S                DLC:  8    1d 01 01 00 00 00 00 00     Channel: can0
+=========HEART BEAT DETECTED, DIDNT ENTER
+closing file

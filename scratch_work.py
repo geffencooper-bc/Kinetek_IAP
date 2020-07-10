@@ -173,12 +173,7 @@ def lookup2(data, table):
 
 #print(reverse_bytes("ab cd ef gh"))
 
-# hex_file = open("scratch.txt", "r")
-# hex_lines = hex_file.readlines()
+hex_file = open("scratch.txt", "r")
+hex_lines = hex_file.readlines()
 
-# print(hex_lines[len(hex_lines)-1][1:3])
-
-a = [1, 2, 3, 4, 5, 6, 7, 8]
-print(a)
-a.clear
-print(a)
+print(hex_lines[len(hex_lines)-1][1:3])

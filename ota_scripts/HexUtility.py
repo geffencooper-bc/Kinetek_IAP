@@ -59,6 +59,7 @@ class HexUtility:
         while self.get_type(self.hex_lines[index]) != DATA:
             index -=1
         self.last_data_line_index = index
+        print(self.hex_lines[self.last_data_line_index])
         return self.hex_lines[index][1:3]
 
     def calc_laurence_checksum(self, line):
