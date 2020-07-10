@@ -18,7 +18,7 @@ IAP_data_lookup = [
     ('069\s\|\s05\s20\s20\s20\s20\s20\s20\s20' ,                                                                    "END_OF_HEX_FILE_RESPONSE"),
     ('069\s\|\s06\s30\s30\s30\s30\s30\s30\s30' ,                                                                    "CALCULATE_TOTAL_CHECKSUM_RESPONSE"),
     ('069\s\|\s07\s40\s40\s40\s40\s40\s40\s40' ,                                                                    "CALCULATE_PAGE_CHECKSUM_RESPONSE"),
-    ('060\s\|\s84\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]',                 "calculated page checksum")
+    ('060\s\|\s84\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]',                         "SELF_CALCULATED_PAGE_CHECKSUM")
 ] 
 
 # find the according pattern in the above table

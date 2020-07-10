@@ -153,24 +153,36 @@ class IAPUtil:
             if num_tries > max_tries:
                 return (False, timeout_message) 
 
+    def wait_for_message(self, expected_message, time_out_count, time_out_message):
+        resp = self.bus.recv(timeout=1000)
+        print("RECEIVED:\t", resp)
+        count = 0
+        while lookup(decode_socketcan_packet(resp), IAP_data_lookup) != expected_message:
+            resp = self.bus.recv(timeout=1000)
+            print("RECEIVED:\t", resp) 
+            count += 1
+            if count > time_out_count:
+                return (False, time_out_message)
+        #return True
+
     def send_init_packets(self):
         print("sending init packets")
         # make sure in iap mode first
         if self.in_iap_mode == True:
             # request fw revision
-            if self.send_request(self.FW_REVISION_REQUEST, "FW_REVISION_REQUEST_RESPONSE", 10) == False:
+            if self.send_request(self.FW_REVISION_REQUEST, "FW_REVISION_REQUEST_RESPONSE", 20) == False:
                 return "CONTROLLER WONT RESPOND TO FW REVISION REQUEST"
             # request to send bytes
-            if self.send_request(self.SEND_BYTES_REQUEST, "SEND_BYTES_RESPONSE", 10) == False:
+            if self.send_request(self.SEND_BYTES_REQUEST, "SEND_BYTES_RESPONSE", 20) == False:
                 return "CONTROLLER WONT RECEIVE BYTES"
             # request to send start address
-            if self.send_request(self.SEND_START_ADDRESS_REQUEST, "SEND_START_ADDRESS_RESPONSE", 10) == False:
+            if self.send_request(self.SEND_START_ADDRESS_REQUEST, "SEND_START_ADDRESS_RESPONSE", 20) == False:
                 return "CONTROLLER WONT RECEIVE START ADDRESS"
             # request to send checksum data
-            if self.send_request(self.SEND_CHECKSUM_DATA_REQUEST, "SEND_CHECKSUM_DATA_RESPONSE", 10) == False:
+            if self.send_request(self.SEND_CHECKSUM_DATA_REQUEST, "SEND_CHECKSUM_DATA_RESPONSE", 20) == False:
                 return "CONTROLLER WONT RECEIVE CHECKSUM DATA"
             # request to send start address
-            if self.send_request(self.SEND_DATA_SIZE_REQUEST, "SEND_DATA_SIZE_RESPONSE", 10) == False:
+            if self.send_request(self.SEND_DATA_SIZE_REQUEST, "SEND_DATA_SIZE_RESPONSE", 20) == False:
                 return "CONTROLLER WONT RECEIVE DATA SIZE"
             return "SUCCESS"
         return "NOT IN IAP"
@@ -197,6 +209,11 @@ class IAPUtil:
                                                                                                         + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
                                                                                                         ))
                     self.page_count += 1
+                    # need to wait for 06 pointer thing with page checksum
+                    
+                    resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 20, "NO SELF CALCULATED PAGE CHECKSUM") 
+                    if resp != None and resp[0] == False:
+                        return resp[1]
                     resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
                     if resp != None and resp[0] == False:
                         return resp[1]
@@ -211,6 +228,10 @@ class IAPUtil:
                                                                                                     + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
                                                                                                     ))
                 resp = self.send_request_repeated(self.SEND_EOF_REQUEST, "END_OF_HEX_FILE_RESPONSE", 10, 2, "END_OF_HEX_FILE_TIMEOUT")
+                if resp != None and resp[0] == False:
+                    return resp[1]
+                
+                resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 20, "NO SELF CALCULATED PAGE CHECKSUM") 
                 if resp != None and resp[0] == False:
                     return resp[1]
                 resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
@@ -243,7 +264,7 @@ class IAPUtil:
             
             hex_frame = make_socketcan_packet(write_ids[i],data) # make a socket_can packet from hex data
             if i == 3: # if this is the fourth packet, wait for 32 bytes confirmation from Kinetek
-                if self.send_request(hex_frame, "RECEIVED_32__BYTES", 20) == False: # if no confirmation, return false
+                if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
                     return False
                 self.current_packet.clear # if receive confirmation can clear and return true
                 self.num_bytes_uploaded += len(data)
