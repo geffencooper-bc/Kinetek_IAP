@@ -44,19 +44,20 @@ def get_kinetek_can_id_code(arg):
 
 def get_kinetek_data_code(arg):
     return{
-        "DEFAULT":              '00 00 00 00 00 00 00 00',
-        "ENTER_IAP_MODE":       '00 00 00 00 00 00 00 00',
-        "SEND_BYTES":           '88 88 88 88 88 88 88 88',
-        "CODE_START_ADDRESS_PREFIX":    '02 ',
-        "CODE_START_ADDRESS_SUFFIX":    ' 9A 00 00',
-        "SEND_CHECKSUM_PREFIX":         '03 ',
-        "SEND_CHECKSUM_SUFFIX":         ' 9B 00 00',  
-        "SEND_DATA_SIZE_PREFIX":        '04 ',
-        "SEND_DATA_SIZE_SUFFIX":        ' 9C 00 00',
-        "END_OF_HEX_FILE":      '05 10 10 10 10 10 10 10',
-        "TOTAL_CHECKSUM_PREFIX":      '06 ',
-        "TOTAL_CHECKSUM_SUFFIX": ' 9D 00 00',
-        "PAGE_CHECKSUM_PREFIX":   '07 ',
-        "PAGE_CHECKSUM_MID":     ' 9E ',
-        "PAGE_CHECKSUM_SUFFIX":     ' 00'
+        "DEFAULT":                       '00 00 00 00 00 00 00 00',
+        "ENTER_IAP_MODE":                '00 00 00 00 00 00 00 00',
+        "SEND_BYTES":                    '88 88 88 88 88 88 88 88',
+        "CODE_START_ADDRESS_PREFIX":     '02 ',
+        "CODE_START_ADDRESS_SUFFIX":     ' 9A 00 00',
+        "SEND_CHECKSUM_PREFIX":          '03 ',
+        "SEND_CHECKSUM_SUFFIX":          ' 9B 00 00',  
+        "SEND_DATA_SIZE_PREFIX":         '04 ',
+        "SEND_DATA_SIZE_SUFFIX":         ' 9C 00 00',
+        "END_OF_HEX_FILE_PREFIX":        '05 ',
+        "END_OF_HEX_FILE_SUFFIX":        ' 00 00 00 90 00 00',
+        "TOTAL_CHECKSUM_PREFIX":         '06 ',
+        "TOTAL_CHECKSUM_SUFFIX":         ' 9D 00 00',
+        "PAGE_CHECKSUM_PREFIX":          '07 ',
+        "PAGE_CHECKSUM_MID":             ' 9E ',
+        "PAGE_CHECKSUM_SUFFIX":          ' 00'
     }.get(arg)

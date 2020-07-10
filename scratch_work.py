@@ -162,13 +162,18 @@ def lookup2(data, table):
 # 99 99 99 99 99 99 99 99
 # 11 1  11 11 11 11 11 11
 
-def reverse_bytes(string):
-    string = string.replace(" ", "")
-    bytes_list = [string[i:i+2] for i in range(0, len(string), 2)]
-    bytes_list.reverse()
-    string = ""
-    for i in range(len(bytes_list)):
-        string += bytes_list[i] + " "
-    return string[:-1]
+# def reverse_bytes(string):
+#     string = string.replace(" ", "")
+#     bytes_list = [string[i:i+2] for i in range(0, len(string), 2)]
+#     bytes_list.reverse()
+#     string = ""
+#     for i in range(len(bytes_list)):
+#         string += bytes_list[i] + " "
+#     return string[:-1]
 
-print(reverse_bytes("ab cd ef gh"))
+#print(reverse_bytes("ab cd ef gh"))
+
+hex_file = open("scratch.txt", "r")
+hex_lines = hex_file.readlines()
+
+print(hex_lines[len(hex_lines)-1][1:3])

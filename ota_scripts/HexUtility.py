@@ -53,6 +53,9 @@ class HexUtility:
                 line_size = int(self.get_record_length(line), 16)
                 size += line_size
         return size
+    
+    def get_last_data_line_size(self):
+        return self.hex_lines[len(self.hex_lines)-1][1:3]
 
     def calc_laurence_checksum(self, line):
         bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]

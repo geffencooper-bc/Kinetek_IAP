@@ -20,6 +20,7 @@ class IAPUtil:
         self.total_checksum = self.hexUtil.get_total_checksum()
         self.total_checksum_reverse = reverse_bytes(self.total_checksum)
         self.start_address = self.hexUtil.get_start_address()
+        self.last_data_line_size = self.hexUtil.get_last_data_line_size()
 
         # make socket_can commands
         self.FW_REVISION_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("FW_REVISION_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("DEFAULT")))
@@ -41,7 +42,9 @@ class IAPUtil:
                                                                                                         + get_kinetek_data_code("SEND_DATA_SIZE_SUFFIX")
                                                                                                         ))   
 
-        self.SEND_EOF_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("END_OF_HEX_FILE")))             
+        self.SEND_EOF_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("END_OF_HEX_FILE_PREFIX") \
+                                                                                                        + self.last_data_line_size \
+                                                                                                        + get_kinetek_data_code("END_OF_HEX_FILE_SUFFIX")))             
         self.SEND_TOTAL_CHECKSUM_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                     get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
                                                                                                     + reverse_bytes(self.total_checksum_reverse) \
