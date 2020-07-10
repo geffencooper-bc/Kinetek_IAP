@@ -10,22 +10,11 @@ from HexUtility import make_socketcan_packet, data_string_to_byte_list
 # used for decoding requests/responses
 IAP_data_lookup = [
 
-    ('10 10 10 10 10 10 10 10' ,                                                            "received 32 bytes"),
-    ('88 88 88 88 88 88 88 88' ,                                                            "start sending bytes request"),
-    ('99 99 99 99 99 99 99 99' ,                                                            "ready to receive bytes response"),
-    ('[0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 5E|5F [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 00 00 00' , "receive reply of version request command"),
-    ('02 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 9A 00 00' ,    "send code start address"),
-    ('02 10 10 10 10 10 10 10' ,                                                            "receive reply of code start address"),
-    ('03 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 9B 00 00' ,    "send code checksum data"),
-    ('03 10 10 10 10 10 10 10' ,                                                            "receive reply of code checksum"),
-    ('04 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 9C 00 00' ,    "send code data size"),
-    ('04 10 10 10 10 10 10 10' ,                                                            "receive reply of code data size"),
-    ('05 10 00 00 00 90 00 00' ,                                                            "send end of hex file message"),
-    ('05 20 20 20 20 20 20 20' ,                                                            "calculated checksum successfully"),
-    ('07 40 40 40 40 40 40 40' ,                                                            "checksum correct?"),
-    ('07 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] 9E [0-9A-F][0-9A-F] [0-9A-F][0-9A-F]' , "check page checksum"),
-    ('84 [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F] [0-9A-F][0-9A-F]',              "calculated page checksum")
-] 
+    ('02\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9A\s00\s00' ,    "send code start address"),
+    ('03\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9B\s00\s00' ,    "send code checksum data"),
+    ('04\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9C\s00\s00' ,    "send code data size"),
+    ('07\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9E\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]' , "check page checksum")
+]
 
 # a generic structure for a can frame to conform to from csv and socket can used by the decoder
 class My_frame:
@@ -98,7 +87,7 @@ class Decoder:
                 if cs == self.calc_checksum_page:
                     return make_socketcan_packet(0x069, data_string_to_byte_list("07 40 40 40 40 40 40 40"))
                 else:
-                    print(cks, " == ", self.calc_checksum_page)
+                    print(cs, " == ", self.calc_checksum_page)
                     return "wrong page checksum-------------------"
             
             # once the hex file ends, calculate total checksum, and current page checksum

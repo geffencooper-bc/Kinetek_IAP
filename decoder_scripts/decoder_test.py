@@ -6,6 +6,86 @@ from HexUtility import *
 from IAPUtil import IAPUtil
 from KinetekCodes import *
 
+def send_request(request, expected_response, timeout_count):
+        #self.bus.send(request)  
+        #resp = self.bus.recv(timeout=1000)
+        print("SENT:\t", request)
+        resp = kin_socketcan.decode_frame(request)
+        print("RECEIVED:\t", resp)
+        count = 0
+        while lookup(decode_socket(resp), IAP_data_lookup) != expected_response:
+            #resp = self.bus.recv(timeout=1000)
+            resp = kin_socketcan.decode_frame(request)
+            print("RECEIVED:\t", resp) 
+            count += 1
+            if count > timeout_count:
+                return False
+        return True
+
+    
+def upload_image():
+    global page_count
+    global iapUtil
+    global packet_count
+    print("sending hex file...")
+    #self.current_packet = [] # store in case need to retry
+    write_ids = [0x04F, 0x050, 0x051, 0x052]     
+    write_ids_retry = [0x053, 0x054, 0x055, 0x056]
+    
+    while True:
+        status = send_hex_packet(write_ids)
+        while status == True: # keep sending hex packets until status false or none
+            packet_count +=1
+            if packet_count % 32 == 0:
+                page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
+                                                                                                    get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
+                                                                                                    + iapUtil.page_check_sums[page_count] \
+                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
+                                                                                                    + format_int_to_code(page_count, 1) \
+                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
+                                                                                                    ))
+                timeout_temp = 0 
+                page_count += 1                                                                                   
+                while send_request(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10) == False:
+                    send_request(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10)
+                    timeout_temp +=1
+                    if timeout_temp > 2:
+                        return (False, "PAGE_CHECKSUM_TIMEOUT")
+            status = send_hex_packet(write_ids)
+        if status == None: # reached end of file
+            return (True, "EOF")
+        if status == False: # retry
+            status = send_hex_packet(write_ids_retry)
+            if status == False:
+                return (False, "32_BYTE_RESPONSE_TIMEOUT")
+            continue
+
+    
+def send_hex_packet(write_ids): #32 bytes of data
+    i = 0
+    while True:
+        data = iapUtil.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file
+        #self.current_packet.append(data) # stores these in case need to retry
+        current_packet.append(data)
+        if data == -1: # means eof so break loop
+            upload_done = True
+            return None
+        
+        hex_frame = make_socketcan_packet(write_ids[i],data) # make a socket_can packet from hex data
+        if i == 3: # if this is the fourth packet, ait for 32 bytes confirmation from Kinetek
+            if send_request(hex_frame, "RECEIVED_32__BYTES", 20) == False: # if no confirmation, return false
+                return False
+            current_packet.clear # if receive confirmation can clear and return true
+            return True
+
+        else: # if first three packets then send normally
+            #self.bus.send(hex_frame) 
+            print("SENT:\t", hex_frame)
+            resp = kin_socketcan.decode_frame(hex_frame)
+
+        i += 1
+        if i == len(write_ids):
+            i = 0
 
 if __name__ == "__main__":
     #----------------------csv test----------------
@@ -102,76 +182,19 @@ if __name__ == "__main__":
 
    
     iapUtil = IAPUtil()
-
-    def send_request(request, expected_response, timeout_count):
-        #self.bus.send(request)  
-        #resp = self.bus.recv(timeout=1000)
-        print("SENT:\t", request)
-        resp = kin_socketcan.decode_frame(request)
-        print("RECEIVED:\t", resp)
-        count = 0
-        while lookup(decode_socket(resp), IAP_data_lookup) != expected_response:
-            #resp = self.bus.recv(timeout=1000)
-            resp = kin_socketcan.decode_frame(request)
-            print("RECEIVED:\t", resp) 
-            count += 1
-            if count > timeout_count:
-                return False
-        return True
-
     current_packet = []
-    def upload_image():
-        print("sending hex file...")
-        #self.current_packet = [] # store in case need to retry
-        write_ids = [0x04F, 0x050, 0x051, 0x052]     
-        write_ids_retry = [0x053, 0x054, 0x055, 0x056]
-        
-        while True:
-            status = send_hex_packet(write_ids)
-            while status == True: # keep sending hex packets until status false or none
-                status = send_hex_packet(write_ids)
-            if status == None: # reached end of file
-                return True
-            if status == False: # retry
-                status = send_hex_packet(write_ids_retry)
-                if status == False:
-                    return False
-                continue
-            
-        
-    def send_hex_packet(write_ids): #32 bytes of data
-        i = 0
-        while True:
-            data = iapUtil.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file
-            #self.current_packet.append(data) # stores these in case need to retry
-            current_packet.append(data)
-            if data == -1: # means eof so break loop
-                upload_done = True
-                return None
-            
-            hex_frame = make_socketcan_packet(write_ids[i],data) # make a socket_can packet from hex data
-            if i == 3: # if this is the fourth packet, ait for 32 bytes confirmation from Kinetek
-                if send_request(hex_frame, "RECEIVED_32__BYTES", 20) == False: # if no confirmation, return false
-                    return False
-                current_packet.clear # if receive confirmation can clear and return true
-                return True
+    page_count = 0
+    packet_count = 0
 
-            else: # if first three packets then send normally
-                #self.bus.send(hex_frame) 
-                print("SENT:\t", hex_frame)
-                resp = kin_socketcan.decode_frame(hex_frame)
+    iapUtil.load_hex_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex")
+    iapUtil.to_string()
+    print("uploading")
 
-            i += 1
-            if i == len(write_ids):
-                i = 0
-
+    upload_image()
 
 
     
-    iapUtil.load_hex_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex")
-    iapUtil.to_string()
-
-    upload_image()
+    
 
     # hexUtil = HexUtility()
     # hexUtil.open_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex")
