@@ -201,6 +201,7 @@ class IAPUtil:
             while status == True: # keep sending hex packets until status false or none
                 self.packet_count += 1
                 if self.packet_count % 32 == 0: # page_cs packet needs to be made while running unless want to make all during load
+                    print("\n======END OF PAGE======\n")
                     page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                         get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
                                                                                                         + self.page_check_sums[self.page_count]
@@ -245,6 +246,9 @@ class IAPUtil:
                 status = self.send_hex_packet(write_ids_retry, True)
                 if status == False:
                     return (False, "32_BYTE_RESPONSE_TIMEOUT")
+                for chunk in self.current_packet:
+                    self.num_bytes_uploaded += len(chunk)
+                print(self.num_bytes_uploaded)
                 self.packet_count += 1
                 continue
             
@@ -256,7 +260,7 @@ class IAPUtil:
             while True:
                 hex_frame = make_socketcan_packet(write_ids[count], self.current_packet[count])
                 if count == 3:
-                    if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
+                    if self.send_request(hex_frame, "RECEIVED_32__BYTES", 80) == False: # if no confirmation, return false
                         return False
                     #self.num_bytes_uploaded += len(self.current_packet)
                     self.current_packet.clear() # if receive confirmation can clear and return true
