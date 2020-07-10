@@ -170,6 +170,7 @@ if __name__ == "__main__":
     
     # make a kinetek socketcan decoder (make a kinetek simulator)
     kin_socketcan = Decoder("socketcan")
+    print("start")
 
     # the IAP download utility which helps automates the process 
     iapUtil = IAPUtil()

@@ -43,7 +43,7 @@ class IAPUtil:
         self.SEND_EOF_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("END_OF_HEX_FILE")))             
         self.SEND_TOTAL_CHECKSUM_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                     get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
-                                                                                                    + reverse_bytes(iapUtil.total_checksum_reverse) \
+                                                                                                    + reverse_bytes(self.total_checksum_reverse) \
                                                                                                     + get_kinetek_data_code("TOTAL_CHECKSUM_SUFFIX")
                                                                                                     ))                                                                                  
         

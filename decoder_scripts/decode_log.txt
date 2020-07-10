@@ -1,19 +1,4 @@
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
-RECEIVED:	 Timestamp:        0.000000        ID: 0060    S                DLC:  5    08 00 00 00 00
-entered IAP mode
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    88 88 88 88 88 88 88 88
-RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    99 99 99 99 99 99 99 99
-can start sending bytes
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    02 08 00 80 00 9a 00 00
-RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    02 10 10 10 10 10 10 10
-start address received
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    03 00 87 47 fe 9b 00 00
-RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    03 10 10 10 10 10 10 10
-checksum data received
-SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    04 00 01 68 30 9c 00 00
-RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    04 10 10 10 10 10 10 10
-code data size received
-ready to start sending hex
+start
 
 
 					=============================================
@@ -40,6 +25,22 @@ SEND_START_ADDRESS_REQUEST:	 Timestamp:        0.000000        ID: 0048    S    
 SEND_CHECKSUM_DATA_REQUEST:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    03 00 87 47 fe 9b 00 00
 
 SEND_DATA_SIZE_REQUEST:		 Timestamp:        0.000000        ID: 0048    S                DLC:  8    04 00 01 68 30 9c 00 00
+SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    00 00 00 00 00 00 00 00
+RECEIVED:	 Timestamp:        0.000000        ID: 0060    S                DLC:  5    08 00 00 00 00
+entered IAP mode
+SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    88 88 88 88 88 88 88 88
+RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    99 99 99 99 99 99 99 99
+can start sending bytes
+SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    02 08 00 80 00 9a 00 00
+RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    02 10 10 10 10 10 10 10
+start address received
+SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    03 00 87 47 fe 9b 00 00
+RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    03 10 10 10 10 10 10 10
+checksum data received
+SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    04 00 01 68 30 9c 00 00
+RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    04 10 10 10 10 10 10 10
+code data size received
+ready to start sending hex
 uploading
 sending hex file...
 SENT:	 Timestamp:        0.000000        ID: 004f    S                DLC:  8    70 10 00 20 01 81 00 08
@@ -15272,6 +15273,9 @@ SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8   
 RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    07 40 40 40 40 40 40 40
 SENT:	 Timestamp:        0.000000        ID: 0048    S                DLC:  8    06 00 87 47 fe 9d 00 00
 RECEIVED:	 Timestamp:        0.000000        ID: 0069    S                DLC:  8    06 30 30 30 30 30 30 30
+
+
+ Recreation of Hex file
 :020000040800F2
 :1080000070100020018100082912010871ED00089C
 :10801000190F01083DC80008EDAF0108000000007D
