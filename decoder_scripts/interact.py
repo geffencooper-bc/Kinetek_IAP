@@ -22,7 +22,6 @@ print(ut.send_init_packets())
 
 ut.upload_image()
 
-
 # while True:
 #     print(ping_msg)
 #     vbus.send(ping_msg)

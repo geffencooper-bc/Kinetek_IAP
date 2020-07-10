@@ -13,7 +13,7 @@ IAP_data_lookup = [
     ('02\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9A\s00\s00' ,    "send code start address"),
     ('03\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9B\s00\s00' ,    "send code checksum data"),
     ('04\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9C\s00\s00' ,    "send code data size"),
-    ('05\s10\s10\s10\s10\s10\s10\s10',                                                             "send end of hex file message"),
+    ('05\s[0-9A-F][0-9A-F]\s00\s00\s00\s90\s00\s00',                                               "send end of hex file message"),
     ('06\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9D\s00\s00',     "send total checksum message"),
     ('07\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9E\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]' , "check page checksum")
 ]
