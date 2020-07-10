@@ -56,8 +56,9 @@ class HexUtility:
     
     def get_last_data_line_size(self):
         index = len(self.hex_lines) - 1
-        while self.get_type(self.hex_lines[index]) != "00":
+        while self.get_type(self.hex_lines[index]) != DATA:
             index -=1
+        self.last_data_line_index = index
         return self.hex_lines[index][1:3]
 
     def calc_laurence_checksum(self, line):
@@ -143,7 +144,8 @@ class HexUtility:
 
         record_length = int(self.get_record_length(self.hex_lines[self.curr_line_index]))
         if record_length < 8:
-            data_bytes = self.get_data_bytes(self.hex_lines[self.curr_line_index], 0, record_length)    
+            data_bytes = self.get_data_bytes(self.hex_lines[self.curr_line_index], 0, record_length) 
+            self.curr_line_index += 1   
 
         elif self.first_8:
             self.first_8 = False 

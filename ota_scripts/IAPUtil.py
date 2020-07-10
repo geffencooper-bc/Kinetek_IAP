@@ -164,6 +164,8 @@ class IAPUtil:
             if count > time_out_count:
                 return (False, time_out_message)
         #return True
+                
+            
 
     def send_init_packets(self):
         print("sending init packets")
@@ -271,18 +273,46 @@ class IAPUtil:
                     #self.num_bytes_uploaded += len(self.current_packet[count])
                     print("SENT:\t",hex_frame)
                 count += 1
-        i = 0
+
+        write_id_index = 0
         while True:
             if self.num_bytes_uploaded == self.data_size_bytes:
                 return None
-            data = self.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file
+
+            data = self.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file, or next n if last line and incomplete
+
+            if self.hexUtil.curr_line_index == self.hexUtil.last_data_line_index: # if last line add filler if necessary
+                self.num_bytes_uploaded += len(data)
+                last_data_frame_filler_amount = 8 - len(data) # complete the frame with filler data bytes
+                if write_id_index == 0 and last_data_frame_filler_amount == 8: # if file ends on complete packet, don't think I need this because only way these conditions are true is if this was not a data line, so would not get here anyways, or an empty data line which does not make sense
+                    return None
+                for i in range(last_data_frame_filler_amount):
+                    data.append(0xFF)
+                self.current_packet.append(data)
+                filler_data = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+                num_frames_to_fill = 4 - len(self.current_packet) # complete the packet with filler frames
+                for i in range(num_frames_to_fill):
+                    self.current_packet.append(filler_data)
+
+                hex_frame = make_socketcan_packet(write_ids[write_id_index], self.current_packet[write_id_index])
+                self.bus.send(hex_frame)
+                for i in range(num_frames_to_fill):
+                    hex_frame = make_socketcan_packet(write_ids[write_id_index + i + 1], self.current_packet[write_id_index + i + 1])
+                    self.bus.send(hex_frame)
+                    if write_id_index + i == 3:
+                        if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
+                            return False
+                        print(self.current_packet)
+                        return None
+
+
             self.current_packet.append(data) # stores these in case need to retry
             if data == -1: # means eof so break loop
                 self.upload_done = True
                 return None
-            
-            hex_frame = make_socketcan_packet(write_ids[i],data) # make a socket_can packet from hex data
-            if i == 3: # if this is the fourth packet, wait for 32 bytes confirmation from Kinetek
+
+            hex_frame = make_socketcan_packet(write_ids[write_id_index],data) # make a socket_can packet from hex data
+            if write_id_index == 3: # if this is the fourth packet, wait for 32 bytes confirmation from Kinetek
                 if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
                     return False
                 print(self.current_packet)
@@ -297,9 +327,9 @@ class IAPUtil:
                 #self.num_bytes_uploaded += len(data)
                 print("SENT:\t",hex_frame)
             #print(self.num_bytes_uploaded)
-            i += 1
-            if i == len(write_ids):
-                i = 0
+            write_id_index += 1
+            if write_id_index == len(write_ids):
+                write_id_index = 0
 
 
 def decode_socketcan_packet(frame):
