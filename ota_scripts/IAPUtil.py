@@ -9,6 +9,7 @@ class IAPUtil:
         self.total_checksum = 0    #
         self.start_address = 0
         self.is_virtual = is_virtual
+        self.in_iap_mode = False
 
     def load_hex_file(self, file_path):
         # get fw data from hex file
@@ -86,8 +87,10 @@ class IAPUtil:
         # repeatedly send request until enter iap mode, if receive a heartbeat then out of boot up mode and can't do forced download
         while enter_iap_mode_resp_count < 2:
             if decode_socketcan_packet(resp) != ENTER_IAP_MODE_RESPONSE: # if don't get desired response, send again
-                self.bus.send(self.ENTER_IAP_MODE_REQUEST)   
+                self.bus.send(self.ENTER_IAP_MODE_REQUEST) 
+                print("SENT:\t", self.ENTER_IAP_MODE_REQUEST)  
                 resp = self.bus.recv(timeout=1000)
+                #print(decode_socketcan_packet(resp))
                 print("RECEIVED:\t", resp)
                 if resp.arbitration_id == 0x80: # if the response if a heartbeat then break because left boot up mode
                      print("=========HEART BEAT DETECTED, DIDNT ENTER")
@@ -102,6 +105,7 @@ class IAPUtil:
         # resp = self.bus.recv(timeout=1000)
         # print("RECEIVED:\t", resp)
         # resp = self.bus.recv(timeout=1000)
+        self.in_iap_mode = True
         return True
         #print("entered iap_mode")
 
@@ -123,6 +127,7 @@ class IAPUtil:
     # request should be in socket_can form, expected_response should be string from lookup table
     def send_request(self, request, expected_response, timeout_count):
         self.bus.send(request)  
+        print("SENT:\t", request)
         resp = self.bus.recv(timeout=1000)
         print("RECEIVED:\t", resp)
         count = 0
@@ -137,9 +142,9 @@ class IAPUtil:
     # if you want to send a request multiple times, with each request having a timeout causing the next attempt to send
     def send_request_repeated(self, request, expected_response, time_out_count, max_tries, timeout_message):
         num_tries = 0
-        request_status = send_request(request, expected_response, time_out_count)
+        request_status = self.send_request(request, expected_response, time_out_count)
         while request_status == False:
-            request_status = send_request(request, expected_response, time_out_count)
+            request_status = self.send_request(request, expected_response, time_out_count)
             num_tries +=1
             if num_tries > max_tries:
                 return (False, timeout_message) 
@@ -147,7 +152,7 @@ class IAPUtil:
     def send_init_packets(self):
         print("sending init packets")
         # make sure in iap mode first
-        if self.check_if_in_iap_mode() == True:
+        if self.in_iap_mode == True:
             # request fw revision
             if self.send_request(self.FW_REVISION_REQUEST, "FW_REVISION_REQUEST_RESPONSE", 10) == False:
                 return "CONTROLLER WONT RESPOND TO FW REVISION REQUEST"
@@ -188,26 +193,26 @@ class IAPUtil:
                                                                                                         ))
                     self.page_count += 1
                     resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
-                    if resp[0] == False:
+                    if resp != None and resp[0] == False:
                         return resp[1]
                 status = self.send_hex_packet(write_ids)
             if status == None: # reached end of file
-                self.page_count +=1 # (degenarate packet at the end)
+                #self.page_count +=1 # (degenarate packet at the end)
                 page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                     get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
-                                                                                                    + iapUtil.page_check_sums[page_count] \
+                                                                                                    + self.page_check_sums[self.page_count] \
                                                                                                     + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
-                                                                                                    + format_int_to_code(page_count+1, 1) \
+                                                                                                    + format_int_to_code(self.page_count+1, 1) \
                                                                                                     + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
                                                                                                     ))
                 resp = self.send_request_repeated(self.SEND_EOF_REQUEST, "END_OF_HEX_FILE_RESPONSE", 10, 2, "END_OF_HEX_FILE_TIMEOUT")
-                if resp[0] == False:
+                if resp != None and resp[0] == False:
                     return resp[1]
                 resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
-                if resp[0] == False:
+                if resp != None and resp[0] == False:
                     return resp[1]
-                    resp = self.send_request_repeated(self.SEND_EOF_REQUEST, "CALCULATE_TOTAL_CHECKSUM_RESPONSE", 10, 2, "TOTAL_CHECKSUM_TIMEOUT")
-                if resp[0] == False:
+                resp = self.send_request_repeated(self.SEND_TOTAL_CHECKSUM_REQUEST, "CALCULATE_TOTAL_CHECKSUM_RESPONSE", 10, 2, "TOTAL_CHECKSUM_TIMEOUT")
+                if resp != None and resp[0] == False:
                     return resp[1]
                 return (True, "EOF")
             if status == False: # retry
@@ -237,6 +242,7 @@ class IAPUtil:
 
             else: # if first three packets then send normally
                 self.bus.send(hex_frame) 
+                print("SENT:\t",hex_frame)
 
             i += 1
             if i == len(write_ids):

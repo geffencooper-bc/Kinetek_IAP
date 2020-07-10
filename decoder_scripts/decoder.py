@@ -43,6 +43,7 @@ class Decoder:
         self.calc_checksum_page = "" # same as above
         self.is_eof = False # if hex file ended received
         self.is_eop = False # if page ended
+        self.noise_frame = make_socketcan_packet(0x101, data_string_to_byte_list("11 11 11 11 11 11 11 11"))
  
 
     # calculates the checksum of a page by adding all the bytes, need to convert from string, returns as the numerical value
@@ -62,12 +63,21 @@ class Decoder:
         self.bus = can.interface.Bus(bustype='socketcan', channel=channel_name)
 
     def run_simulator(self):
+        count = 0
         while True:
             frame = self.bus.recv(timeout=1000)
             print(frame)
             resp = self.decode_socketcan_frame(frame)
             if resp != None:
                 self.bus.send(resp)
+            count += 1
+            if count % 10:
+                self.spit_noise()
+
+    # the kinetek spits rand messages, also helps iap with timeouts
+    def spit_noise(self):
+        self.bus.send(self.noise_frame)
+
 
     # takes the generic My_frame structure and decodes it by responding like a kinetek, input frames are commands sent during IAP
     def decode_my_frame(self, frame):
@@ -79,7 +89,7 @@ class Decoder:
                 return make_socketcan_packet(0x101, data_string_to_byte_list("10 10 10 10 10 10 10 10"))
         if frame.can_id == "0x0048": # IAP Request sent
             if frame.data == "00 00 00 00 00 00 00 00": # force enter IAP mode command
-                return make_socketcan_packet(0x060, data_string_to_byte_list("08 00 00 00 00")) # entered IAP mode response
+                return make_socketcan_packet(0x060, data_string_to_byte_list("80 00 00 00 00")) # entered IAP mode response
 
             elif frame.data == "88 88 88 88 88 88 88 88": # start sending bytes request
                 return make_socketcan_packet(0x069, data_string_to_byte_list("99 99 99 99 99 99 99 99")) # ready to receive bytes response

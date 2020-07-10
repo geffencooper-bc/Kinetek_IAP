@@ -1,21 +1,30 @@
 import can
-import os
+import sys
+sys.path.insert(1, '/home/geffen.cooper/Desktop/kinetek_scripts/ota_scripts/')
+from IAPUtil import IAPUtil
 
-def decode_socketcan_packet(frame):
-    can_id = hex(frame.arbitration_id)[2:].zfill(3) # form: "060"
-    data = ""
-    for byte in frame.data:
-        data += hex(byte)[2:].zfill(2).upper() + " " # form: "00 00 00 00 00 00 00 00"
-    return str(can_id + " | " + data[:-1])
+# vbus = can.interface.Bus(bustype='socketcan', channel='vcan0')
+# ping_msg = can.Message(arbitration_id=0x111,
+#                     data=[0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11],
+#                     is_extended_id=False)
 
-vbus = can.interface.Bus(bustype='socketcan', channel='vcan0')
-ping_msg = can.Message(arbitration_id=0x111,
-                    data=[0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11],
-                    is_extended_id=False)
+# the IAP download utility which helps automates the process 
+ut = IAPUtil(True)
+ut.init_can("vcan0")
 
-#os.system('python3 simulator_runner.py')
+# extracts all needed iap information from hex file like checksum, size, start address. Also reads this file while hex data uploaded
+ut.load_hex_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.27_copy.hex")
+ut.to_string() # print important hexfile data
 
-while True:
-    vbus.send(ping_msg)
-    resp = vbus.recv(timeout=1000)
-    print(resp)
+print("try to enter iap")
+ut.put_in_IAP_mode()
+print(ut.send_init_packets())
+
+ut.upload_image()
+
+
+# while True:
+#     print(ping_msg)
+#     vbus.send(ping_msg)
+#     resp = vbus.recv(timeout=1000)
+#     print(resp)
