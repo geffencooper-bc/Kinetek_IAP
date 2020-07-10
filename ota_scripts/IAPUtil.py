@@ -213,7 +213,7 @@ class IAPUtil:
                                                                                                         ))
                     # need to wait for 06 pointer thing with page checksum
                     
-                    resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 20, "NO SELF CALCULATED PAGE CHECKSUM") 
+                    resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 40, "NO SELF CALCULATED PAGE CHECKSUM") 
                     if resp != None and resp[0] == False:
                         return resp[1]
                     resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
@@ -252,6 +252,7 @@ class IAPUtil:
                     self.num_bytes_uploaded += len(chunk)
                 print(self.num_bytes_uploaded)
                 self.packet_count += 1
+                self.current_packet.clear() # if receive confirmation can clear and return true
                 continue
             
             
@@ -265,7 +266,6 @@ class IAPUtil:
                     if self.send_request(hex_frame, "RECEIVED_32__BYTES", 80) == False: # if no confirmation, return false
                         return False
                     #self.num_bytes_uploaded += len(self.current_packet)
-                    self.current_packet.clear() # if receive confirmation can clear and return true
                     return True
 
                 else:
@@ -282,6 +282,7 @@ class IAPUtil:
             data = self.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file, or next n if last line and incomplete
 
             if self.hexUtil.curr_line_index == self.hexUtil.last_data_line_index: # if last line add filler if necessary
+                print("\n\n\n====FILLER====\n\n\n")
                 self.num_bytes_uploaded += len(data)
                 last_data_frame_filler_amount = 8 - len(data) # complete the frame with filler data bytes
                 if write_id_index == 0 and last_data_frame_filler_amount == 8: # if file ends on complete packet, don't think I need this because only way these conditions are true is if this was not a data line, so would not get here anyways, or an empty data line which does not make sense
