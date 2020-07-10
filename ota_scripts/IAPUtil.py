@@ -245,6 +245,7 @@ class IAPUtil:
                 status = self.send_hex_packet(write_ids_retry, True)
                 if status == False:
                     return (False, "32_BYTE_RESPONSE_TIMEOUT")
+                self.packet_count += 1
                 continue
             
             

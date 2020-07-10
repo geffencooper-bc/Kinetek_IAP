@@ -18,12 +18,12 @@ ut.to_string() # print important hexfile data
 
 # print("try to enter iap")
 
-ut.put_in_IAP_mode()
+#ut.put_in_IAP_mode()
 
-#ut.in_iap_mode = True
-#print(ut.send_init_packets())
+ut.in_iap_mode = True
+print(ut.send_init_packets())
 
-#ut.upload_image()
+ut.upload_image()
 
 # while True:
 #     print(ping_msg)
