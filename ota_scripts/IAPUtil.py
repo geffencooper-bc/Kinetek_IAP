@@ -158,14 +158,20 @@ class IAPUtil:
                                                                                                         + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
                                                                                                         + format_int_to_code(self.page_count, 1) \
                                                                                                         + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
-                                                                                                        ))  
+                                                                                                        ))
+                    timeout_temp = 0                                                                                    
+                    while self.send_request(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10) == False:
+                        self.send_request(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10)
+                        timeout_temp +=1
+                        if timeout_temp > 2:
+                            return (False, "PAGE_CHECKSUM_TIMEOUT")
                 status = self.send_hex_packet(write_ids)
             if status == None: # reached end of file
-                return True
+                return (True, "EOF")
             if status == False: # retry
                 status = self.send_hex_packet(write_ids_retry)
                 if status == False:
-                    return False
+                    return (False, "32_BYTE_RESPONSE_TIMEOUT")
                 self.page_count += 1
                 continue
             

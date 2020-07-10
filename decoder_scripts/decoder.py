@@ -83,6 +83,16 @@ class Decoder:
             # the page checksum is calculated every 1024 bytes and is calculated in the frame_id 0x052 if block
             # that happens before this statement is called so we already have the checksum, just need to validate it
             elif self.lookup(frame.data, IAP_data_lookup) == "check page checksum": 
+                print("\n\n\n=================================================\n\n\n")
+                self.is_eop = True
+                # calculate checksum of page, format into print frame
+                self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
+                cs_page = hex(self.calc_laurence_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
+                self.calc_checksum_page = cs_page
+                #print(self.accumulated_hex_frames)
+                # rest values to start next page
+                self.num_hex_frames = 0
+                self.accumulated_hex_frames = ""  
                 cs = frame.data[6:15].replace(" ", "")
                 if cs == self.calc_checksum_page:
                     return make_socketcan_packet(0x069, data_string_to_byte_list("07 40 40 40 40 40 40 40"))
@@ -150,17 +160,17 @@ class Decoder:
             # keep track so can know when end of page, hex frame is 8 bytes
             self.num_hex_frames += 4 # this is the 4th 8 byte frame
             
-            if self.num_hex_frames == 128: # page is 1024 bytes, 8 byte frame * 128 = 1024 bytes
-                #print("\n\n\n=================================================\n\n\n")
-                self.is_eop = True
-                # calculate checksum of page, format into print frame
-                self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
-                cs = hex(self.calc_laurence_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
-                self.calc_checksum_page = cs
-                #print(self.accumulated_hex_frames)
-                # rest values to start next page
-                self.num_hex_frames = 0
-                self.accumulated_hex_frames = ""   
+            #if self.num_hex_frames == 128: # page is 1024 bytes, 8 byte frame * 128 = 1024 bytes
+                # #print("\n\n\n=================================================\n\n\n")
+                # self.is_eop = True
+                # # calculate checksum of page, format into print frame
+                # self.accumulated_hex_frames = self.accumulated_hex_frames.replace(" ","")
+                # cs = hex(self.calc_laurence_checksum(self.accumulated_hex_frames))[2:].upper().zfill(6)
+                # self.calc_checksum_page = cs
+                # #print(self.accumulated_hex_frames)
+                # # rest values to start next page
+                # self.num_hex_frames = 0
+                # self.accumulated_hex_frames = ""   
             return make_socketcan_packet(0x069, data_string_to_byte_list("10 10 10 10 10 10 10 10")) # 32 bytes received
 
 

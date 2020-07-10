@@ -41,7 +41,7 @@ def upload_image():
                                                                                                     get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
                                                                                                     + iapUtil.page_check_sums[page_count] \
                                                                                                     + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
-                                                                                                    + format_int_to_code(page_count, 1) \
+                                                                                                    + format_int_to_code(page_count+1, 1) \
                                                                                                     + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
                                                                                                     ))
                 timeout_temp = 0 
@@ -53,7 +53,21 @@ def upload_image():
                         return (False, "PAGE_CHECKSUM_TIMEOUT")
             status = send_hex_packet(write_ids)
         if status == None: # reached end of file
-            return (True, "EOF")
+            page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
+                                                                                                    get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
+                                                                                                    + iapUtil.page_check_sums[page_count] \
+                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
+                                                                                                    + format_int_to_code(page_count+1, 1) \
+                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
+                                                                                                    ))
+            timeout_temp = 0 
+            page_count += 1                                                                                   
+            while send_request(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10) == False:
+                send_request(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10)
+                timeout_temp +=1
+                if timeout_temp > 2:
+                    return (False, "PAGE_CHECKSUM_TIMEOUT")
+        return (True, "EOF")
         if status == False: # retry
             status = send_hex_packet(write_ids_retry)
             if status == False:

@@ -80,6 +80,7 @@ class HexUtility:
                     page_check_sums.append(self.calc_laurence_checksum(page_data))
                     page_data = ""
                     i = 0
+        page_check_sums.append(self.calc_laurence_checksum(page_data)) # the last remaining packets make up a degenarate page, lol
         return page_check_sums
 
     # the following five functions extract a certain field given an entry

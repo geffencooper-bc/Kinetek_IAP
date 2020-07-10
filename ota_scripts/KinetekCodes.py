@@ -56,5 +56,5 @@ def get_kinetek_data_code(arg):
         "CHECK_CHECK_SUM":      '06 __ __ __ __ 9D __ __',
         "PAGE_CHECKSUM_PREFIX":   '07 ',
         "PAGE_CHECKSUM_MID":     ' 9E ',
-        "PAGE_CHECKSUM_END":     ' 00'
+        "PAGE_CHECKSUM_SUFFIX":     ' 00'
     }.get(arg)
