@@ -49,7 +49,8 @@ class IAPUtil:
                                                                                                     get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
                                                                                                     + reverse_bytes(self.total_checksum_reverse) \
                                                                                                     + get_kinetek_data_code("TOTAL_CHECKSUM_SUFFIX")
-                                                                                                    ))                                                                                  
+                                                                                                    ))
+        print(self.last_data_line_size)                                                                                  
         
 
     def to_string(self):
@@ -181,6 +182,7 @@ class IAPUtil:
         self.current_packet = [] # store in case need to retry
         write_ids = [0x04F, 0x050, 0x051, 0x052]     
         write_ids_retry = [0x053, 0x054, 0x055, 0x056]
+        self.num_bytes_uploaded = 0
         
         while True:
             status = self.send_hex_packet(write_ids)
@@ -230,6 +232,9 @@ class IAPUtil:
     def send_hex_packet(self,write_ids): #32 bytes of data
         i = 0
         while True:
+            print(self.num_bytes_uploaded)
+            if self.num_bytes_uploaded == self.data_size_bytes:
+                return None
             data = self.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file
             self.current_packet.append(data) # stores these in case need to retry
             if data == -1: # means eof so break loop
@@ -237,14 +242,16 @@ class IAPUtil:
                 return None
             
             hex_frame = make_socketcan_packet(write_ids[i],data) # make a socket_can packet from hex data
-            if i == 3: # if this is the fourth packet, ait for 32 bytes confirmation from Kinetek
+            if i == 3: # if this is the fourth packet, wait for 32 bytes confirmation from Kinetek
                 if self.send_request(hex_frame, "RECEIVED_32__BYTES", 20) == False: # if no confirmation, return false
                     return False
                 self.current_packet.clear # if receive confirmation can clear and return true
+                self.num_bytes_uploaded += len(data)
                 return True
 
             else: # if first three packets then send normally
                 self.bus.send(hex_frame) 
+                self.num_bytes_uploaded += len(data)
                 print("SENT:\t",hex_frame)
 
             i += 1

@@ -137,7 +137,12 @@ class HexUtility:
         
         while self.get_type(self.hex_lines[self.curr_line_index]) != "00":
             self.curr_line_index +=1
-        if self.first_8:
+
+        record_length = int(self.get_record_length(self.hex_lines[self.curr_line_index]))
+        if record_length < 8:
+            data_bytes = self.get_data_bytes(self.hex_lines[self.curr_line_index], 0, record_length)    
+
+        elif self.first_8:
             self.first_8 = False 
             data_bytes = self.get_data_bytes(self.hex_lines[self.curr_line_index], 0, 8)
         else:
