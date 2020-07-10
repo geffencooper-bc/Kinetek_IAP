@@ -111,7 +111,53 @@ def insert_spaces(string, n):
 
 #print(insert_spaces(a,2))
 
-FW_REVISION_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("FW_REVISION_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("DEFAULT")))
-#print(FW_REVISION_REQUEST)
+# FW_REVISION_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("FW_REVISION_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("DEFAULT")))
+# #print(FW_REVISION_REQUEST)
 
-print(format_int(92208, 4))
+# #print(format_int(92208, 4))
+
+# def test():
+#     while True:
+#         return True
+# test()
+
+def decode_socketcan_packet(frame):
+    can_id = hex(frame.arbitration_id)[2:].zfill(3) # form: "060"
+    data = ""
+    for byte in frame.data:
+        data += hex(byte)[2:].zfill(2).upper() + " " # form: "00 00 00 00 00 00 00 00"
+    #simple_frame = SimpleFrame(frame.timestamp, can_id, data[:-1])
+    return str(can_id + " | " + data[:-1])
+
+
+
+table = [
+ 
+    ('069\s\|\s10\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "RECEIVED_32__BYTES"),
+    ('069\s\|\s99\s99\s99\s99\s99\s99\s99\s99' ,                                                                    "SEND_BYTES_RESPONSE"),
+    ('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00' , "FW_REVISION_REQUEST_RESPONSE"),
+    ('069\s\|\s02\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_START_ADDRESS_RESPONSE"),
+    ('069\s\|\s03\s10\s10\s10\s10\s10\s10\s10' ,                                                                     "SEND_CHECKSUM_DATA_RESPONSE"),
+    ('069\s\|\s04\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_DATA_SIZE_RESPONSE"),
+    ('069\s\|\s05\s20\s20\s20\s20\s20\s20\s20' ,                                                                    "CALCULATE_CHECKSUM_RESPONSE"),
+    ('069\s\|\s07\s40\s40\s40\s40\s40\s40\s40' ,                                                                    "CALCULATE_PAGE_CHECKSUM_RESPONSE"),
+    ('060\s\|\s84\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]',                 "calculated page checksum")
+] 
+
+def lookup2(data, table):
+    for pattern, value in table:
+        if re.match(pattern, data):
+            return value
+    return "none"
+
+# msg = make_socketcan_packet(0x67, data_string_to_byte_list("01 08 5e 00 80 00 00 00"))
+# print(decode_socketcan_packet(msg))
+# if decode_socketcan_packet(msg) == "067 | 01 08 5E 00 80 00 00 00":
+#     print("ya")
+#     #print(lookup2("069 | 99 99 99 99 99 99 99 99", table))
+#     print(lookup2(decode_socketcan_packet(msg), table))
+
+print(re.search('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00', "067 | 01 08 5E 00 80 00 00 00"))
+# 10 10 10 10 10 10 10 10
+# 99 99 99 99 99 99 99 99
+# 11 1  11 11 11 11 11 11

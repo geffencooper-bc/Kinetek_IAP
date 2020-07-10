@@ -142,13 +142,23 @@ class IAPUtil:
     
     def upload_image(self):
         print("sending hex file...")
-        current_packet = [] # store in case need to retry
+        self.page_count = 0
+        self.current_packet = [] # store in case need to retry
         write_ids = [0x04F, 0x050, 0x051, 0x052]     
         write_ids_retry = [0x053, 0x054, 0x055, 0x056]
         
         while True:
             status = self.send_hex_packet(write_ids)
             while status == True: # keep sending hex packets until status false or none
+                self.page_count += 1
+                if self.page_count == 128:
+                    page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
+                                                                                                        get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
+                                                                                                        + format_int_to_code(self.page_check_sums[self.page_count], 3)
+                                                                                                        + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
+                                                                                                        + format_int_to_code(self.page_count, 1) \
+                                                                                                        + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
+                                                                                                        ))  
                 status = self.send_hex_packet(write_ids)
             if status == None: # reached end of file
                 return True
@@ -156,14 +166,15 @@ class IAPUtil:
                 status = self.send_hex_packet(write_ids_retry)
                 if status == False:
                     return False
+                self.page_count += 1
                 continue
             
             
 
-    def send_hex_packet(write_ids): #32 bytes of data
+    def send_hex_packet(self,write_ids): #32 bytes of data
         i = 0
         while True:
-            data = hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file
+            data = self.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file
             self.current_packet.append(data) # stores these in case need to retry
             if data == -1: # means eof so break loop
                 self.upload_done = True
@@ -171,49 +182,36 @@ class IAPUtil:
             
             hex_frame = make_socketcan_packet(write_ids[i],data) # make a socket_can packet from hex data
             if i == 3: # if this is the fourth packet, ait for 32 bytes confirmation from Kinetek
-                if self.send_request(hex_frame, "RECEIVED_32__BYTES") == False: # if no confirmation, return false
+                if self.send_request(hex_frame, "RECEIVED_32__BYTES", 20) == False: # if no confirmation, return false
                     return False
                 self.current_packet.clear # if receive confirmation can clear and return true
                 return True
 
             else: # if first three packets then send normally
-                self.bus.send(request) 
+                self.bus.send(hex_frame) 
 
             i += 1
             if i == len(write_ids):
                 i = 0
 
-       
-
-
-# class SimpleFrame:
-#     # last_time_stamp = 0
-#     # curr_time_stamp = 0 # these are static variables shared accross all instances
-#     # time_stamp_delta = 0 # used to detect a timeout
-#     def __init__(self, time_stamp, can_id, data):
-#         self.time_stamp = time_stamp
-#         self.can_id = can_id
-#         self.data = data
-#         # update these
-#         # self.last_time_stamp = self.curr_time_stamp
-#         # self.curr_time_stamp = time_stamp
 
 def decode_socketcan_packet(frame):
-    can_id = hex(int(frame.arbitration_id,16))[2:].zfill(3) # form: "060"
+    can_id = hex(frame.arbitration_id)[2:].zfill(3) # form: "060"
     data = ""
     for byte in frame.data:
         data += hex(byte)[2:].zfill(2).upper() + " " # form: "00 00 00 00 00 00 00 00"
-    #simple_frame = SimpleFrame(frame.timestamp, can_id, data[:-1])
     return str(can_id + " | " + data[:-1])
 
-ut = IAPUtil()
-ut.load_hex_file("2.28_copy.hex")
-ut.to_string()
+# ut = IAPUtil()
+# ut.load_hex_file("2.28_copy.hex")
+# ut.to_string()
 
-ut.init_can()
-ut.put_in_IAP_mode()
+# ut.init_can()
+# ut.put_in_IAP_mode()
+
 # if ut.put_in_IAP_mode() == True:
 #     print("sending packets")
 #     time.sleep(3)
 #     ut.send_init_packets()
-print(ut.send_init_packets())
+#print(ut.send_init_packets())
+#ut.upload_image()

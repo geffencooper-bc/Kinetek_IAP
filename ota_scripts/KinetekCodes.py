@@ -11,7 +11,7 @@ IAP_data_lookup = [
  
     ('069\s\|\s10\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "RECEIVED_32__BYTES"),
     ('069\s\|\s99\s99\s99\s99\s99\s99\s99\s99' ,                                                                    "SEND_BYTES_RESPONSE"),
-    ('067\s\|\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s5E|5F\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s00\s00\s00' , "FW_REVISION_REQUEST_RESPONSE"),
+    ('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00' , "FW_REVISION_REQUEST_RESPONSE"),
     ('069\s\|\s02\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_START_ADDRESS_RESPONSE"),
     ('069\s\|\s03\s10\s10\s10\s10\s10\s10\s10' ,                                                                     "SEND_CHECKSUM_DATA_RESPONSE"),
     ('069\s\|\s04\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_DATA_SIZE_RESPONSE"),
@@ -54,5 +54,7 @@ def get_kinetek_data_code(arg):
         "SEND_DATA_SIZE_SUFFIX":        ' 9C 00 00',
         "END_OF_HEX_FILE":      '05 10 10 10 10 10 10 10',
         "CHECK_CHECK_SUM":      '06 __ __ __ __ 9D __ __',
-        "PAGE_CHECKSUM_DATA":   '07 __ __ __ __ 9E __ __'
+        "PAGE_CHECKSUM_PREFIX":   '07 ',
+        "PAGE_CHECKSUM_MID":     ' 9E ',
+        "PAGE_CHECKSUM_END":     ' 00'
     }.get(arg)
