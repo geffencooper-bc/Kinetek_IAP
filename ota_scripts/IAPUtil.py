@@ -16,6 +16,7 @@ class IAPUtil:
         self.data_size_bytes = self.hexUtil.get_file_data_size()
         self.page_check_sums = self.hexUtil.get_page_checksums()
         self.total_checksum = self.hexUtil.get_total_checksum()
+        self.total_checksum_reverse = reverse_bytes(self.total_checksum)
         self.start_address = self.hexUtil.get_start_address()
 
         # make socket_can commands

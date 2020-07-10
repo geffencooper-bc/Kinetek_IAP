@@ -53,6 +53,8 @@ def upload_image():
                         return (False, "PAGE_CHECKSUM_TIMEOUT")
             status = send_hex_packet(write_ids)
         if status == None: # reached end of file
+            SEND_EOF = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("END_OF_HEX_FILE")))
+            #print(SEND_EOF)
             page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
                                                                                                     get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
                                                                                                     + iapUtil.page_check_sums[page_count] \
@@ -60,13 +62,31 @@ def upload_image():
                                                                                                     + format_int_to_code(page_count+1, 1) \
                                                                                                     + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
                                                                                                     ))
+            TOTAL_CHECKSUM = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
+                                                                                                    get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
+                                                                                                    + reverse_bytes(iapUtil.total_checksum_reverse) \
+                                                                                                    + get_kinetek_data_code("TOTAL_CHECKSUM_SUFFIX")
+                                                                                                    ))
+                                                                
             timeout_temp = 0 
-            page_count += 1                                                                                   
+            page_count += 1
+            while send_request(SEND_EOF, "END_OF_HEX_FILE_RESPONSE", 10) == False:
+                send_request(SEND_EOF, "END_OF_HEX_FILE_RESPONSE", 10)
+                timeout_temp +=1
+                if timeout_temp > 2:
+                    return (False, "END_OF_HEX_FILE_TIMEOUT") 
+            timeout_temp = 0                                                                                  
             while send_request(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10) == False:
                 send_request(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10)
                 timeout_temp +=1
                 if timeout_temp > 2:
                     return (False, "PAGE_CHECKSUM_TIMEOUT")
+            timeout_temp = 0
+            while send_request(TOTAL_CHECKSUM, "CALCULATE_TOTAL_CHECKSUM_RESPONSE", 10) == False:
+                send_request(TOTAL_CHECKSUM, "CALCULATE_TOTAL_CHECKSUM_RESPONSE", 10)
+                timeout_temp +=1
+                if timeout_temp > 2:
+                    return (False, "TOTAL_CHECKSUM_TIMEOUT")
         return (True, "EOF")
         if status == False: # retry
             status = send_hex_packet(write_ids_retry)

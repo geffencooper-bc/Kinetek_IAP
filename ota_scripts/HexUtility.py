@@ -168,7 +168,15 @@ def insert_spaces(string, n):
 
 def format_int_to_code(num, num_bytes):
     return insert_spaces(hex(num)[2:].zfill(num_bytes*2), 2)
-        
+
+def reverse_bytes(string):
+    string = string.replace(" ", "")
+    bytes_list = [string[i:i+2] for i in range(0, len(string), 2)]
+    bytes_list.reverse()
+    string = ""
+    for i in range(len(bytes_list)):
+        string += bytes_list[i] + " "
+    return string[:-1]
 
 # for the actual can class make it easy to send messages, abstract away socket can
 # for example can say "send data size __" or "send start address __" functions

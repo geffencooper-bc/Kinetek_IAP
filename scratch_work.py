@@ -157,7 +157,18 @@ def lookup2(data, table):
 #     #print(lookup2("069 | 99 99 99 99 99 99 99 99", table))
 #     print(lookup2(decode_socketcan_packet(msg), table))
 
-print(re.search('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00', "067 | 01 08 5E 00 80 00 00 00"))
+#print(re.search('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00', "067 | 01 08 5E 00 80 00 00 00"))
 # 10 10 10 10 10 10 10 10
 # 99 99 99 99 99 99 99 99
 # 11 1  11 11 11 11 11 11
+
+def reverse_bytes(string):
+    string = string.replace(" ", "")
+    bytes_list = [string[i:i+2] for i in range(0, len(string), 2)]
+    bytes_list.reverse()
+    string = ""
+    for i in range(len(bytes_list)):
+        string += bytes_list[i] + " "
+    return string[:-1]
+
+print(reverse_bytes("ab cd ef gh"))

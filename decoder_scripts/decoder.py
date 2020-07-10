@@ -13,6 +13,8 @@ IAP_data_lookup = [
     ('02\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9A\s00\s00' ,    "send code start address"),
     ('03\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9B\s00\s00' ,    "send code checksum data"),
     ('04\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9C\s00\s00' ,    "send code data size"),
+    ('05\s10\s10\s10\s10\s10\s10\s10',                                                             "send end of hex file message"),
+    ('06\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9D\s00\s00',     "send total checksum message"),
     ('07\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s9E\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]' , "check page checksum")
 ]
 
@@ -102,6 +104,7 @@ class Decoder:
             
             # once the hex file ends, calculate total checksum, and current page checksum
             elif self.lookup(frame.data, IAP_data_lookup) == "send end of hex file message": 
+                #print("==============EOF")
                 self.is_eof = True
                 self.accumulated_hex_frames_total = self.accumulated_hex_frames_total.replace(" ","")
                 cs_total = hex(self.calc_laurence_checksum(self.accumulated_hex_frames_total))[2:].upper().zfill(6) # total checksum, format into string
@@ -116,6 +119,10 @@ class Decoder:
                     return make_socketcan_packet(0x069, data_string_to_byte_list("05 20 20 20 20 20 20 20")) # need to return total checksum good
                 else:
                     print(self.checksum_total, "!=", self.calc_checksum_total)
+            
+            elif self.lookup(frame.data, IAP_data_lookup) == "send total checksum message":
+                #print("=TOTAL++++++++++++++++++++++")
+                return make_socketcan_packet(0x069, data_string_to_byte_list("06 30 30 30 30 30 30 30"))
             
         elif self.is_eof == True:
                 cs_page = self.calc_checksum_page

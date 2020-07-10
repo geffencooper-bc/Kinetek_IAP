@@ -13,9 +13,10 @@ IAP_data_lookup = [
     ('069\s\|\s99\s99\s99\s99\s99\s99\s99\s99' ,                                                                    "SEND_BYTES_RESPONSE"),
     ('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00' , "FW_REVISION_REQUEST_RESPONSE"),
     ('069\s\|\s02\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_START_ADDRESS_RESPONSE"),
-    ('069\s\|\s03\s10\s10\s10\s10\s10\s10\s10' ,                                                                     "SEND_CHECKSUM_DATA_RESPONSE"),
+    ('069\s\|\s03\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_CHECKSUM_DATA_RESPONSE"),
     ('069\s\|\s04\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_DATA_SIZE_RESPONSE"),
-    ('069\s\|\s05\s20\s20\s20\s20\s20\s20\s20' ,                                                                    "CALCULATE_CHECKSUM_RESPONSE"),
+    ('069\s\|\s05\s20\s20\s20\s20\s20\s20\s20' ,                                                                    "END_OF_HEX_FILE_RESPONSE"),
+    ('069\s\|\s06\s30\s30\s30\s30\s30\s30\s30' ,                                                                    "CALCULATE_TOTAL_CHECKSUM_RESPONSE"),
     ('069\s\|\s07\s40\s40\s40\s40\s40\s40\s40' ,                                                                    "CALCULATE_PAGE_CHECKSUM_RESPONSE"),
     ('060\s\|\s84\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]\s[0-9A-F]',                 "calculated page checksum")
 ] 
@@ -53,7 +54,8 @@ def get_kinetek_data_code(arg):
         "SEND_DATA_SIZE_PREFIX":        '04 ',
         "SEND_DATA_SIZE_SUFFIX":        ' 9C 00 00',
         "END_OF_HEX_FILE":      '05 10 10 10 10 10 10 10',
-        "CHECK_CHECK_SUM":      '06 __ __ __ __ 9D __ __',
+        "TOTAL_CHECKSUM_PREFIX":      '06 ',
+        "TOTAL_CHECKSUM_SUFFIX": ' 9D 00 00',
         "PAGE_CHECKSUM_PREFIX":   '07 ',
         "PAGE_CHECKSUM_MID":     ' 9E ',
         "PAGE_CHECKSUM_SUFFIX":     ' 00'
