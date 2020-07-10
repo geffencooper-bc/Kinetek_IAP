@@ -148,6 +148,8 @@ class Decoder:
             
             elif self.lookup(frame.data, IAP_data_lookup) == "send total checksum message":
                 #print("=TOTAL++++++++++++++++++++++")
+                hex_copy = open("hex_copy.txt", "w")
+                hex_copy.write(self.hex_data)
                 return make_socketcan_packet(0x069, data_string_to_byte_list("06 30 30 30 30 30 30 30"))
             
         elif self.is_eof == True:
