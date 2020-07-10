@@ -121,9 +121,27 @@ def send_hex_packet(write_ids): #32 bytes of data
         if i == len(write_ids):
             i = 0
 
+def decode_socket(frame): # only accounts for id a data
+        can_id = hex(frame.arbitration_id)[2:].zfill(3)
+        data = ""
+        for byte in frame.data:
+           data += hex(byte)[2:].zfill(2).upper() + " "
+        return str(can_id + " | " + data[:-1])
+
+
+
+
+#========================= MAIN ========================================
+
+
+
 if __name__ == "__main__":
+
     #----------------------csv test----------------
-    # kin_csv = Decoder("csv")
+    # reads the iap commands from a csv file and responds like a kinetek, can compare with responses in csv
+
+
+    # kin_csv = Decoder("csv") # make a csv decoder
    
     # # pass in the file to parse as a command line arg
     # parser = argparse.ArgumentParser()
@@ -131,32 +149,34 @@ if __name__ == "__main__":
     # args = parser.parse_args()
     # file_name = args.csv_file
 
+    # read through the entire csv file line by line and get the decoder response
     # with open(file_name, 'r') as csv_file:
     #     reader = csv.reader(csv_file)
     #     for row in reader:
     #         response = kin_csv.decode_frame(row)
-    #         if response != None:
-    #             pass
+    #         if response != None: # the commands that are not IAP will return none
     #             print(response)
-    #     print(kin_csv.hex_data)
+    #     print(kin_csv.hex_data) # recreated hex file
+
 
 
     # #----------------------socket_can test--------------------
+    # behaves very similarly to the kinetek during iap, can be used to test instead of actual kinetek (takes in and returns socket_can frames)
+    # just use the iap utility class to load in hex file information that can be "written" to the decoder
+
     # note calling the decode function multiple times may cause duplication
-    # of the recreated hex data. Store return value in a variable as shown.
-
-    # this is a hard coded test, need a more flexible script that just reads from the hex file
-
-    def decode_socket(frame): # only accounts for id a data
-        can_id = hex(frame.arbitration_id)[2:].zfill(3)
-        data = ""
-        for byte in frame.data:
-           data += hex(byte)[2:].zfill(2).upper() + " "
-        return str(can_id + " | " + data[:-1])
+    # of the recreated hex data. Store return values in a variable as shown. It is like sending the kinetek a fw write twice.
 
     
-    # make a kinetek socketcan decoder
+    # make a kinetek socketcan decoder (make a kinetek simulator)
     kin_socketcan = Decoder("socketcan")
+
+    # the IAP download utility which helps automates the process 
+    iapUtil = IAPUtil()
+
+    # extracts all needed iap information from hex file like checksum, size, start address. Also reads this file while hex data uploaded
+    iapUtil.load_hex_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex")
+    iapUtil.to_string() # print important hexfile data
 
     # send enter IAP mode command
     msg = can.Message(arbitration_id=0x048, data=[0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], is_extended_id=False)
@@ -215,48 +235,18 @@ if __name__ == "__main__":
 
 
    
-    iapUtil = IAPUtil()
+    
     current_packet = []
     page_count = 0
     packet_count = 0
 
-    iapUtil.load_hex_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex")
-    iapUtil.to_string()
+    
     print("uploading")
 
     upload_image()
 
+    print("\n\n Recreation of Hex file")
 
-    
-    
-
-    # hexUtil = HexUtility()
-    # hexUtil.open_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex")
-    # print(hexUtil.get_file_data_size())
-    # print(hexUtil.get_total_checksum())
-    # print(hexUtil.get_page_checksums())
-    # write_ids = [0x04F, 0x050, 0x051, 0x052]
-
-    # i = 0
-    # while True:
-    #     data = hexUtil.get_next_data_8()
-    #     if data == -1:
-    #         break
-
-    #     msg = make_socketcan_packet(write_ids[i],data)
-    #     print("SENT:\t",msg)
-    #     resp = kin_socketcan.decode_frame(msg)
-    #     if resp != None:
-    #         print("RECEIVED:\t", resp)
-
-    #     i += 1
-    #     if i == len(write_ids):
-    #         i = 0
-        
-    # print(kin_socketcan.hex_data)
-    # print(make_socketcan_packet(0x04F,hexUtil.get_next_data_8()))
-    # print(make_socketcan_packet(0x050,hexUtil.get_next_data_8()))
-    # print(make_socketcan_packet(0x051,hexUtil.get_next_data_8()))
-    # print(make_socketcan_packet(0x052,hexUtil.get_next_data_8()))
+    print(kin_socketcan.hex_data)
     
         

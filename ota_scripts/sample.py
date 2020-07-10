@@ -1,8 +1,9 @@
 from __future__ import print_function
 import can 
 bus = can.interface.Bus(bustype='socketcan', channel='can0')
+vbus = can.interface.Bus(bustype='socketcan', channel='vcan0')
 while True:
-    print(bus.recv(timeout=1000))
+    print(vbus.recv(timeout=1000))
 # msg = can.Message(arbitration_id=0x001,
 #                     data=[0x1D, 0xF7, 0x05, 0x00, 0x00],
 #                     is_extended_id=False)
