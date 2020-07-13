@@ -131,7 +131,7 @@ class IAPUtil:
 
     # repeatedly send the enter iap mode command until get response from Kinetek to confirm in IAP mode
     def put_in_IAP_mode(self):
-        self.send_request_repeated(self.ENTER_IAP_MODE_REQUEST, ENTER_IAP_MODE_RESPONSE, -1, -1, None) # -1 ensures request sent indefinetely
+        self.send_request_repeated(self.ENTER_IAP_MODE_REQUEST, "ENTER_IAP_MODE_RESPONSE", -1, -1, None) # -1 ensures request sent indefinetely
         # no need to check response because it will request will only return if successful
         self.in_iap_mode = True
         return True
@@ -140,7 +140,7 @@ class IAPUtil:
 
 
     def check_if_in_iap_mode(self): 
-        self.in_iap_mode = self.send_request(None, ENTER_IAP_MODE_RESPONSE, 20)
+        self.in_iap_mode = self.send_request(None, "ENTER_IAP_MODE_RESPONSE", 20)
         if self.in_iap_mode == True:
             return "In IAP mode"
         return "Not in IAP mode"

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
+# this file is essentially a config file with all the kinetek command and response codes
 
-from HexUtility import make_socketcan_packet, data_string_to_byte_list
 import re
-# FW_REVISION_REQUEST = make_socketcan_packet(0x045, data_string_to_byte_list("00 00 00 00 00 00 00 00"))
-# ENTER_IAP_MODE_REQUEST = make_socketcan_packet(0x048, data_string_to_byte_list("00 00 00 00 00 00 00 00"))
-# SEND_BYTES_REQUEST = make_socketcan_packet(0x048, data_string_to_byte_list("88 88 88 88 88 88 88 88"))
 
-ENTER_IAP_MODE_RESPONSE = "060 | 80 00 00 00 00"
+
+#ENTER_IAP_MODE_RESPONSE = "060 | 80 00 00 00 00"
 
 # used for decoding requests/responses
+# the left side is  a regex pattern and the right side is the decoded expected response
+# the lookup function searches through this table to see if the expected response is found
 IAP_data_lookup = [
- 
+    ('060\s\|\s80\s00\s00\s00\s00' ,                                                                                "ENTER_IAP_MODE_RESPONSE"),
     ('069\s\|\s10\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "RECEIVED_32__BYTES"),
     ('069\s\|\s99\s99\s99\s99\s99\s99\s99\s99' ,                                                                    "SEND_BYTES_RESPONSE"),
     ('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00' , "FW_REVISION_REQUEST_RESPONSE"),
@@ -31,6 +31,7 @@ def lookup(data, table):
             return value
     return ""
 
+# essentially just a switch statement for can_ids
 def get_kinetek_can_id_code(arg):
     return{
         'FW_REVISION_REQUEST':   0x045,
@@ -45,6 +46,7 @@ def get_kinetek_can_id_code(arg):
         'RESEND_PACKET_4':       0x056
     }.get(arg)
 
+# essentially just a switch statement for can_data_byets
 def get_kinetek_data_code(arg):
     return{
         "DEFAULT":                       [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
