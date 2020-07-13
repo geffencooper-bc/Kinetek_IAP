@@ -34,7 +34,8 @@ class IAPUtil:
 
         # make socket_can commands
         self.FW_REVISION_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("FW_REVISION_REQUEST"), get_kinetek_data_code("DEFAULT"))
-        self.ENTER_IAP_MODE_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("ENTER_IAP_MODE"))
+        self.ENTER_IAP_MODE_REQUEST_FORCED = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("ENTER_IAP_MODE_FORCED"))
+        self.ENTER_IAP_MODE_REQUEST_SELECTIVE = make_socketcan_frame(get_kinetek_can_id_code("KINETEK_COMMAND"), get_kinetek_data_code("ENTER_IAP_MODE_SELECTIVE"))
         self.SEND_BYTES_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_BYTES"))
         self.SEND_START_ADDRESS_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("CODE_START_ADDRESS_PREFIX") \
                                                                                                         + self.start_address
@@ -70,12 +71,13 @@ class IAPUtil:
         print("HEX FILE DATA TOTAL CHECKSUM:\t", self.total_checksum)
         print("START ADDRESS:\t\t\t", self.start_address)
         print("PAGE CHECKSUMS:\t", self.page_check_sums)
-        print("\n\n==== INIT COMMANDS====\n\nFW_REVISION_REQUEST:\t\t", self.FW_REVISION_REQUEST)
-        print("\nENTER_IAP_MODE_REQUEST:\t\t", self.ENTER_IAP_MODE_REQUEST)
-        print("\nSEND_BYTES_REQUEST:\t\t", self.SEND_BYTES_REQUEST)
-        print("\nSEND_START_ADDRESS_REQUEST:\t", self.SEND_START_ADDRESS_REQUEST)
-        print("\nSEND_CHECKSUM_DATA_REQUEST:\t", self.SEND_CHECKSUM_DATA_REQUEST)
-        print("\nSEND_DATA_SIZE_REQUEST:\t\t", self.SEND_DATA_SIZE_REQUEST)
+        print("\n\n==== INIT COMMANDS====\n\nFW_REVISION_REQUEST:\t\t\t\t", self.FW_REVISION_REQUEST)
+        print("\nENTER_IAP_MODE_REQUEST_FORCED:\t\t\t", self.ENTER_IAP_MODE_REQUEST_FORCED)
+        print("\nENTER_IAP_MODE_REQUEST_SELECTIVE:\t\t", self.ENTER_IAP_MODE_REQUEST_SELECTIVE)
+        print("\nSEND_BYTES_REQUEST:\t\t\t\t", self.SEND_BYTES_REQUEST)
+        print("\nSEND_START_ADDRESS_REQUEST:\t\t\t", self.SEND_START_ADDRESS_REQUEST)
+        print("\nSEND_CHECKSUM_DATA_REQUEST:\t\t\t", self.SEND_CHECKSUM_DATA_REQUEST)
+        print("\nSEND_DATA_SIZE_REQUEST:\t\t\t\t", self.SEND_DATA_SIZE_REQUEST)
         print("\n")
         print("\t\t\t\t\t=============================================")
         print("\t\t\t\t\t============= IAP UTILITY PRINT =============")
@@ -130,12 +132,19 @@ class IAPUtil:
 
 
     # repeatedly send the enter iap mode command until get response from Kinetek to confirm in IAP mode
-    def put_in_IAP_mode(self):
-        self.send_request_repeated(self.ENTER_IAP_MODE_REQUEST, "ENTER_IAP_MODE_RESPONSE", -1, -1, None) # -1 ensures request sent indefinetely
-        # no need to check response because it will request will only return if successful
-        self.in_iap_mode = True
-        return True
-        print("entered iap_mode")
+    def put_in_IAP_mode(self, force_mode=True):
+        if force_mode == False:
+            self.send_request(self.ENTER_IAP_MODE_REQUEST_SELECTIVE, "ENTER_IAP_MODE_RESPONSE_SELECTIVE", 20)
+            self.send_request_repeated(None, "IN_IAP_MODE",-1,-1, None)
+            print("entered iap_mode")
+            return True
+        else:
+            self.send_request_repeated(self.ENTER_IAP_MODE_REQUEST_FORCED, "IN_IAP_MODE", -1, -1, None) # -1 ensures request sent indefinetely
+            # no need to check response because it will request will only return if successful
+            self.in_iap_mode = True
+            print("entered iap_mode")
+            return True
+            
 
 
 

@@ -11,7 +11,8 @@ import re
 # the left side is  a regex pattern and the right side is the decoded expected response
 # the lookup function searches through this table to see if the expected response is found
 IAP_data_lookup = [
-    ('060\s\|\s80\s00\s00\s00\s00' ,                                                                                "ENTER_IAP_MODE_RESPONSE"),
+    ('060\s\|\s80\s00\s00\s00\s00' ,                                                                                "IN_IAP_MODE"),
+    ('081\s\|\s1D\s03\s27\s00\s00' ,                                                                                "ENTER_IAP_MODE_RESPONSE_SELECTIVE"),
     ('069\s\|\s10\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "RECEIVED_32__BYTES"),
     ('069\s\|\s99\s99\s99\s99\s99\s99\s99\s99' ,                                                                    "SEND_BYTES_RESPONSE"),
     ('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00' , "FW_REVISION_REQUEST_RESPONSE"),
@@ -34,6 +35,7 @@ def lookup(data, table):
 # essentially just a switch statement for can_ids
 def get_kinetek_can_id_code(arg):
     return{
+        'KINETEK_COMMAND':       0x001,
         'FW_REVISION_REQUEST':   0x045,
         'IAP_REQUEST':           0x048,
         'SEND_PACKET_1':         0x04F,
@@ -50,7 +52,8 @@ def get_kinetek_can_id_code(arg):
 def get_kinetek_data_code(arg):
     return{
         "DEFAULT":                       [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        "ENTER_IAP_MODE":                [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        "ENTER_IAP_MODE_FORCED":         [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        "ENTER_IAP_MODE_SELECTIVE":      [0x1D, 0x03, 0x27, 0x00, 0x00],
         "SEND_BYTES":                    [0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88],
         "CODE_START_ADDRESS_PREFIX":     [0x02],
         "CODE_START_ADDRESS_SUFFIX":     [0x9A, 0x00, 0x00],
