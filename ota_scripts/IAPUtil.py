@@ -258,7 +258,9 @@ class IAPUtil:
                 resp = self.send_request_repeated(self.SEND_TOTAL_CHECKSUM_REQUEST, "CALCULATE_TOTAL_CHECKSUM_RESPONSE", 10, 2, "TOTAL_CHECKSUM_TIMEOUT")
                 if resp != None and resp[0] == False:
                     return resp[1]
-                return (True, "EOF")
+
+                resp = self.send_request_repeated(None, "HEART_BEAT", -1, -1, None)
+                return "WORKING"
             
             
             

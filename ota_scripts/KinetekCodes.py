@@ -15,14 +15,15 @@ IAP_data_lookup = [
     ('081\s\|\s1D\s03\s27\s00\s00' ,                                                                                "ENTER_IAP_MODE_RESPONSE_SELECTIVE"),
     ('069\s\|\s10\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "RECEIVED_32__BYTES"),
     ('069\s\|\s99\s99\s99\s99\s99\s99\s99\s99' ,                                                                    "SEND_BYTES_RESPONSE"),
-    ('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00' , "FW_REVISION_REQUEST_RESPONSE"),
+    ('067\s\|\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s5E|5F\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s00\s00\s00' ,         "FW_REVISION_REQUEST_RESPONSE"),
     ('069\s\|\s02\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_START_ADDRESS_RESPONSE"),
     ('069\s\|\s03\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_CHECKSUM_DATA_RESPONSE"),
     ('069\s\|\s04\s10\s10\s10\s10\s10\s10\s10' ,                                                                    "SEND_DATA_SIZE_RESPONSE"),
     ('069\s\|\s05\s20\s20\s20\s20\s20\s20\s20' ,                                                                    "END_OF_HEX_FILE_RESPONSE"),
     ('069\s\|\s06\s30\s30\s30\s30\s30\s30\s30' ,                                                                    "CALCULATE_TOTAL_CHECKSUM_RESPONSE"),
     ('069\s\|\s07\s40\s40\s40\s40\s40\s40\s40' ,                                                                    "CALCULATE_PAGE_CHECKSUM_RESPONSE"),
-    ('060\s\|\s84\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]',                         "SELF_CALCULATED_PAGE_CHECKSUM")
+    ('060\s\|\s84\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]',                         "SELF_CALCULATED_PAGE_CHECKSUM"),
+    ('080\s\|\s1D\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]\s[0-9A-F][0-9A-F]', "HEART_BEAT")
 ] 
 
 # find the according pattern in the above table
