@@ -5,10 +5,6 @@ import can
 # The following is a utility class with functions to help read data from a hex file
 # It relies on reading from a hex file and keeps track of the current position
 
-#TODO
-# verify function inputs are valid
-# verify hex file is valid by calculating all checksums in the file, and eof and addresses, etc
-
 
 # Hex file details
 
@@ -36,7 +32,7 @@ EXTENDED = "04"
 
 class HexUtility:
     def __init__(self):
-        self.curr_line_index = 0 # current line in hex file
+        self.curr_line_index = 0 # current line reading from in hex file
         self.first_8 = True      # reading the first 8 or second 8 bytes
         self.is_eof = False
 
@@ -46,35 +42,68 @@ class HexUtility:
         self.hex_file = open(self.hex_file_path, "r")
         self.hex_lines = self.hex_file.readlines()
     
+ # the following five functions extract a certain field given an entry in the hex file
+    
+    # returns an int, ex: 16 --> 0x10
+    def get_record_length(self, line):
+        return int(line[RECORD_LENGTH_FIELD],16)
+
+    # returns an int, ex: 32768 --> 0x8000
+    def get_record_address(self, line):
+        return int(line[ADDRESS_FIELD], 16)
+    
+    # returns a string, ex: '00'
+    def get_record_type(self, line):
+        return line[TYPE_FIELD]
+    
+    # start is an index relative to the first byte, so 8 means start from the 8th byte, num_bytes is how many bytes after start you want to get
+    # returns the data portion of a line in the hex file as a lsit of bytes, ex: "001122..." --> [0x00, 0x11, 0x22, ...]
+    def get_record_data_bytes(self, line, start=0, num_bytes=-1): 
+        start = start*2 # each byte is two hex digits                   012345678
+        data_start = 9 # the data is guaranteed to start at index 9 --> :llaaaatt[dd...dd]cc
+        if num_bytes == -1 or len(line[data_start:data_start + 2*self.get_record_length(line)]) < num_bytes:  # then get all bytes in line
+            data_bytes = line[data_start+start:data_start+start + 2*self.get_record_length(line)] # record length in bytes, two hex chars are a byte
+        else:
+            data_bytes = line[data_start+start:data_start+start + 2*num_bytes]
+        return data_string_to_byte_list(data_bytes)
+
+    # add up all the record lengths of data lines
+    # returns: number of data bytes as an int
     def get_file_data_size(self):
         size = 0
         for line in self.hex_lines:
-            if self.get_type(line) == DATA:
-                line_size = int(self.get_record_length(line), 16)
+            if self.get_record_type(line) == DATA:
+                line_size = self.get_record_length(line)
                 size += line_size
         return size
     
+    # finds the last data line starting from the bottom
+    # returns: record length as an int, ex: 16 --> 0x10
     def get_last_data_line_size(self):
         index = len(self.hex_lines) - 1
-        while self.get_type(self.hex_lines[index]) != DATA:
+        while self.get_record_type(self.hex_lines[index]) != DATA:
             index -=1
         self.last_data_line_index = index
-        print(self.hex_lines[self.last_data_line_index])
-        return self.hex_lines[index][1:3]
+        return self.get_record_length(self.hex_lines[self.last_data_line_index])
 
+    # input: a stream of bytes as a hex string (no spaces), ex '0ABBCCDD', 
+    # returns: the sum of all bytes as a list of 4 bytes ex: [0xAA, 0xBB, 0xCC, 0xDD]
     def calc_laurence_checksum(self, line):
-        bytes_list = [line[i:i+2] for i in range(0, len(line), 2)]
-        bytes_list_num = [int(i, 16) for i in bytes_list]
-        cs = hex(sum(bytes_list_num))[2:].upper().zfill(8)
-        return insert_spaces(cs, 2)
+        byte_list = data_string_to_byte_list(line)
+        cs = sum(byte_list)
+        return list(cs.to_bytes(4, "big"))
 
+    # extracts a string of all data bytes in hex, gets their Laurence checksum
+    # returns: the sum of all bytes a list of 4 bytes ex: [0x00, 0x86, 0xC9, 0x14]
     def get_total_checksum(self):
-        raw_data = ""
+        raw_data = []
         for line in self.hex_lines:
-            if self.get_type(line) == DATA:
-                raw_data += self.get_data_bytes(line)
+            if self.get_record_type(line) == DATA:
+                raw_data += self.get_record_data_bytes(line)
         return self.calc_laurence_checksum(raw_data)
 
+    # reads through entire file string and gets Laurence checksum every page (1024 bytes)
+    # returns: all page checksums as list of 4 byte spaced hex strings, ex: ['00 01 23 4A', '00 01 C3 B7', ...]
     def get_page_checksums(self):
         page_data = ""
         page_check_sums = []
@@ -84,31 +113,13 @@ class HexUtility:
                 page_data += self.get_data_bytes(line)
                 i += 1
                 if i == 64: # pages are 1024 bytes, 128 frames * 8 bytes each --> 64 lines 16 bytes each
-                    #print(page_data + "\n\n")
                     page_check_sums.append(self.calc_laurence_checksum(page_data))
                     page_data = ""
                     i = 0
         page_check_sums.append(self.calc_laurence_checksum(page_data)) # the last remaining packets make up a degenarate page, lol
         return page_check_sums
 
-    # the following five functions extract a certain field given an entry
-    def get_record_length(self, line):
-        return line[RECORD_LENGTH_FIELD]
-
-    def get_address(self, line):
-        return line[ADDRESS_FIELD]
-    
-    def get_type(self, line):
-        return line[TYPE_FIELD]
-
-    def get_data_bytes(self, line, start=0, num_bytes=-1): # start is an index relative to the first byte, so 8 means start from the 8th bytes
-        # need to check if num bytes is valid, throw exception if not
-        start = start*2
-        #print("-----------",len(line[9:9 + 2*int(self.get_record_length(line), 16)]))
-        if num_bytes == -1 or len(line[9:9 + 2*int(self.get_record_length(line), 16)]) < num_bytes:  # then get all bytes
-            #print("-----------------------------")
-            return line[9+start:9+start + 2*int(self.get_record_length(line), 16)] # record length in bytes, two hex chars are a byte
-        return line[9+start:9+start + 2*num_bytes]
+   
 
     def get_checksum(self, line):
         return line[9 + 2*int(self.get_record_length(line)):9 + 2*int(self.get_record_length(line)) + 2] # don't know if have newline or not, safer to start from begginging
@@ -164,9 +175,11 @@ class HexUtility:
         print("closing file")
         self.hex_file.close()
 
+# additional helper functions not directly related to hex file, independent of class
 
-# helper function independent of class
-def data_string_to_byte_list(data_bytes): # input form is 00 00 00 00 00 00 00 00
+# converts a byte string (spaced or unspaced) into a list of numerical bytes
+# input: '00 01 02 A0 30 12 5C 10' --> outut: [0x00, 0x01, 0x02, 0xA0, 0x30, 0x12, 0x5C, 0x10]
+def data_string_to_byte_list(data_bytes):
     data_bytes = data_bytes.replace(" ","")
     bytes_list = [data_bytes[i:i+2] for i in range(0, len(data_bytes), 2)]
     bytes_list_num = [int(i, 16) for i in bytes_list]

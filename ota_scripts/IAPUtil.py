@@ -1,19 +1,27 @@
-# class to automate iap process like get code size, get start address, send hex file
-from HexUtility import *
-from KinetekCodes import *
+#!/usr/bin/env python3
+
+
+
+from HexUtility import *     # all hex file helper functions
+from KinetekCodes import *   # config file with all kinetek commands
 import time
+
+# class to automate iap process by reading and uploading data from a hex file
+
 class IAPUtil:
     def __init__(self, is_virtual=False):
-        self.code_size_bytes = 0   # integer form    ex: 92208
-        self.page_check_sums = []  # list of hex strings ex: ['01 64 3C', '01 8F 75' ...]
-        self.total_checksum = 0    #
-        self.start_address = 0
-        self.is_virtual = is_virtual
+        # all bytes lists are in big endian form
+        self.start_address = []       # ex: [0x08, 0x00, 0x80, 0x00] --> 08008000
+        self.data_size_bytes = []     # ex: [0x00, 0x01, 0x67, 0x24] --> 92208 bytes
+        self.page_check_sums = []     # ex: [[0x01, 0x64, 0x3C], [0x01, 0x8F, 0x75] ...] --> [0x01643C, 0x018F75, ...]
+        self.total_checksum = []      # ex: [0x00, 0x086, 0xC9, 0x14] --> 0x0086C914
+        self.is_virtual = is_virtual  # can use this class for real kinetek or simulator
         self.in_iap_mode = False
-
-    def load_hex_file(self, file_path):
-        # get fw data from hex file
         self.hexUtil = HexUtility()
+
+    
+    # extract needed fw info from hex file 
+    def load_hex_file(self, file_path):
         self.hexUtil.open_file(file_path)
         self.data_size_bytes = self.hexUtil.get_file_data_size()
         self.page_check_sums = self.hexUtil.get_page_checksums()
@@ -23,16 +31,14 @@ class IAPUtil:
         self.last_data_line_size = self.hexUtil.get_last_data_line_size()
 
         # make socket_can commands
-        self.FW_REVISION_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("FW_REVISION_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("DEFAULT")))
-        self.ENTER_IAP_MODE_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("ENTER_IAP_MODE")))
-        self.SEND_BYTES_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("SEND_BYTES")))
-        self.SEND_START_ADDRESS_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
-                                                                                                        get_kinetek_data_code("CODE_START_ADDRESS_PREFIX") \
-                                                                                                        + insert_spaces(self.start_address, 2)
+        self.FW_REVISION_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("FW_REVISION_REQUEST"), get_kinetek_data_code("DEFAULT"))
+        self.ENTER_IAP_MODE_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("ENTER_IAP_MODE"))
+        self.SEND_BYTES_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_BYTES"))
+        self.SEND_START_ADDRESS_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("CODE_START_ADDRESS_PREFIX") \
+                                                                                                        + self.start_address
                                                                                                         + get_kinetek_data_code("CODE_START_ADDRESS_SUFFIX")
-                                                                                                        ))
-        self.SEND_CHECKSUM_DATA_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
-                                                                                                        get_kinetek_data_code("SEND_CHECKSUM_PREFIX") \
+                                                                                                        )
+        self.SEND_CHECKSUM_DATA_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_CHECKSUM_PREFIX") \
                                                                                                         + self.total_checksum
                                                                                                         + get_kinetek_data_code("SEND_CHECKSUM_SUFFIX")
                                                                                                         ))

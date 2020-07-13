@@ -173,7 +173,18 @@ def lookup2(data, table):
 
 #print(reverse_bytes("ab cd ef gh"))
 
-hex_file = open("scratch.txt", "r")
-hex_lines = hex_file.readlines()
+# hex_file = open("scratch.txt", "r")
+# hex_lines = hex_file.readlines()
 
-print(hex_lines[len(hex_lines)-1][1:3])
+# print(hex_lines[len(hex_lines)-1][1:3])
+
+ut = HexUtility()
+ut.open_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.27_copy.hex")
+print("record length\t\t",ut.get_record_length(ut.hex_lines[0]))
+print("adress\t\t\t",ut.get_record_address(ut.hex_lines[0]))
+print("record type\t\t",ut.get_record_type(ut.hex_lines[0]))
+print("record data\t\t",ut.get_record_data_bytes(ut.hex_lines[4]))
+print("data size\t\t",ut.get_file_data_size())
+print("last line size\t\t",ut.get_last_data_line_size())
+print("laurence checksum\t",ut.calc_laurence_checksum("0A0B0C0D"))
+print("total checksum\t\t",ut.get_total_checksum())

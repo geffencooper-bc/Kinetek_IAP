@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 from HexUtility import make_socketcan_packet, data_string_to_byte_list
 import re
 # FW_REVISION_REQUEST = make_socketcan_packet(0x045, data_string_to_byte_list("00 00 00 00 00 00 00 00"))
@@ -44,20 +47,20 @@ def get_kinetek_can_id_code(arg):
 
 def get_kinetek_data_code(arg):
     return{
-        "DEFAULT":                       '00 00 00 00 00 00 00 00',
-        "ENTER_IAP_MODE":                '00 00 00 00 00 00 00 00',
-        "SEND_BYTES":                    '88 88 88 88 88 88 88 88',
-        "CODE_START_ADDRESS_PREFIX":     '02 ',
-        "CODE_START_ADDRESS_SUFFIX":     ' 9A 00 00',
-        "SEND_CHECKSUM_PREFIX":          '03 ',
-        "SEND_CHECKSUM_SUFFIX":          ' 9B 00 00',  
-        "SEND_DATA_SIZE_PREFIX":         '04 ',
-        "SEND_DATA_SIZE_SUFFIX":         ' 9C 00 00',
-        "END_OF_HEX_FILE_PREFIX":        '05 ',
-        "END_OF_HEX_FILE_SUFFIX":        ' 00 00 00 90 00 00',
-        "TOTAL_CHECKSUM_PREFIX":         '06 ',
-        "TOTAL_CHECKSUM_SUFFIX":         ' 9D 00 00',
-        "PAGE_CHECKSUM_PREFIX":          '07 ',
-        "PAGE_CHECKSUM_MID":             ' 9E ',
-        "PAGE_CHECKSUM_SUFFIX":          ' 00'
+        "DEFAULT":                       [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        "ENTER_IAP_MODE":                [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        "SEND_BYTES":                    [0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88],
+        "CODE_START_ADDRESS_PREFIX":     [0x02],
+        "CODE_START_ADDRESS_SUFFIX":     [0x9A, 0x00, 0x00],
+        "SEND_CHECKSUM_PREFIX":          [0x03],
+        "SEND_CHECKSUM_SUFFIX":          [0x9B, 0x00, 0x00],  
+        "SEND_DATA_SIZE_PREFIX":         [0x04],
+        "SEND_DATA_SIZE_SUFFIX":         [0x9C, 0x00, 0x00],
+        "END_OF_HEX_FILE_PREFIX":        [0x05],
+        "END_OF_HEX_FILE_SUFFIX":        [0x00, 0x00, 0x00, 0x90, 0x00, 0x00],
+        "TOTAL_CHECKSUM_PREFIX":         [0x06],
+        "TOTAL_CHECKSUM_SUFFIX":         [0x9D, 0x00, 0x00],
+        "PAGE_CHECKSUM_PREFIX":          [0x07],
+        "PAGE_CHECKSUM_MID":             [0x9E],
+        "PAGE_CHECKSUM_SUFFIX":          [0x00]
     }.get(arg)
