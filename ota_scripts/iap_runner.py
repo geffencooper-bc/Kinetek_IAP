@@ -19,7 +19,7 @@ ut.print() # print important hexfile data
 # print("try to enter iap")
 
 
-#ut.put_in_IAP_mode()
+ut.put_in_IAP_mode()
 
 # ut.in_iap_mode = True
 # print(ut.send_init_packets())

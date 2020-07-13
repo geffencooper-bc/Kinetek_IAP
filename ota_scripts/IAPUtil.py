@@ -20,6 +20,7 @@ class IAPUtil:
         self.hexUtil = HexUtility()
 
     
+
     # extract needed fw info from hex file 
     def load_hex_file(self, file_path):
         self.hexUtil.open_file(file_path)
@@ -32,32 +33,33 @@ class IAPUtil:
         self.last_data_line_size = self.hexUtil.get_last_data_line_size()
 
         # make socket_can commands
-        self.FW_REVISION_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("FW_REVISION_REQUEST"), get_kinetek_data_code("DEFAULT"))
-        self.ENTER_IAP_MODE_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("ENTER_IAP_MODE"))
-        self.SEND_BYTES_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_BYTES"))
-        self.SEND_START_ADDRESS_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("CODE_START_ADDRESS_PREFIX") \
+        self.FW_REVISION_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("FW_REVISION_REQUEST"), get_kinetek_data_code("DEFAULT"))
+        self.ENTER_IAP_MODE_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("ENTER_IAP_MODE"))
+        self.SEND_BYTES_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_BYTES"))
+        self.SEND_START_ADDRESS_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("CODE_START_ADDRESS_PREFIX") \
                                                                                                         + self.start_address
                                                                                                         + get_kinetek_data_code("CODE_START_ADDRESS_SUFFIX")
                                                                                                         )
-        self.SEND_CHECKSUM_DATA_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_CHECKSUM_PREFIX") \
+        self.SEND_CHECKSUM_DATA_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_CHECKSUM_PREFIX") \
                                                                                                         + self.total_checksum
                                                                                                         + get_kinetek_data_code("SEND_CHECKSUM_SUFFIX")
                                                                                                         )
-        self.SEND_DATA_SIZE_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_DATA_SIZE_PREFIX") \
+        self.SEND_DATA_SIZE_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_DATA_SIZE_PREFIX") \
                                                                                                         + list(self.data_size_bytes.to_bytes(4, "big"))
                                                                                                         + get_kinetek_data_code("SEND_DATA_SIZE_SUFFIX")
                                                                                                         )   
 
-        self.SEND_EOF_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("END_OF_HEX_FILE_PREFIX") \
+        self.SEND_EOF_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("END_OF_HEX_FILE_PREFIX") \
                                                                                                         + list(self.last_data_line_size.to_bytes(1, "big")) \
                                                                                                         + get_kinetek_data_code("END_OF_HEX_FILE_SUFFIX")
                                                                                                         )
 
-        self.SEND_TOTAL_CHECKSUM_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
+        self.SEND_TOTAL_CHECKSUM_REQUEST = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
                                                                                                     + self.total_checksum_reverse \
                                                                                                     + get_kinetek_data_code("TOTAL_CHECKSUM_SUFFIX")
                                                                                                     )                                                                                  
         
+
 
     def print(self):
         print("\n")
@@ -79,102 +81,74 @@ class IAPUtil:
         print("\t\t\t\t\t============= IAP UTILITY PRINT =============")
         print("\t\t\t\t\t=============================================\n\n\n\n\n\n\n")
     
+    
+
+
+    # send the kinetek an iap request, if expected response is received within the timeout thresh, then return True, otherwise false
+    # request should be in socket_can form, expected_response should be string from lookup table in kinetekCodes
+    def send_request(self, request, expected_response, timeout_count):
+        if request != None: # if pass in none then just want to wait for a certain message from the kinetek
+            self.bus.send(request)  
+            print("SENT:\t", request)
+        resp = self.bus.recv(timeout=1000)
+        print("RECEIVED:\t", resp)
+        count = 0
+        
+        # receive messages until either the expected one is received or timeout_count is up
+        while lookup(decode_socketcan_packet(resp), IAP_data_lookup) != expected_response:
+            if count > timeout_count:
+                return False
+            resp = self.bus.recv(timeout=1000)
+            print("RECEIVED:\t", resp) 
+            count += 1
+        return True
+
+
+
+    # send a request multiple times, with each request having a timeout causing the next attempt to send
+    def send_request_repeated(self, request, expected_response, time_out_count, max_tries, timeout_message):
+        num_tries = 0 # number of times request sent
+        request_status = self.send_request(request, expected_response, time_out_count)
+        while request_status == False: # keep sending request until reach max tries
+            request_status = self.send_request(request, expected_response, time_out_count)
+            if max_tries > 0: # if want to send request indefinetly then max_tries = -1 so don't increment num_tries
+                num_tries +=1
+            if num_tries > max_tries and max_tries > 0:
+                return (False, timeout_message) 
+        return None
+
+
+
+    # start up can bus
     def init_can(self, channel_name):
         # need to add modprobe, ip set up stuff for ifconfig
-        # maybe add a test message to send to see if works
         if self.is_virtual:
             self.bus = can.interface.Bus(bustype='socketcan', channel=channel_name)
         else:
             self.bus = can.interface.Bus(bustype='socketcan', channel=channel_name)
 
+
+
+    # repeatedly send the enter iap mode command until get response from Kinetek to confirm in IAP mode
     def put_in_IAP_mode(self):
-        self.bus.send(self.ENTER_IAP_MODE_REQUEST)
-        print("Message sent on {}".format(self.bus.channel_info))   
-        resp = self.bus.recv(timeout=1000)
-        print("RECEIVED:\t", resp)
-        enter_iap_mode_resp_count = 0 # wait till get two iap_mode responses to confirm in iap mode
-        
-        # repeatedly send request until enter iap mode, if receive a heartbeat then out of boot up mode and can't do forced download
-        while enter_iap_mode_resp_count < 2:
-            if decode_socketcan_packet(resp) != ENTER_IAP_MODE_RESPONSE: # if don't get desired response, send again
-                self.bus.send(self.ENTER_IAP_MODE_REQUEST) 
-                print("SENT:\t", self.ENTER_IAP_MODE_REQUEST)  
-                resp = self.bus.recv(timeout=1000)
-                #print(decode_socketcan_packet(resp))
-                print("RECEIVED:\t", resp)
-                # if resp.arbitration_id == 0x80: # if the response if a heartbeat then break because left boot up mode
-                #      print("=========HEART BEAT DETECTED, DIDNT ENTER")
-                #      return False
-            else: # if receive a desired response then increment the count
-                enter_iap_mode_resp_count += 1
-        # print("RECEIVED:\t", resp)
-        # resp = self.bus.recv(timeout=1000)
-        # print("RECEIVED:\t", resp)
-        # resp = self.bus.recv(timeout=1000)
-        # print("RECEIVED:\t", resp)
-        # resp = self.bus.recv(timeout=1000)
-        # print("RECEIVED:\t", resp)
-        # resp = self.bus.recv(timeout=1000)
+        self.send_request_repeated(self.ENTER_IAP_MODE_REQUEST, ENTER_IAP_MODE_RESPONSE, -1, -1, None) # -1 ensures request sent indefinetely
+        # no need to check response because it will request will only return if successful
         self.in_iap_mode = True
         return True
-        #print("entered iap_mode")
+        print("entered iap_mode")
 
-    def check_if_in_iap_mode(self): # if sent fw rev req it becomes 060 | 81 00 00 00 00 00 00 00
-        timeout_count = 0 # if receive 20 messages with <2 iap_mode signifiers, not in IAP mode
-        enter_iap_mode_resp_count = 0
-        while enter_iap_mode_resp_count < 2:
-            resp = self.bus.recv(timeout=1000)
-            if timeout_count > 20:
-                return False
-            if decode_socketcan_packet(resp) != ENTER_IAP_MODE_RESPONSE:   
-                resp = self.bus.recv(timeout=1000)
-                timeout_count += 1
-            else:
-                enter_iap_mode_resp_count += 1
-        return True
-    
-    # if expected response is received within the timeout thresh, then return True, otherwise false
-    # request should be in socket_can form, expected_response should be string from lookup table
-    def send_request(self, request, expected_response, timeout_count):
-        self.bus.send(request)  
-        print("SENT:\t", request)
-        resp = self.bus.recv(timeout=1000)
-        print("RECEIVED:\t", resp)
-        count = 0
-        while lookup(decode_socketcan_packet(resp), IAP_data_lookup) != expected_response:
-            resp = self.bus.recv(timeout=1000)
-            print("RECEIVED:\t", resp) 
-            count += 1
-            if count > timeout_count:
-                return False
-        return True
 
-    # if you want to send a request multiple times, with each request having a timeout causing the next attempt to send
-    def send_request_repeated(self, request, expected_response, time_out_count, max_tries, timeout_message):
-        num_tries = 0
-        request_status = self.send_request(request, expected_response, time_out_count)
-        while request_status == False:
-            request_status = self.send_request(request, expected_response, time_out_count)
-            num_tries +=1
-            if num_tries > max_tries:
-                return (False, timeout_message) 
 
-    def wait_for_message(self, expected_message, time_out_count, time_out_message):
-        resp = self.bus.recv(timeout=1000)
-        print("RECEIVED:\t", resp)
-        count = 0
-        while lookup(decode_socketcan_packet(resp), IAP_data_lookup) != expected_message:
-            resp = self.bus.recv(timeout=1000)
-            print("RECEIVED:\t", resp) 
-            count += 1
-            if count > time_out_count:
-                return (False, time_out_message)
-        #return True
-                
-            
+    def check_if_in_iap_mode(self): 
+        self.in_iap_mode = self.send_request(None, ENTER_IAP_MODE_RESPONSE, 20)
+        if self.in_iap_mode == True:
+            return "In IAP mode"
+        return "Not in IAP mode"
+
+
 
     def send_init_packets(self):
-        print("sending init packets")
+        print("\n======= sending init packets =======\n")
         # make sure in iap mode first
         if self.in_iap_mode == True:
             # request fw revision
@@ -195,39 +169,49 @@ class IAPUtil:
             return "SUCCESS"
         return "NOT IN IAP"
     
+
+
     def upload_image(self):
-        print("sending hex file...")
-        self.page_count = 0
-        self.packet_count = 0
-        self.current_packet = [] # store in case need to retry
-        write_ids = [0x04F, 0x050, 0x051, 0x052]     
-        write_ids_retry = [0x053, 0x054, 0x055, 0x056]
+        print("\n======= Uploading Hex File =======\n")
+        self.page_count = 0 # page = 32 packets = 1024 bytes
+        self.packet_count = 0 # packet = 32 bytes (4 can frames)
+        self.current_packet = [] # store last four messages in case need to resend them
+        write_ids = [0x04F, 0x050, 0x051, 0x052] # can ids for sending hex packet (4 can frames)   
+        write_ids_retry = [0x053, 0x054, 0x055, 0x056] # can ids for resending hex packet
         self.num_bytes_uploaded = 0
         
+        # keep uploading packets until reach end of hex file or timeout
         while True:
+            # first check if reached end of page, have sent 32 packets
             if self.packet_count > 0 and self.packet_count% 32 == 0: # page_cs packet needs to be made while running unless want to make all during load
                 print("\n======END OF PAGE======\n")
-                page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
+                page_cs = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
                                                                                         + self.page_check_sums[self.page_count]
                                                                                         + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
                                                                                         + list((self.page_count+1).to_bytes(1,"big")) \
                                                                                         + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
                                                                                         )
-                # need to wait for 06 pointer thing with page checksum, try without
+                # the kinetek sends the packet checksum upon receiving 32 packets
+                # you can check it but it tends to timeout so it is commented out
+
+                # resp = self.send_request(None, "SELF_CALCULATED_PAGE_CHECKSUM", 40)
+                # if resp == False:
+                #     return "SLEF CHECKSUM NOT CALCULATED"
                 
-                # resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 40, "NO SELF CALCULATED PAGE CHECKSUM") 
-                # if resp != None and resp[0] == False:
-                #     return resp[1]
+                # send the kinetek the correct page checksum and see if it responds correctly, if not return timeout message
                 resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
                 if resp != None and resp[0] == False:
                     return resp[1]
                 self.page_count += 1
 
+
+            # next send the next hex packet
             status = self.send_hex_packet(write_ids)
             if status == True: # keep sending hex packets until status false or none
                 self.packet_count += 1
             
-            elif status == False: # retry
+            # if the kinetek does not send confirmation, resend the packet
+            elif status == False:
                 status = self.send_hex_packet(write_ids_retry, True)
                 if status == False:
                     return (False, "32_BYTE_RESPONSE_TIMEOUT")
@@ -238,24 +222,30 @@ class IAPUtil:
                 self.current_packet.clear() # if receive confirmation can clear and return true
                 continue
                 
-            elif status == None: # reached end of file
-                #self.page_count +=1 # (degenarate packet at the end)
-                page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
+            # if the return value is non then have reached end of file
+            elif status == None: 
+                page_cs = make_socketcan_frame(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
                                                                                         + self.page_check_sums[self.page_count]
                                                                                         + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
                                                                                         + list((self.page_count+1).to_bytes(1,"big")) \
                                                                                         + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
                                                                                         )
+                # tell the kinetek reached end of hex file
                 resp = self.send_request_repeated(self.SEND_EOF_REQUEST, "END_OF_HEX_FILE_RESPONSE", 10, 2, "END_OF_HEX_FILE_TIMEOUT")
                 if resp != None and resp[0] == False:
                     return resp[1]
                 
-                # resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 20, "NO SELF CALCULATED PAGE CHECKSUM") 
-                # if resp != None and resp[0] == False:
-                #     return resp[1]
+                # can wait for last page cs if want to but tends to time out so commented out code
+                # resp = self.send_request(None, "SELF_CALCULATED_PAGE_CHECKSUM", 40)
+                # if resp == False:
+                #     return "SLEF CHECKSUM NOT CALCULATED"
+                
+                # check that the last page checksum is correct (may be an incomplete page that does not land on 32 packets)
                 resp = self.send_request_repeated(page_cs, "CALCULATE_PAGE_CHECKSUM_RESPONSE", 10, 2, "PAGE_CHECKSUM_TIMEOUT")
                 if resp != None and resp[0] == False:
                     return resp[1]
+
+                # check the total hex file checksum
                 resp = self.send_request_repeated(self.SEND_TOTAL_CHECKSUM_REQUEST, "CALCULATE_TOTAL_CHECKSUM_RESPONSE", 10, 2, "TOTAL_CHECKSUM_TIMEOUT")
                 if resp != None and resp[0] == False:
                     return resp[1]
@@ -263,50 +253,59 @@ class IAPUtil:
             
             
             
-
-    def send_hex_packet(self,write_ids, is_retry=False): #32 bytes of data
+    # send four can frames, 32 bytes of data
+    def send_hex_packet(self,write_ids, is_retry=False):
+        # if this is a retry packet, want to resend the current packet instead of reading from hex file
         if is_retry == True:
             count = 0
             while True:
-                hex_frame = make_socketcan_packet(write_ids[count], self.current_packet[count])
+                hex_frame = make_socketcan_frame(write_ids[count], self.current_packet[count])
                 if count == 3:
                     if self.send_request(hex_frame, "RECEIVED_32__BYTES", 80) == False: # if no confirmation, return false
                         return False
-                    #self.num_bytes_uploaded += len(self.current_packet)
                     return True
 
                 else:
                     self.bus.send(hex_frame) 
-                    #self.num_bytes_uploaded += len(self.current_packet[count])
                     print("SENT:\t",hex_frame)
                 count += 1
 
+        # if this is a normal packet follow these steps
         write_id_index = 0
         while True:
+
+            # if we have uploaded all data bytes then can return
             if self.num_bytes_uploaded == self.data_size_bytes:
                 return None
-
-            data = self.hexUtil.get_next_data_8() # get the next 8 data bytes from the hex file, or next n if last line and incomplete
-
-            if self.hexUtil.curr_line_index-1 == self.hexUtil.last_data_line_index: # if last line add filler if necessary
+            
+            # get the next 8 data bytes from the hex file, or next n if last line and incomplete
+            data = self.hexUtil.get_next_data_8() 
+            
+            # if this data is the last line then add filler if necessary
+            if self.hexUtil.curr_line_index-1 == self.hexUtil.last_data_line_index: 
                 print("\n\n\n====FILLER====\n\n\n")
                 self.num_bytes_uploaded += len(data)
                 last_data_frame_filler_amount = 8 - len(data) # complete the frame with filler data bytes
                 if write_id_index == 0 and last_data_frame_filler_amount == 8: # if file ends on complete packet, don't think I need this because only way these conditions are true is if this was not a data line, so would not get here anyways, or an empty data line which does not make sense
                     return None
+
+                # fill the last data frame with filler
                 for i in range(last_data_frame_filler_amount):
                     data.append(0xFF)
                 self.current_packet.append(data)
+
+                # fill the last packet with filler frames
                 filler_data = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
                 num_frames_to_fill = 4 - len(self.current_packet) # complete the packet with filler frames
                 for i in range(num_frames_to_fill):
                     self.current_packet.append(filler_data)
-                hex_frame = make_socketcan_packet(write_ids[write_id_index], self.current_packet[write_id_index])
+
+                # finally send the packet
+                hex_frame = make_socketcan_frame(write_ids[write_id_index], self.current_packet[write_id_index])
                 self.bus.send(hex_frame)
                 print("SENT:\t", hex_frame)
-                # do get to here bu dont exec for loop, num_frames to fill = 0?
                 for i in range(num_frames_to_fill):
-                    hex_frame = make_socketcan_packet(write_ids[write_id_index + i + 1], self.current_packet[write_id_index + i + 1])
+                    hex_frame = make_socketcan_frame(write_ids[write_id_index + i + 1], self.current_packet[write_id_index + i + 1])
                     if write_id_index + i + 1 == 3:
                         if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
                             return False
@@ -316,13 +315,13 @@ class IAPUtil:
                     print("SENT:\t", hex_frame)
                     
 
-
-            self.current_packet.append(data) # stores these in case need to retry
+            # stores data in the current packet in case need to resend packet
+            self.current_packet.append(data)
             if data == -1: # means eof so break loop
                 self.upload_done = True
                 return None
 
-            hex_frame = make_socketcan_packet(write_ids[write_id_index],data) # make a socket_can packet from hex data
+            hex_frame = make_socketcan_frame(write_ids[write_id_index],data)
             if write_id_index == 3: # if this is the fourth packet, wait for 32 bytes confirmation from Kinetek
                 if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
                     return False
@@ -335,14 +334,15 @@ class IAPUtil:
 
             else: # if first three packets then send normally
                 self.bus.send(hex_frame) 
-                #self.num_bytes_uploaded += len(data)
                 print("SENT:\t",hex_frame)
-            #print(self.num_bytes_uploaded)
+
             write_id_index += 1
             if write_id_index == len(write_ids):
                 write_id_index = 0
 
 
+
+# translate socketcan frame into string format that can compare against
 def decode_socketcan_packet(frame):
     can_id = hex(frame.arbitration_id)[2:].zfill(3) # form: "060"
     data = ""

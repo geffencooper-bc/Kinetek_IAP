@@ -198,5 +198,5 @@ def data_string_to_byte_list(data_bytes):
     return bytes_list_num
 
 # make a sokcet can message from can id (int) and data bytes (list of bytes)
-def make_socketcan_packet(can_id, data_bytes): # pass in data as a list of 8 bytes
+def make_socketcan_frame(can_id, data_bytes): # pass in data as a list of 8 bytes
     return can.Message(arbitration_id=can_id, data=data_bytes, is_extended_id=False)
