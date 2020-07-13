@@ -13,7 +13,7 @@ ut = IAPUtil(False)
 ut.init_can("can0")
 
 # extracts all needed iap information from hex file like checksum, size, start address. Also reads this file while hex data uploaded
-ut.load_hex_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex")
+ut.load_hex_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.27_copy.hex")
 ut.to_string() # print important hexfile data
 
 # print("try to enter iap")
@@ -21,10 +21,10 @@ ut.to_string() # print important hexfile data
 
 #ut.put_in_IAP_mode()
 
-#ut.in_iap_mode = True
-#print(ut.send_init_packets())
+# ut.in_iap_mode = True
+# print(ut.send_init_packets())
 
-ut.upload_image()
+#ut.upload_image()
 
 # while True:
 #     print(ping_msg)
