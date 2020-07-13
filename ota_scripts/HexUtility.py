@@ -200,19 +200,3 @@ def data_string_to_byte_list(data_bytes):
 # make a sokcet can message from can id (int) and data bytes (list of bytes)
 def make_socketcan_packet(can_id, data_bytes): # pass in data as a list of 8 bytes
     return can.Message(arbitration_id=can_id, data=data_bytes, is_extended_id=False)
-
-# inserts spaces into a string every n chars
-def insert_spaces(string, n):
-    return " ".join(string[i:i+n] for i in range(0, len(string), n))
-
-def format_int_to_code(num, num_bytes):
-    return insert_spaces(hex(num)[2:].zfill(num_bytes*2), 2)
-
-def reverse_bytes(string):
-    string = string.replace(" ", "")
-    bytes_list = [string[i:i+2] for i in range(0, len(string), 2)]
-    bytes_list.reverse()
-    string = ""
-    for i in range(len(bytes_list)):
-        string += bytes_list[i] + " "
-    return string[:-1]

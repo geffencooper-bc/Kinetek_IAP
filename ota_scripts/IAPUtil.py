@@ -26,7 +26,8 @@ class IAPUtil:
         self.data_size_bytes = self.hexUtil.get_file_data_size()
         self.page_check_sums = self.hexUtil.get_page_checksums()
         self.total_checksum = self.hexUtil.get_total_checksum()
-        self.total_checksum_reverse = reverse_bytes(self.total_checksum)
+        self.total_checksum_reverse = self.total_checksum
+        self.total_checksum_reverse.reverse()
         self.start_address = self.hexUtil.get_start_address()
         self.last_data_line_size = self.hexUtil.get_last_data_line_size()
 
@@ -41,28 +42,27 @@ class IAPUtil:
         self.SEND_CHECKSUM_DATA_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_CHECKSUM_PREFIX") \
                                                                                                         + self.total_checksum
                                                                                                         + get_kinetek_data_code("SEND_CHECKSUM_SUFFIX")
-                                                                                                        ))
-        self.SEND_DATA_SIZE_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
-                                                                                                        get_kinetek_data_code("SEND_DATA_SIZE_PREFIX") \
-                                                                                                        + format_int_to_code(self.data_size_bytes, 4)
+                                                                                                        )
+        self.SEND_DATA_SIZE_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("SEND_DATA_SIZE_PREFIX") \
+                                                                                                        + list(self.data_size_bytes.to_bytes(4, "big"))
                                                                                                         + get_kinetek_data_code("SEND_DATA_SIZE_SUFFIX")
-                                                                                                        ))   
+                                                                                                        )   
 
-        self.SEND_EOF_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list(get_kinetek_data_code("END_OF_HEX_FILE_PREFIX") \
-                                                                                                        + self.last_data_line_size \
-                                                                                                        + get_kinetek_data_code("END_OF_HEX_FILE_SUFFIX")))             
-        self.SEND_TOTAL_CHECKSUM_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
-                                                                                                    get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
+        self.SEND_EOF_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("END_OF_HEX_FILE_PREFIX") \
+                                                                                                        + list(self.last_data_line_size.to_bytes(1, "big")) \
+                                                                                                        + get_kinetek_data_code("END_OF_HEX_FILE_SUFFIX")
+                                                                                                        )
+
+        self.SEND_TOTAL_CHECKSUM_REQUEST = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("TOTAL_CHECKSUM_PREFIX") \
                                                                                                     + self.total_checksum_reverse \
                                                                                                     + get_kinetek_data_code("TOTAL_CHECKSUM_SUFFIX")
-                                                                                                    ))
-        print(self.last_data_line_size)                                                                                  
+                                                                                                    )                                                                                  
         
 
-    def to_string(self):
+    def print(self):
         print("\n")
         print("\t\t\t\t\t=============================================")
-        print("\t\t\t\t\t=========== IAP UTILITY TO STRING ===========")
+        print("\t\t\t\t\t============= IAP UTILITY PRINT== ===========")
         print("\t\t\t\t\t=============================================\n\n")
         print("HEX FILE DATA SIZE:\t\t", self.data_size_bytes, "bytes")
         print("HEX FILE DATA TOTAL CHECKSUM:\t", self.total_checksum)
@@ -76,7 +76,7 @@ class IAPUtil:
         print("\nSEND_DATA_SIZE_REQUEST:\t\t", self.SEND_DATA_SIZE_REQUEST)
         print("\n")
         print("\t\t\t\t\t=============================================")
-        print("\t\t\t\t\t=========== IAP UTILITY TO STRING ===========")
+        print("\t\t\t\t\t============= IAP UTILITY PRINT =============")
         print("\t\t\t\t\t=============================================\n\n\n\n\n\n\n")
     
     def init_can(self, channel_name):
@@ -102,9 +102,9 @@ class IAPUtil:
                 resp = self.bus.recv(timeout=1000)
                 #print(decode_socketcan_packet(resp))
                 print("RECEIVED:\t", resp)
-                if resp.arbitration_id == 0x80: # if the response if a heartbeat then break because left boot up mode
-                     print("=========HEART BEAT DETECTED, DIDNT ENTER")
-                     return False
+                # if resp.arbitration_id == 0x80: # if the response if a heartbeat then break because left boot up mode
+                #      print("=========HEART BEAT DETECTED, DIDNT ENTER")
+                #      return False
             else: # if receive a desired response then increment the count
                 enter_iap_mode_resp_count += 1
         # print("RECEIVED:\t", resp)
@@ -207,13 +207,12 @@ class IAPUtil:
         while True:
             if self.packet_count > 0 and self.packet_count% 32 == 0: # page_cs packet needs to be made while running unless want to make all during load
                 print("\n======END OF PAGE======\n")
-                page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
-                                                                                                    get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
-                                                                                                    + self.page_check_sums[self.page_count]
-                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
-                                                                                                    + format_int_to_code(self.page_count+1, 1) \
-                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
-                                                                                                    ))
+                page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
+                                                                                        + self.page_check_sums[self.page_count]
+                                                                                        + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
+                                                                                        + list((self.page_count+1).to_bytes(1,"big")) \
+                                                                                        + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
+                                                                                        )
                 # need to wait for 06 pointer thing with page checksum, try without
                 
                 # resp = self.wait_for_message("SELF_CALCULATED_PAGE_CHECKSUM", 40, "NO SELF CALCULATED PAGE CHECKSUM") 
@@ -241,13 +240,12 @@ class IAPUtil:
                 
             elif status == None: # reached end of file
                 #self.page_count +=1 # (degenarate packet at the end)
-                page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), data_string_to_byte_list( \
-                                                                                                    get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
-                                                                                                    + self.page_check_sums[self.page_count] \
-                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
-                                                                                                    + format_int_to_code(self.page_count+1, 1) \
-                                                                                                    + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
-                                                                                                    ))
+                page_cs = make_socketcan_packet(get_kinetek_can_id_code("IAP_REQUEST"), get_kinetek_data_code("PAGE_CHECKSUM_PREFIX") \
+                                                                                        + self.page_check_sums[self.page_count]
+                                                                                        + get_kinetek_data_code("PAGE_CHECKSUM_MID") \
+                                                                                        + list((self.page_count+1).to_bytes(1,"big")) \
+                                                                                        + get_kinetek_data_code("PAGE_CHECKSUM_SUFFIX")
+                                                                                        )
                 resp = self.send_request_repeated(self.SEND_EOF_REQUEST, "END_OF_HEX_FILE_RESPONSE", 10, 2, "END_OF_HEX_FILE_TIMEOUT")
                 if resp != None and resp[0] == False:
                     return resp[1]
@@ -351,17 +349,3 @@ def decode_socketcan_packet(frame):
     for byte in frame.data:
         data += hex(byte)[2:].zfill(2).upper() + " " # form: "00 00 00 00 00 00 00 00"
     return str(can_id + " | " + data[:-1])
-
-# ut = IAPUtil()
-# ut.load_hex_file("2.28_copy.hex")
-# ut.to_string()
-
-# ut.init_can()
-# ut.put_in_IAP_mode()
-
-# if ut.put_in_IAP_mode() == True:
-#     print("sending packets")
-#     time.sleep(3)
-#     ut.send_init_packets()
-#print(ut.send_init_packets())
-#ut.upload_image()
