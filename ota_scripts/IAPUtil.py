@@ -134,6 +134,7 @@ class IAPUtil:
     # repeatedly send the enter iap mode command until get response from Kinetek to confirm in IAP mode
     def put_in_IAP_mode(self, force_mode=True):
         if force_mode == False:
+            self.send_request_repeated(None, "HEART_BEAT",-1,-1, None)
             self.send_request(self.ENTER_IAP_MODE_REQUEST_SELECTIVE, "ENTER_IAP_MODE_RESPONSE_SELECTIVE", 20)
             self.send_request_repeated(None, "IN_IAP_MODE",-1,-1, None)
             print("entered iap_mode")
@@ -272,7 +273,7 @@ class IAPUtil:
             while True:
                 hex_frame = make_socketcan_frame(write_ids[count], self.current_packet[count])
                 if count == 3:
-                    if self.send_request(hex_frame, "RECEIVED_32__BYTES", 80) == False: # if no confirmation, return false
+                    if self.send_request(hex_frame, "RECEIVED_32__BYTES", 160) == False: # if no confirmation, return false
                         return False
                     return True
 
@@ -318,7 +319,7 @@ class IAPUtil:
                 for i in range(num_frames_to_fill):
                     hex_frame = make_socketcan_frame(write_ids[write_id_index + i + 1], self.current_packet[write_id_index + i + 1])
                     if write_id_index + i + 1 == 3:
-                        if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
+                        if self.send_request(hex_frame, "RECEIVED_32__BYTES", 160) == False: # if no confirmation, return false
                             return False
                         print(self.current_packet)
                         return None
@@ -334,7 +335,7 @@ class IAPUtil:
 
             hex_frame = make_socketcan_frame(write_ids[write_id_index],data)
             if write_id_index == 3: # if this is the fourth packet, wait for 32 bytes confirmation from Kinetek
-                if self.send_request(hex_frame, "RECEIVED_32__BYTES", 40) == False: # if no confirmation, return false
+                if self.send_request(hex_frame, "RECEIVED_32__BYTES", 160) == False: # if no confirmation, return false
                     return False
                 print(self.current_packet)
                 for chunk in self.current_packet:
