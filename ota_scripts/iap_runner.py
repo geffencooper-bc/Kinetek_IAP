@@ -11,7 +11,7 @@ from IAPUtil import IAPUtil
 #                     is_extended_id=False)
 
 # the IAP download utility which helps automates the process, false means use real kinetek not virtual 
-ut = IAPUtil(False) 
+ut = IAPUtil(True) 
 ut.init_can("can0")
 
 # extracts all needed iap information from hex file like checksum, size, start address. Also reads this file while hex data uploaded
@@ -20,13 +20,14 @@ ut.print() # print important hexfile data
 
 # print("try to enter iap")
 
-
+#ut.turn_on_print()
 ut.put_in_IAP_mode(False)
 
 ut.in_iap_mode = True
-print(ut.send_init_packets())
-
-print(ut.upload_image())
+status = ut.send_init_packets()
+print(status)
+if status == "SUCCESS":
+    print(ut.upload_image())
 
 # while True:
 #     print(ping_msg)
