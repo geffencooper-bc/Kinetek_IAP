@@ -1,23 +1,22 @@
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <linux/can.h>
-#include <stdlib.h>
-#include <unistd.h> 
-#include <stdlib.h> 
-#include <netinet/in.h> 
-#include <string.h> 
-#include <linux/if.h>
-#include <sys/ioctl.h>
+#include "SocketCanUtil.h"
+
+int test_can();
 
 int main()
+{
+    SocketCanUtil ut = SocketCanUtil();
+    ut.init_socket("can0");
+    
+    
+    // test_can();
+}
+
+int test_can()
 {
     int s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
     struct sockaddr_can addr;
     struct ifreq ifr;
-
-    s = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
     strcpy(ifr.ifr_name, "can0" );
     ioctl(s, SIOCGIFINDEX, &ifr);
@@ -28,6 +27,7 @@ int main()
     bind(s, (struct sockaddr *)&addr, sizeof(addr));
 
     struct can_frame frame;
+    printf("size: %i:", sizeof(can_frame));
 
     while(true)
     {
@@ -52,5 +52,4 @@ int main()
             printf("%02X ", frame.data[i]);
         }
     }
-    
 }
