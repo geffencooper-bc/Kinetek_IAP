@@ -35,6 +35,8 @@ class SocketCanUtil
     // abstracts socket read, return -1 if read unsuccseful
     int get_frame(can_frame* frame);
 
+    void print_frame(can_frame* frame);
+
 
     private:
     int socket_fd;

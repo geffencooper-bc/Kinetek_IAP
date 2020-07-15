@@ -6,6 +6,12 @@ int main()
 {
     SocketCanUtil ut = SocketCanUtil();
     ut.init_socket("can0");
+    can_frame frame;
+    uint8_t data[5] = {0x1D, 0xF1, 0x04, 0x00, 0x01};
+    ut.make_socket_can_frame(0x001, data, 5, &frame);
+    ut.send_frame(&frame);
+    ut.get_frame(&frame);
+    ut.print_frame(&frame);
     
     
     // test_can();

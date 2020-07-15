@@ -29,6 +29,7 @@ void SocketCanUtil::make_socket_can_frame(uint8_t can_id, uint8_t* data, uint8_t
 
 int SocketCanUtil::send_frame(can_frame* frame)
 {
+    printf("Sending Frame\n");
     int num_bytes = write(socket_fd, frame, sizeof(can_frame));
     if(num_bytes != sizeof(can_frame))
     {
@@ -38,9 +39,20 @@ int SocketCanUtil::send_frame(can_frame* frame)
 
 int SocketCanUtil::get_frame(can_frame* frame)
 {
+    printf("Receiving Frame\n");
     int num_bytes = read(socket_fd, frame, sizeof(struct can_frame));
     if(num_bytes != sizeof(can_frame))
     {
         perror("Read");
+    }
+}
+
+void SocketCanUtil::print_frame(can_frame* frame)
+{
+    printf("\ncan_id: %02X\t", frame->can_id);
+    printf("data:\t");
+    for(int i = 0; i < frame->can_dlc; i++)
+    {
+        printf("%02X ", frame->data[i]);
     }
 }
