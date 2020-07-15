@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stdint.h>
 
 using std::string;
 
@@ -27,11 +28,11 @@ using std::string;
 enum hex_record_type
 {
     DATA = 0,
-    EOF = 1,
+    END_OF_FILE = 1,
     EXTENDED_SEGMENT_AR = 2,
     EXTENDED_LINEAR_AR = 4,
     START_LINEAR_AR = 5
-}
+};
 
 
 class HexUtility
@@ -39,10 +40,10 @@ class HexUtility
     public:
     HexUtility();
     void open_file(string hex_file_path);
-    int get_record_length(string hex_line);
+    int get_record_data_length(string hex_line);
     int get_record_address(string hex_line);
     hex_record_type get_record_type(string hex_line);
-    void get_record_data_bytes(string hex_line, int start=0, int num_bytes=-1, uint8_t* data);
+    void get_record_data_bytes(string hex_line, uint8_t* data, int start=0, int num_bytes=-1);
     int get_record_checksum(string hex_line);
 
     private:
@@ -51,9 +52,10 @@ class HexUtility
     bool is_first_8;
     bool is_eof;
 
-    void data_string_to_bytes_list(string hex_line, uint8_t* data);
-    //const uint8_t CAN_MAX_LEN = 8;
+    void data_string_to_byte_list(string hex_line, uint8_t* data);
+    const uint8_t CAN_MAX_DATA_LEN = 8;
+    const uint8_t HEX_DATA_START_I = 9;
     
-}
+};
 
 #endif

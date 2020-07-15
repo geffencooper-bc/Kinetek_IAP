@@ -1,17 +1,27 @@
 #include "SocketCanUtil.h"
+#include "HexUtil.h"
 
 int test_can();
 
 int main()
 {
-    SocketCanUtil ut = SocketCanUtil();
-    ut.init_socket("can0");
-    can_frame frame;
-    uint8_t data[5] = {0x1D, 0xF1, 0x04, 0x00, 0x01};
-    ut.make_socket_can_frame(0x001, data, 5, &frame);
-    ut.send_frame(&frame);
-    ut.get_frame(&frame);
-    ut.print_frame(&frame);
+    HexUtility ut = HexUtility();
+    ut.open_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex");
+    printf("%i\n", ut.get_record_data_length(":020000040800F2"));
+    printf("%i\n", ut.get_record_address(":020000040800F2"));
+    printf("%i\n", ut.get_record_type(":020000040800F2"));
+    uint8_t data[8];
+    ut.get_record_data_bytes(":020000040800F2", data, 0, 8);
+    printf("%02X %02X", data[0], data[1]);
+    
+    // SocketCanUtil ut2 = SocketCanUtil();
+    // ut.init_socket("can0");
+    // can_frame frame;
+    // uint8_t data[5] = {0x1D, 0xF1, 0x04, 0x00, 0x01};
+    // ut.make_socket_can_frame(0x001, data, 5, &frame);
+    // ut.send_frame(&frame);
+    // ut.get_frame(&frame);
+    // ut.print_frame(&frame);
     
     
     // test_can();

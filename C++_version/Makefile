@@ -6,7 +6,7 @@ CXX = g++
 
 #COMPILER_FLAGS specifies the additional compilation options we're using
 # -w suppresses all warnings, -g adds debug information
-COMPILER_FLAGS = -w -g
+COMPILER_FLAGS = -w -g -std=c++11
 
 #INCLUDE_PATHS specifies the paths to the header files
 INCLUDE_PATHS = -I.
