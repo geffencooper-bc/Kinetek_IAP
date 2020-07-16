@@ -45,26 +45,53 @@ const uint8_t KT_CHECKSUM_SIZE = 4; // size in bytes
 class HexUtility
 {
     public:
+    // opens file, then loads hex data like checksums, data size, etc
     HexUtility(const string &hex_file_path);
+
+    // closes file
     ~HexUtility();
 
-    int get_record_data_length(const string &hex_line);
-    int get_record_address(const string &hex_line);
-    hex_record_type get_record_type(const string &hex_line);
-    void get_record_data_bytes(const string &hex_line, uint8_t* data, int start=0, int num_bytes=-1);
-    int get_record_checksum(const string &hex_line);
-
-    int get_file_data_size();
-    void calc_laurence_checksum(uint8_t* data_bytes, size_t num_data_bytes, uint8_t* cs_bytes);
+    // accessors
+    int get_file_data_size()
+    {
+        return hex_file_data_size;
+    }
     
-    private:
-    ifstream hex_file;
-    string curr_line;
-    bool is_first_8;
-    bool is_eof;
-    uint8_t last_data_line_size;
+    uint8_t get_last_data_line_size()
+    {
+        return last_data_line_size;
+    }
+    
+    // pass in a 4 byte buffer to be filled with cs bytes 
+    void get_total_cs(uint8_t* cs_bytes, uint8_t num_cs_bytes);
 
-    void data_string_to_byte_list(const string &hex_line, uint8_t* data);
+    private:
+    ifstream hex_file; // file is open for object lifetime
+    string curr_line;  // file will be read line by line
+
+    bool is_first_8;   // reading 1st 8 bytes or 2nd 8 bytes of 16 data bytes in each hex record 
+    bool is_eof;       
+    uint8_t last_data_line_size; // needed by IAP
+    int hex_file_data_size;      
+    uint32_t total_checksum;     // sum of all data bytes
+    
+    
+    // Helper functions that should not be exposed
+
+    // first five functions extract and return certain part of hex record fed in as a string
+    int get_record_data_length(const string &hex_record); // in bytes
+    int get_record_address(const string &hex_record);
+    hex_record_type get_record_type(const string &hex_record);
+    // extracts the data bytes and fills in a buffer passed in
+    int get_record_data_bytes(const string &hex_record, uint8_t* data_bytes, uint8_t num_data_bytes, int start=0, int num_bytes=-1);
+    int get_record_checksum(const string &hex_record);
+
+    // converts a string of bytes "AABBCCDD" to an array of bytes [0xAA, 0xBB, 0xCC, 0xDD]
+    int data_string_to_byte_list(const string &hex_data, uint8_t* data_bytes, uint8_t num_data_bytes);
+    int load_hex_file_data();
+    int cs_to_byte_list(uint32_t cs, uint8_t* cs_bytes, uint8_t num_cs_bytes);
+    
+
 };
 
 #endif
