@@ -10,8 +10,15 @@ int main()
     memcpy(&dest, byte_arr, 4);
     printf("%08X\n", dest);
     HexUtility ut("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.27_copy.hex");
-    ut.get_total_cs(byte_arr, 4);
-    
+    //ut.get_total_cs(byte_arr, 4);
+    //printf("CS: %02X", ut.calc_hex_checksum(":108080001B8100081B810008C58800081B81000AF"));
+    // uint8_t bytes[20];
+    // int ret = ut.data_string_to_byte_list("108080001B8100081B810008C58800081B810008", bytes, 20);
+    // printf("ret: %i\n", ret);
+    // for(int i = 0; i < 20; i++)
+    // {
+    //     printf("%02X ", bytes[i]);
+    // }
     
     // SocketCanUtil ut2 = SocketCanUtil();
     // ut.init_socket("can0");

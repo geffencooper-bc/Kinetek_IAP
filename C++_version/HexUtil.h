@@ -65,6 +65,10 @@ class HexUtility
     // pass in a 4 byte buffer to be filled with cs bytes 
     void get_total_cs(uint8_t* cs_bytes, uint8_t num_cs_bytes);
 
+    // pass in a 4 byte buffer to be filled with address bytes, also gets returned as an int
+    int get_start_address(uint8_t* start_address_bytes, uint8_t num_bytes);
+    uint8_t calc_hex_checksum(const string &hex_record);
+    int data_string_to_byte_list(const string &hex_data, uint8_t* data_bytes, uint8_t num_data_bytes);
     private:
     ifstream hex_file; // file is open for object lifetime
     string curr_line;  // file will be read line by line
@@ -74,6 +78,7 @@ class HexUtility
     uint8_t last_data_line_size; // needed by IAP
     int hex_file_data_size;      
     uint32_t total_checksum;     // sum of all data bytes
+    uint32_t start_address;
     
     
     // Helper functions that should not be exposed
@@ -87,10 +92,10 @@ class HexUtility
     int get_record_checksum(const string &hex_record);
 
     // converts a string of bytes "AABBCCDD" to an array of bytes [0xAA, 0xBB, 0xCC, 0xDD]
-    int data_string_to_byte_list(const string &hex_data, uint8_t* data_bytes, uint8_t num_data_bytes);
+   // int data_string_to_byte_list(const string &hex_data, uint8_t* data_bytes, uint8_t num_data_bytes);
     int load_hex_file_data();
-    int cs_to_byte_list(uint32_t cs, uint8_t* cs_bytes, uint8_t num_cs_bytes);
-    
+    void num_to_byte_list(int num, uint8_t* bytes, uint8_t num_bytes);    
+    //uint8_t calc_hex_checksum(const string &hex_record);
 
 };
 

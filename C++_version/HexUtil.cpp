@@ -25,7 +25,13 @@ HexUtility::~HexUtility()
 
 void HexUtility::get_total_cs(uint8_t* cs_bytes, uint8_t num_cs_bytes)
 {
-    cs_to_byte_list(total_checksum, cs_bytes, num_cs_bytes);
+    num_to_byte_list(total_checksum, cs_bytes, num_cs_bytes);
+}
+
+int HexUtility::get_start_address(uint8_t* start_address_bytes, uint8_t num_bytes)
+{
+    num_to_byte_list(start_address, start_address_bytes, num_bytes);
+    return start_address;
 }
 
 
@@ -51,6 +57,7 @@ int HexUtility::data_string_to_byte_list(const string &hex_data, uint8_t* data_b
     // the number of bytes should be at least half the number of chars in the string, "AA" --> 1 byte
     if(num_data_bytes < hex_data.size()/2)
     {
+        printf("%i, %i\n", num_data_bytes, hex_data.size()/2);
         return -1;
     }
     // iterate through the string only filling in data bytes every two chars, return the sum of the bytes for checksum
@@ -97,8 +104,33 @@ int HexUtility::load_hex_file_data()
 {
     string last_data_line = ""; // save the last data line so can get its size
     uint8_t byte_list[16];       // buffer to hold next 16 data bytes in the hex file
+    int line_index = 0;
+    uint16_t ms_16_bits = 0;
+    uint16_t ls_16_bits = 0;
     while(getline(hex_file, curr_line))
     {
+        if(calc_hex_checksum(curr_line) != get_record_checksum(curr_line))
+        {
+            printf("BAD HEX CHECKSUM, LINE: %i", line_index);
+            return -1;
+        }
+        // first get the start address, if extended linear then need to combine  ms and ls 16 bits
+        if(line_index == 0 && get_record_type(curr_line) == EXTENDED_LINEAR_AR)
+        {
+            get_record_data_bytes(curr_line, byte_list, 16); // most significant 16 bits stored in bytes_list
+            ms_16_bits = (byte_list[0] << 8) + byte_list[1]; // need to convert from bytes list to int, ex: [0x01, 0x10] --> 0x0110
+            getline(hex_file, curr_line);
+            line_index +=1;
+            if(get_record_type(curr_line) == DATA)
+            {
+                ls_16_bits = get_record_address(curr_line);
+                start_address = (ms_16_bits << 16) + ls_16_bits;
+            }
+        }
+        else if(line_index == 0 && get_record_type(curr_line) == DATA) 
+        {
+            start_address = get_record_address(curr_line);
+        }
         if(get_record_type(curr_line) == DATA)
         {
             hex_file_data_size += get_record_data_length(curr_line);
@@ -106,6 +138,7 @@ int HexUtility::load_hex_file_data()
 
             last_data_line = curr_line;
         }
+        line_index += 1;
     }
 
     last_data_line_size = get_record_data_length(last_data_line);
@@ -115,16 +148,27 @@ int HexUtility::load_hex_file_data()
     hex_file.seekg(0, ios::beg);
 }
 
-int HexUtility::cs_to_byte_list(uint32_t cs, uint8_t* cs_bytes, uint8_t num_cs_bytes)
+void HexUtility::num_to_byte_list(int num, uint8_t* bytes, uint8_t num_bytes)
 {
-    if(num_cs_bytes != KT_CHECKSUM_SIZE)
+    // need to convert from number to list of bytes, ex: 0x00018C1D --> [0x00, 0x01, 0x8C, 0x1D]
+    for(int i = 0; i < num_bytes; i++)
     {
-        // exit
+        bytes[i] = (num >> 8*(num_bytes-i-1)) & 0xFF;
     }
-    // need to convert checksum from number to list of bytes, ex: 0x00018C1D --> [0x00, 0x01, 0x8C, 0x1D]
-    for(int i = 0; i < KT_CHECKSUM_SIZE; i++)
+}
+
+uint8_t HexUtility::calc_hex_checksum(const string &hex_record)
+{
+    int size = 4 + get_record_data_length(hex_record); // first 4 bytes are fixed --> :llaaaatt
+    uint8_t record[size];
+    data_string_to_byte_list(hex_record.substr(1, hex_record.size()-3), record, size);
+
+    int sum = 0;
+    for(int i = 0; i < size; i++)
     {
-        cs_bytes[i] = (cs >> 8*(KT_CHECKSUM_SIZE-i-1)) & 0xFF;
+        sum += record[i];
     }
+    int two_compl = (256 - sum) % 256;
+    return two_compl;
 }
 
