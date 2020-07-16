@@ -1,0 +1,128 @@
+make_minimum_required(VERSION 2.8.3)
+
+set(APP_NAME "kinetek-util")
+
+set(CMAKE_BUILD_TYPE Debug)
+
+# default directory paths
+set(CANOPEN_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../modules/CANopenNode)
+set(STACKDRV_SRC ${CANOPEN_SRC}/stack/neuberger-socketCAN)
+#set(STACKDRV_SRC ${CANOPEN_SRC}/stack/socketCAN)
+set(APP_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+
+include_directories(   
+                        ${STACKDRV_SRC}
+                        ${CANOPEN_SRC}
+                        ${APPL_SRC}
+                        ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+set(SOURCES     ${STACKDRV_SRC}/CO_driver.c         
+             #   ${STACKDRV_SRC}/CO_Linux_threads.c    
+                ${STACKDRV_SRC}/CO_notify_pipe.c    
+            #    ${CANOPEN_SRC}/CANopen.c
+                ${APP_SRC}/main.cpp                          
+)
+
+# attempt to generate version.h if info changed
+add_custom_target(
+   gen_version_headers2
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/__df_1   # depend on non-existent file to force target to build every time
+)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/__df_1
+    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/version.py
+)
+
+# remove stopping compilation due to warnings caused by the auto-generated file OC_OD.c
+set_source_files_properties(${OBJ_DICT_SRC}/CO_OD.c PROPERTIES COMPILE_FLAGS -w)
+
+add_executable(${APP_NAME} ${SOURCES})
+add_dependencies(${APP_NAME} gen_version_headers2)
+
+target_compile_options(${APP_NAME} PUBLIC "-pthread")
+
+target_link_libraries(${APP_NAME} pthread)
+
+install(TARGETS ${APP_NAME}
+    COMPONENT linapp
+    RUNTIME DESTINATION ${LOWSHEEN_UTILS_PATH}
+    LIBRARY DESTINATION ${LOWSHEEN_UTILS_PATH}
+    DESTINATION ${LOWSHEEN_UTILS_PATH}
+)
+
+
+
+
+
+
+
+----------------
+
+cmake_minimum_required(VERSION 2.8.3)
+
+# Project Properties
+
+project(lowsheen-utils)
+
+set(LOWSHEEN_UTILS_PATH /usr/local/bin)
+
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-Wall -Werror")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+
+# Project Applications
+add_subdirectory(vcis-util)
+add_subdirectory(kinetek-util)
+
+# Debian Package Definition (using CPack)
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Lowsheen") #required
+INCLUDE(CPack)
+
+# place script to automatically bring up interfaces using /etc/network/interfaces.d
+set(LOWSHEEN_UTILS_IFC_SCRIPT "./scripts/${CMAKE_PROJECT_NAME}.socketcan")
+install(PROGRAMS ${LOWSHEEN_UTILS_IFC_SCRIPT}
+    DESTINATION "/etc/network/interfaces.d/"
+)
+~                                                                                                       
+~                                                                                                       
+~                   
+
+-------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <iostream>
+#include <string>
+#include "CO_driver.h"
+using namespace std;
+
+// identifier passed with the callback function
+string m = "inside the callback";
+
+// callback function passed into buffer init
+void call_back(void* msg, const CO_CANrxMsg_t* can_msg)
+{
+   cout << "in call back" << endl;
+   //cout << *((string*)msg) << endl;
+}
+
+int main()
+{
+    CO_CANmodule_t cm;
+    CO_CANrxMsg_t can_msg;
+    unsigned long ifindex = 0x8933;
+
+    CO_CANrx_t rxArr[1];
+    CO_CANtx_t txArr[0];
+    CO_CANmodule_init(&cm, &ifindex, rxArr, 1, txArr, 0, 250);
+    cout << "init module. Interface count: " << cm.CANinterfaceCount <<endl;
+    CO_CANrxBufferInit(&cm, 0, 0x040, 0x7FF, 0, &m, &call_back);
+    cout << "init buffer" << endl;
+    CO_CANrxWait(&cm, 0, &can_msg);
+    cout << "this is a test c++" << endl;
+   // printf("This is a test");
+}
+

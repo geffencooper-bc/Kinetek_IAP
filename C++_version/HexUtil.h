@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 using std::string;
+using std::ifstream;
 
 // a utility class with helper functions to help read data from a hex file
 // it relies on reading from a hex file and keeping the current position
@@ -34,28 +35,36 @@ enum hex_record_type
     START_LINEAR_AR = 5
 };
 
+const uint8_t CAN_MAX_DATA_LEN = 8;
+const uint8_t RECORD_DATA_LENGTH_START_I = 1;
+const uint8_t RECORD_ADDRESS_START_I = 3;
+const uint8_t RECORD_TYPE_START_I = 7;
+const uint8_t RECORD_DATA_START_I = 9;
+const uint8_t KT_CHECKSUM_SIZE = 4; // size in bytes
 
 class HexUtility
 {
     public:
-    HexUtility();
-    void open_file(string hex_file_path);
-    int get_record_data_length(string hex_line);
-    int get_record_address(string hex_line);
-    hex_record_type get_record_type(string hex_line);
-    void get_record_data_bytes(string hex_line, uint8_t* data, int start=0, int num_bytes=-1);
-    int get_record_checksum(string hex_line);
+    HexUtility(const string &hex_file_path);
+    ~HexUtility();
 
+    int get_record_data_length(const string &hex_line);
+    int get_record_address(const string &hex_line);
+    hex_record_type get_record_type(const string &hex_line);
+    void get_record_data_bytes(const string &hex_line, uint8_t* data, int start=0, int num_bytes=-1);
+    int get_record_checksum(const string &hex_line);
+
+    int get_file_data_size();
+    void calc_laurence_checksum(uint8_t* data_bytes, size_t num_data_bytes, uint8_t* cs_bytes);
+    
     private:
-    string hex_file_lines;
-    size_t curr_line_index;
+    ifstream hex_file;
+    string curr_line;
     bool is_first_8;
     bool is_eof;
+    uint8_t last_data_line_size;
 
-    void data_string_to_byte_list(string hex_line, uint8_t* data);
-    const uint8_t CAN_MAX_DATA_LEN = 8;
-    const uint8_t HEX_DATA_START_I = 9;
-    
+    void data_string_to_byte_list(const string &hex_line, uint8_t* data);
 };
 
 #endif

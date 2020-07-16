@@ -5,14 +5,17 @@ int test_can();
 
 int main()
 {
-    HexUtility ut = HexUtility();
-    ut.open_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex");
-    printf("%i\n", ut.get_record_data_length(":020000040800F2"));
-    printf("%i\n", ut.get_record_address(":020000040800F2"));
-    printf("%i\n", ut.get_record_type(":020000040800F2"));
+    HexUtility ut("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.27_copy.hex");
+    printf("size: %i\n", ut.get_file_data_size());
+    printf("last line size: %i\n", ut.last_data_line_size);
+    //ut.open_file("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.28_copy.hex");
+    printf("%i\n", ut.get_record_data_length(":108080001B8100081B810008C58800081B810008AF"));
+    printf("%X\n", ut.get_record_address(":108080001B8100081B810008C58800081B810008AF"));
+    printf("%i\n", ut.get_record_type(":108080001B8100081B810008C58800081B810008AF"));
     uint8_t data[8];
-    ut.get_record_data_bytes(":020000040800F2", data, 0, 8);
-    printf("%02X %02X", data[0], data[1]);
+    ut.get_record_data_bytes(":108080001B8100081B810008C58800081B810008AF", data, 0, 8);
+    printf("%02X %02X\n", data[0], data[1]);
+    printf("%02X", ut.get_record_checksum(":108080001B8100081B810008C58800081B810008AF"));
     
     // SocketCanUtil ut2 = SocketCanUtil();
     // ut.init_socket("can0");
