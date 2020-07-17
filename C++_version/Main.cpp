@@ -3,13 +3,41 @@
 
 int test_can();
 
+void print_array(uint8_t* arr, uint8_t size)
+{
+    for(int i = 0; i < size; i++)
+    {
+        printf("%02X ", arr[i]);
+    }
+    printf("\n");
+}
+
 int main()
 {
-    uint8_t byte_arr[4] = {0xAA, 0xBB, 0xCC, 0xDD};
-    uint32_t dest;
-    memcpy(&dest, byte_arr, 4);
-    printf("%08X\n", dest);
+    // uint8_t byte_arr[4] = {0xAA, 0xBB, 0xCC, 0xDD};
+    // uint32_t dest;
+    // memcpy(&dest, byte_arr, 4);
+    // printf("%08X\n", dest);
+
+    uint8_t address_bytes[4]; 
+    uint8_t cs_bytes[4]; 
+    uint8_t next_8[8];
     HexUtility ut("/home/geffen.cooper/Desktop/kinetek_scripts/hex_file_copies/2.27_copy.hex");
+    printf("FILE SIZE: %i\n", ut.get_file_data_size());
+    printf("START ADDRESS: %08X\n", ut.get_start_address(address_bytes, 4));
+    printf("TOTAL CHECKSUM: ");
+    ut.get_total_cs(cs_bytes, 4); print_array(cs_bytes, 4);
+    printf("FIRT 16 BYTES: ");
+    ut.get_next_8_bytes(next_8, 8); print_array(next_8, 8);
+    ut.get_next_8_bytes(next_8, 8); print_array(next_8, 8);
+    ut.get_next_8_bytes(next_8, 8); print_array(next_8, 8);
+    ut.get_next_8_bytes(next_8, 8); print_array(next_8, 8);
+    ut.get_next_8_bytes(next_8, 8); print_array(next_8, 8);
+    ut.get_next_8_bytes(next_8, 8); print_array(next_8, 8);
+    ut.get_next_8_bytes(next_8, 8); print_array(next_8, 8);
+    ut.get_next_8_bytes(next_8, 8); print_array(next_8, 8);
+    
+
     //ut.get_total_cs(byte_arr, 4);
     //printf("CS: %02X", ut.calc_hex_checksum(":108080001B8100081B810008C58800081B81000AF"));
     // uint8_t bytes[20];

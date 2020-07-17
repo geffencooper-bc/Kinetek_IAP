@@ -8,6 +8,14 @@ using std::ios;
 HexUtility::HexUtility(const string &hex_file_path) 
 {
     // need to init other member variables
+    curr_line = "";
+    is_first_8 = true;
+    is_eof = false;       
+    last_data_line_size = 0;
+    hex_file_data_size = 0;      
+    total_checksum = 0;
+    start_address = 0;
+    
 
     hex_file.open(hex_file_path);
     if(hex_file.fail())
@@ -20,6 +28,7 @@ HexUtility::HexUtility(const string &hex_file_path)
 
 HexUtility::~HexUtility()
 {
+    cout << "\nclosing file";
     hex_file.close();
 }
 
@@ -32,6 +41,46 @@ int HexUtility::get_start_address(uint8_t* start_address_bytes, uint8_t num_byte
 {
     num_to_byte_list(start_address, start_address_bytes, num_bytes);
     return start_address;
+}
+
+uint8_t HexUtility::get_next_8_bytes(uint8_t* data_bytes, uint8_t num_bytes)
+{
+    if(is_first_8)
+    {
+        getline(hex_file, curr_line);
+    }
+    
+    //cout << curr_line << "\n";
+    hex_record_type record_type = get_record_type(curr_line);
+
+    if(record_type == END_OF_FILE || record_type == START_LINEAR_AR)
+    {
+        is_eof = true;
+        return -1;
+    }
+
+    while(record_type != DATA)
+    {
+        getline(hex_file, curr_line);
+        record_type = get_record_type(curr_line);
+    }
+
+    if(get_record_data_length(curr_line) < 8)
+    {
+        get_record_data_bytes(curr_line, data_bytes, num_bytes); // will get the whole line by default
+    }
+
+    else if(is_first_8)
+    {
+        is_first_8 = false;
+        get_record_data_bytes(curr_line, data_bytes, num_bytes, 0, 8);
+    }
+
+    else
+    {
+        is_first_8 = true;
+        get_record_data_bytes(curr_line, data_bytes, num_bytes, 8, 8);
+    }
 }
 
 
@@ -91,7 +140,7 @@ int HexUtility::get_record_data_bytes(const string &hex_record, uint8_t* data_by
     }
     else
     {
-       return data_string_to_byte_list(hex_record.substr(RECORD_DATA_START_I, num_bytes), data_bytes, num_data_bytes);
+       return data_string_to_byte_list(hex_record.substr(RECORD_DATA_START_I+start, 2*num_bytes), data_bytes, num_data_bytes);
     }
 }
 

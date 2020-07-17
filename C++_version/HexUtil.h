@@ -9,7 +9,7 @@
 
 using std::string;
 using std::ifstream;
-
+using std::cout;
 // a utility class with helper functions to help read data from a hex file
 // it relies on reading from a hex file and keeping the current position
 
@@ -67,8 +67,10 @@ class HexUtility
 
     // pass in a 4 byte buffer to be filled with address bytes, also gets returned as an int
     int get_start_address(uint8_t* start_address_bytes, uint8_t num_bytes);
-    uint8_t calc_hex_checksum(const string &hex_record);
-    int data_string_to_byte_list(const string &hex_data, uint8_t* data_bytes, uint8_t num_data_bytes);
+
+    // returns how many data bytes there are if < 8
+    uint8_t get_next_8_bytes(uint8_t* data_bytes, uint8_t num_bytes);
+    
     private:
     ifstream hex_file; // file is open for object lifetime
     string curr_line;  // file will be read line by line
@@ -92,11 +94,10 @@ class HexUtility
     int get_record_checksum(const string &hex_record);
 
     // converts a string of bytes "AABBCCDD" to an array of bytes [0xAA, 0xBB, 0xCC, 0xDD]
-   // int data_string_to_byte_list(const string &hex_data, uint8_t* data_bytes, uint8_t num_data_bytes);
+    int data_string_to_byte_list(const string &hex_data, uint8_t* data_bytes, uint8_t num_data_bytes);
     int load_hex_file_data();
     void num_to_byte_list(int num, uint8_t* bytes, uint8_t num_bytes);    
-    //uint8_t calc_hex_checksum(const string &hex_record);
-
+    uint8_t calc_hex_checksum(const string &hex_record);
 };
 
 #endif
